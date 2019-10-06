@@ -11,4 +11,4 @@ You can run it in a container with these steps:
 
 3- docker-compose -p it up -d
 
-4- Go to http: // localhost
+4- Go to http://localhost
