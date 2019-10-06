@@ -2,3 +2,5 @@
 nbproject/
 
 frame_src/cache/
+
+frame_src/modules/php/vendor/
