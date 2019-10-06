@@ -1,0 +1,4 @@
+{
+  "Error trying to translate string %id% - Directory not found: %pathLang%": "Erro ao tentar traduzir a string %id% - Diretório não encontrado: %pathLang%",
+  "Error trying to translate string %id% - String translation ID not found": "Erro ao tentar traduzir a string %$id% - ID de tradução da string não encontrado"
+}

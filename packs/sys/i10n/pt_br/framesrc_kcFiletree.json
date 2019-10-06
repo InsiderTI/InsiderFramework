@@ -1,0 +1,12 @@
+{
+  "Error trying to delete %path%": "Erro ao tentar apagar %path%",
+  "Too long waiting time detected to deletion of directory: %path%": "Tempo de espera para deleção de diretório muito longo detectado: %path%",
+  "Too long waiting time detected to require file: %path%": "Tempo de espera para requerer arquivo muito longo detectado: %path%",
+  "Too long wait time to write to file: %path%": "Tempo de espera para escrever no arquivo muito longo detectado: %path%",
+  "Too long waiting time detected to read file: %path%": "Tempo de espera para ler o arquivo muito longo detectado: %path%",
+  "Too long waiting time detected to rename file: %path%": "Tempo de espera para renomear arquivo muito longo detectado: %path%",
+  "Too long waiting time detected to copy file: %path%": "Tempo de esperado para copiar arquivo muito longo detectado: %path%",
+  "Error trying to delete %path%": "Erro ao tentar apagar %path%",
+  "The file path not specified": "O caminho do arquivo não especificado",
+  "Unable to create directory %directory%": "Impossível criar o diretório %directory%"
+}

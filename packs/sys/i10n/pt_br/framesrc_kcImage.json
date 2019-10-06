@@ -1,0 +1,8 @@
+{
+  "Error on creating directory %path%": "Erro ao criar diretório %path%",
+  "Error resizing image with invalid dimensions": "Erro ao redimensionar imagem com dimensões inválidas",
+  "Target image height or width not set! You must specify the value \"relative\" or a specific value for one of the dimensions of the destination image": "Altura ou largura da imagem de destino não definidas ! É necessário especificar o valor \"relative\" ou um valor específico para uma das dimensões da imagem de destino",
+  "Target image height and width not set! You must specify the value \"relative\" or a specific value for one of the dimensions of the destination image": "Altura e largura da imagem de destino não definidas ! É necessário especificar o valor \"relative\" ou um valor específico para uma das dimensões da imagem de destino",
+  "Unsupported format specified in convertImageToFormat %format%": "Formato não suportado especificado em convertImageToFormat %format%",
+  "Transparency must be an array with 3 float values in convertImageToFormat": "Transparência deve ser um array com 3 valores numéricos em convertImageToFormat"
+}

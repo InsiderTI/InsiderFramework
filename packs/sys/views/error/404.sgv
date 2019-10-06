@@ -1,0 +1,17 @@
+{template src='sys::errorgeneric'}
+{block id='error'}
+<div id="all" unselectable='on' onselectstart='return false;' onmousedown='return false;'>
+    <br><br><br>
+    <?php
+        $error404Title = \KeyClass\I10n::getTranslate("Error 404", "pack/sys");
+        $error404Msg = \KeyClass\I10n::getTranslate("Page not found", "pack/sys");
+        $routeText = \KeyClass\I10n::getTranslate("Route", "pack/sys");
+    ?>
+    <h1 style='font-weight:bold;text-shadow: 4px -4rpx grey;'><?php echo $error404Title;?></h1>
+    <br/>
+    <h4 style='color: #777;'><?php echo $routeText.": ".getValueFromViewBag('originalUrlRequested'); ?></h4>
+    <br/>
+    <h2><?php echo $error404Msg;?></h2>
+    <div class="genericerror"></div>
+</div>
+{/block}

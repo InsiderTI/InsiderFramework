@@ -1,0 +1,9 @@
+{
+    "New data not specified on updateBy with table %table%": "Novos dados não especificados ao usar updateBy com a tabela %table%",
+    "New data not specified on insert with table %table%": "Novos dados não especificados ao usar updateBy com a tabela %table%",
+    "Search data not specified on updateBy with table %table%": "Dados de busca não especificados ao usar updateBy com a tabela %table%",
+    "Error on execute update query %update%: %error%": "Erro ao utilizar a query de update %update%: %error%",
+    "Error on execute insert query %insert%: %error%": "Erro ao utilizar a query de insert %insert%: %error%",
+    "Table name cannot by empty on update": "O nome da tabela não pode ser vazio no update",
+    "Table name cannot by empty on insert": "O nome da tabela não pode ser vazio no insert"
+}

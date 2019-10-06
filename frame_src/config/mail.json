@@ -1,0 +1,8 @@
+{
+    "MAILBOX": "somemail@example.com",
+    "MAILBOX_PASS": "passwordMail",
+    "MAILBOX_SMTP": "smtp.example.com",
+    "MAILBOX_SMTP_AUTH": true,
+    "MAILBOX_SMTP_SECURE": "ssl",
+    "MAILBOX_SMTP_PORT": 465
+}

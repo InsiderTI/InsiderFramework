@@ -1,0 +1,79 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        {* Favicon *}
+        <link rel="apple-touch-icon" sizes="180x180" href="<?php echo REQUESTED_URL; ?>/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="<?php echo REQUESTED_URL; ?>/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="<?php echo REQUESTED_URL; ?>/favicon-16x16.png">
+        <link rel="manifest" href="<?php echo REQUESTED_URL; ?>/site.webmanifest">
+        <link rel="mask-icon" href="<?php echo REQUESTED_URL; ?>/safari-pinned-tab.svg" color="#5bbad5">
+        <meta name="msapplication-TileColor" content="#da532c">
+        <meta name="theme-color" content="#ffffff">
+        
+        {* Charset da página *}
+        <meta charset="<?php echo ENCODE; ?>"/>
+        
+        {* Título da página *}
+        {component id='title'}
+        
+        {* MomentJs *}
+        <script type='text/javascript' src='<?php echo REQUESTED_URL; ?>/packs/sys/assets/js/moment.js/2.22.1/moment-with-locales.min.js'></script>
+        <script>
+            moment.locale('<?php echo LINGUAS; ?>');
+        </script>
+
+        {* Scripts do framework *}
+        <script type='text/javascript' src='<?php echo REQUESTED_URL; ?>/packs/sys/assets/js/js_only_insiderframework.js'></script>
+
+        {* jQuery *}
+        <script type='text/javascript' src='<?php echo REQUESTED_URL; ?>/packs/sys/assets/js/jQuery/3.3.1/jquery-3.3.1.min.js'></script>
+
+        {* Scripts do framework *}
+        <script type='text/javascript' src='<?php echo REQUESTED_URL; ?>/packs/sys/assets/js/jquery_insiderframework.js'></script>
+
+        <?php
+          if (DEBUG){
+        ?>
+            {* Estilos de debug do framework *}
+            <link rel="stylesheet" href='<?php echo REQUESTED_URL; ?>/packs/sys/assets/css/debug.css' />
+        <?php
+          }
+        ?>
+
+        <style>
+            #mcontent{
+                text-align: center;
+                padding-top: 50px;
+                font-weight: bold;
+                font-size: 1.1em;
+                font-family: Verdana;
+            }
+            #descapp{
+                font-size: 20px;
+            }
+        </style>
+        <meta charset="<?php echo ENCODE; ?>"/>
+
+        {* Objeto de injeção de CSS e JS do framework *}
+        {injected_js}
+        {injected_css}
+
+        {* Bloco de estilos da view *}
+        {block id='style'}{/block}
+    </head>
+
+    <body>
+        <div id='mcontent'>
+            <div>
+                {* Bloco mcontent *}
+                {block id='mcontent'}{/block}
+            </div>
+        </div>
+
+        {* Objeto de injeção de HTML do framework *}
+        {injected_html}
+        
+        {* Bloco de scripts da view *}
+        {block id='scripts'}{/block}
+    </body>
+</html>

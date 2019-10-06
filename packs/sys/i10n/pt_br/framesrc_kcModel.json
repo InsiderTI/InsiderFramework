@@ -1,0 +1,12 @@
+{
+  "Database file connector not found: %databaseConnector%": "Arquivo conector de banco de dados não encontrado: %databaseConnector%",
+  "Incomplete parameters of connection with database: %arrayError%": "Parâmetros de conexão de banco de dados incompletos: %arrayError%",
+  "Database connector not detected: %databaseConnector%": "Conector de banco de dados não detectado: %databaseConnector%",
+  "Database connection error: %error%": "Erro de conexão com o banco de dados: %error%",
+  "Database disconnection error: %error%": "Erro de desconexão com o banco de dados: %error%",
+  "Error! The variable bindarray is not an array!": "Erro! A variável bindarray não é um array!",
+  "Error querying: %query%. Message: %errorMessage% / bindArray: %bindArray%": "Erro ao realizar consulta: %query% .Mensagem: %errorMessage% / bindArray: %bindArray%",
+  "Error! The bindarray variable is not an array!": "Erro! A variável bindarray não é um array!",
+  "Database not found in global database array %database%": "Banco de dados não encontrado no array global de bancos de dados %database%",
+  "Default database not defined in global database array": "Banco de dados padrão não definido no array global de bancos de dados"
+}

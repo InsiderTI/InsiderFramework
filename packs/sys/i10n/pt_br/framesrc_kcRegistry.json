@@ -1,0 +1,12 @@
+{
+  "Registry Error: The info %infoContent% does not exist in the package record %packageName%": "Registry Erro: A info %infoContent% não existe no registro do package %packageName%",
+  "Registry Error: Incorrect call to getItemInfo() function: INFO_VALUE = %info%": "Registry Erro: Valor incorreto na chamada da função getItemInfo(): INFO_VALUE = %info%",
+  "Registry Error: File '%filePath%' not found": "Registry Erro: Arquivo '%filePath%' não encontrado",
+  "Registry Error: The info %info% does not exist in pack registry %pack%": "Registry Erro: A info %info% no registro do pack %pack%",
+  "Registry Error: File not found %filePath%": "Registry Erro: Arquivo não encontrado %filePath%",
+  "Registry Error: The object %obj% was not found in the system registry (path: %filePath%)": "Registry Error: O objeto %obj% não foi encontrado no registro do sistema (caminho: %filePath%)",
+  "Registry Error: The registry appears corrupted. The file %filepath% does not contain information": "Registry Erro: O registro parece corrompido. O arquivo %filePath% não contém informações",
+  "Registry Error: The registry appears corrupted. The file %filepath% does not contain information about pack %pack%": "Registry Erro: O registro parece corrompido. O arquivo %filePath% não contém informações sobre o pack %pack%",
+  "Registry Error: Unknown item section %section%": "Tipo de item desconhecido %section%",
+  "Multiple versions of packages are not yet supported": "Ainda não há suporte para múltiplas versões de pacotes"
+}

@@ -1,0 +1,4 @@
+{
+    "Security controller not found for user privilege verification": "Controller de segurança não encontrado para verificação de privilégios de usuário",
+    "Error inserting information in post: variable %post% not a valid array!": "Erro ao inserir informações no post: variável %post% não é um array válido!"
+}
