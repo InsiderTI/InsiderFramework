@@ -12,7 +12,7 @@
 
             {view src='start::databaseoutput'}
             <br/>
-            <span class="grey">Try to access the url "/test" to see route rules in action</span>
+            <span class="grey">The site is under construction</span>
         </div>
     </span>
 {/block}
