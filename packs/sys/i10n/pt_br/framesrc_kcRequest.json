@@ -1,0 +1,5 @@
+{
+  "The statement appears to be incorrect when requesting the controller %controller%": "A declaração parece estar incorreta ao requisitar o controller %controller%",
+  "The statement appears to be incorrect when requesting the model %model%": "A declaração parece estar incorreta ao requisitar o model %model%",
+  "File %filePath% not found": "Arquivo %filePath% não encontrado"
+}

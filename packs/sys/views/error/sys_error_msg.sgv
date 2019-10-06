@@ -1,0 +1,135 @@
+<?php
+// Vermelho Fatal Error
+// Border
+$borderfatal = "#770000;";
+
+// Background
+$backgroundfatal = "
+    background: #faeeef;
+    background: -moz-linear-gradient(top, #faeeef 0%, #f2c8cd 28%, #f0b8be 62%, #fbdde1 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#faeeef), color-stop(28%,#f2c8cd), color-stop(62%,#f0b8be), color-stop(100%,#fbdde1));
+    background: -webkit-linear-gradient(top, #faeeef 0%,#f2c8cd 28%,#f0b8be 62%,#fbdde1 100%);
+    background: -o-linear-gradient(top, #faeeef 0%,#f2c8cd 28%,#f0b8be 62%,#fbdde1 100%);
+    background: -ms-linear-gradient(top, #faeeef 0%,#f2c8cd 28%,#f0b8be 62%,#fbdde1 100%);
+    background: linear-gradient(to bottom, #faeeef 0%,#f2c8cd 28%,#f0b8be 62%,#fbdde1 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#faeeef', endColorstr='#fbdde1',GradientType=0 );";
+
+// Amarelo Warning
+// Border
+$borderwarning = "#4F2F00;";
+// Background
+$backgroundwarning = "
+    background: #fffdf4;
+    background: -moz-linear-gradient(top, #fffdf4 0%, #fff1b5 28%, #ffed9e 62%, #fffdf4 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#fffdf4), color-stop(28%,#fff1b5), color-stop(62%,#ffed9e), color-stop(100%,#fffdf4));
+    background: -webkit-linear-gradient(top, #fffdf4 0%,#fff1b5 28%,#ffed9e 62%,#fffdf4 100%);
+    background: -o-linear-gradient(top, #fffdf4 0%,#fff1b5 28%,#ffed9e 62%,#fffdf4 100%);
+    background: -ms-linear-gradient(top, #fffdf4 0%,#fff1b5 28%,#ffed9e 62%,#fffdf4 100%);
+    background: linear-gradient(to bottom, #fffdf4 0%,#fff1b5 28%,#ffed9e 62%,#fffdf4 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fffdf4', endColorstr='#fffdf4',GradientType=0 );";
+
+global $kernelspace;
+
+$fatal = $kernelspace->getVariable('fatalError', 'insiderFrameworkSystem');
+$cssInjected = $kernelspace->getVariable('injectedCss', 'insiderFrameworkSystem');
+$registeredErrors = $kernelspace->getVariable('registeredErrors', 'insiderFrameworkSystem');
+$debugbacktrace = $kernelspace->getVariable('debugbacktrace', 'insiderFrameworkSystem');
+
+// Recuperando post e get
+$POST = $kernelspace->getVariable('POST', 'insiderFrameworkSystem');
+$GET = $kernelspace->getVariable('GET', 'insiderFrameworkSystem');
+
+if ($fatal === true) {
+    $bordercolorerr = $borderfatal;
+    $backgroundgradient = $backgroundfatal;
+} else {
+    $bordercolorerr = $borderwarning;
+    $backgroundgradient = $backgroundwarning;
+}
+
+// Estilo CSS para erros visíveis para o admin
+$styleerroradmin = "<style>
+            body{
+                font-family: 'Verdana';
+                font-size: 0.9em;
+              }
+
+              #tudo{
+                width: 100%;
+              }
+
+              #titlewarning{
+                margin: 0 auto;
+                width: 80%;
+                border-top: 2px solid #000;
+                border-left: 2px solid #000;
+                border-right: 2px solid #000;
+                height: 1%;
+                line-height: 0.5em;
+                text-align: center;
+                padding: 20px;
+                font-size: 1.3em;
+                overflow: auto;
+                font-weight: bold;
+                background-color: #C0C0C0;
+                -moz-box-shadow: 10px 10px 5px #888;
+                -webkit-box-shadow: 10px 10px 5px #888;
+                box-shadow: 10px 10px 5px #888;
+                text-shadow: 0.1em 0.1em #d9d9d9;
+              }
+
+              #erro{
+                -moz-box-shadow: 10px 10px 5px #888;
+                -webkit-box-shadow: 10px 10px 5px #888;
+                box-shadow: 10px 10px 5px #888;
+                margin: 0 auto;
+                width: 80%;
+                border: 2px solid " . $bordercolorerr . ";
+                padding: 20px;
+                overflow: auto;
+                " . $backgroundgradient . "
+              }
+              </style>";
+
+$REMOTE_ADDR = "";
+if (isset(\KeyClass\Security::getRequest('server')['REMOTE_ADDR'])) {
+    $REMOTE_ADDR = \KeyClass\Security::getRequest('server')['REMOTE_ADDR'];
+}
+?>
+
+<!DOCTYPE html>
+<html lang='pt-br'>
+    <head>
+        <meta http-equiv="content-type" content="application/xhtml+xml; charset=<?php echo ENCODE; ?>" />
+        <?php echo $cssInjected . $styleerroradmin ?>
+    </head>
+    <body>
+        <div id='tudo'>
+            <?php
+                $error = getValueFromViewBag('msgError');
+            ?>
+            <p>
+                <b>Error:</b>&nbsp;
+                &nbsp;
+                <?php echo $error['msgError']; ?>
+            </p>
+
+            <p><b>File:</b>&nbsp;&nbsp;<?php echo $error['errfile']; ?></p>
+
+            <p><b>Line:</b>&nbsp;&nbsp;<?php echo $error['errline'];; ?></p>
+
+            <p><b>GET:</b>&nbsp;&nbsp;<?php print_r($GET); ?></p>
+
+            <p><b>POST:</b>&nbsp;&nbsp;<?php print_r($POST); ?></p>
+
+            <p><b>IP:</b>&nbsp;&nbsp;<?php print_r($REMOTE_ADDR); ?></p>
+
+            <p><b>Date/Time:</b>&nbsp;&nbsp;"<?php echo date('Y-m-d H:i:s'); ?>"</p>
+
+            <p><b>Debugbacktrace:</b><br/>
+                <?php \KeyClass\Code::printDump($debugbacktrace); ?>
+            </p>
+            <hr/>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,5 @@
+{
+    "Invalid load_avg check time %value%": "Tempo de checagem load_avg inválido %value%",
+    "Invalid time interval in LOAD_AVG_ACTION setting for throttle": "Intervalo de tempo na configuração LOAD_AVG_ACTION para throttle inválido",
+    "Invalid action %action% in the LOAD_AVG_ACTION setting": "Ação inválida %action% na configuração LOAD_AVG_ACTION"
+}

@@ -1,0 +1,4 @@
+{
+    "Invalid access. The User-Agent header changed during the same session": "Acesso inválido. O header User-Agent mudou durante a mesma sessão.",
+    "There is no UserAgent in the requisition": "Não existe o UserAgent na requisição"
+}

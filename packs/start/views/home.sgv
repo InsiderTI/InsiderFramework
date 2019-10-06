@@ -1,0 +1,29 @@
+{template src='start::default'}
+{block id='scripts'}{/block}
+{block id='mcontent' settings='keep-content;'}
+    <br/><br/>
+    <span style="font-size: 14px;">
+        <div style="width: 100%;">
+            <div>
+                <img id='logo' src='android-chrome-192x192.png' /><br/>
+                <span class="grey">Welcome to</span> <h1>Insider Framework</h1>
+            </div>
+            <br/><br/>
+
+            {view src='start::databaseoutput'}
+            <br/>
+            <span class="grey">Try to access the url "/test" to see route rules in action</span>
+        </div>
+    </span>
+{/block}
+{block id='style'}
+<style>
+    .grey{
+        color: #777;
+    }
+    #logo{
+        width: 96px;
+        margin-bottom: 10px;
+    }
+</style>
+{/block}

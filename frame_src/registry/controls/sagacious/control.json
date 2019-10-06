@@ -1,0 +1,15 @@
+{
+  "package": "sagacious",
+  "version": "2.1.1",
+  "authors": "Insider TI <contact@insiderframework.com>",
+  "installed-size": 0,
+  "section": "components",
+  "provides": {},
+  "depends": {},
+  "recommends": {},
+  "postinst-cmd": "",
+  "postrm-cmd": "",
+  "preinst-cmd": "",
+  "prerm-cmd": "",
+  "description": "Sagacious is a template manager integrated with the Insider Framework"
+}

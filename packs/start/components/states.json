@@ -1,0 +1,54 @@
+{
+    "title":
+    {
+        "states":{
+            "0":{
+                "class": "Title",
+                "props":{
+                    "fixedtitle":"Insider Framework"
+                }
+            }
+        },
+
+        "defaultstate":"0"
+    },
+    "injected_html":
+    {
+        "states":{
+            "0":{
+                "class": "Codeinjected",
+                "props":{
+                    "code":""
+                }
+            }
+        },
+
+        "defaultstate":"0"
+    },
+    "injected_js":
+    {
+        "states":{
+            "0":{
+                "class": "Codeinjected",
+                "props":{
+                    "code":""
+                }
+            }
+        },
+
+        "defaultstate":"0"
+    },
+    "injected_css":
+    {
+        "states":{
+            "0":{
+                "class": "Codeinjected",
+                "props":{
+                    "code":""
+                }
+            }
+        },
+
+        "defaultstate":"0"
+    }
+}

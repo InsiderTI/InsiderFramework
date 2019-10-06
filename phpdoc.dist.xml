@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<phpdoc>
+  <parser>
+    <target>docs/phpdoc-files</target>
+  </parser>
+  <transformer>
+    <target>docs/phpdoc-files</target>
+  </transformer>
+  <transformations>
+        <template name="responsive"/>
+  </transformations>
+  <files>
+    <file>./frame_src/components/DatabaseConnectors/Mysql/mysql.php</file>
+    <file>./frame_src/components/Sagacious/classes/object.php</file>
+    <file>./frame_src/components/Sagacious/classes/objectsbag.php</file>
+    <file>./frame_src/components/Sagacious/classes/page.php</file>
+    <file>./frame_src/components/Sagacious/classes/template.php</file>
+    <file>./frame_src/components/Sagacious/classes/view.php</file>
+    <file>./frame_src/components/Sagacious/functions.php</file>
+    <file>./frame_src/components/Sagacious/objects/HTML/Title/Title.php</file>
+    <file>./frame_src/components/Sagacious/objects/Sgs/Codeinjected/Codeinjected.php</file>
+    <file>./frame_src/components/Sagacious/objects/Sgs/View/View.php</file>
+    <file>./frame_src/components/Sagacious/objects/Sgs/ViewBag/ViewBag.php</file>
+    <file>./frame_src/components/Sagacious/objects/Sgs/config_sagacious.php</file>
+    <file>./frame_src/components/Sagacious/objects/Sgs/functions.php</file>
+    <file>./frame_src/components/Sagacious/objects/Sgs/loader.php</file>
+    <file>./frame_src/keyclasses/php/*</file>
+    <file>./frame_src/auto_loader.php</file>
+    <file>./frame_src/config_loader.php</file>
+    <file>./frame_src/console.php</file>
+    <file>./frame_src/error_monitor.php</file>
+    <file>./frame_src/init.php</file>
+    <file>./packs/sys/controllers/*</file>
+    <file>./packs/sys/models/*</file>
+    <file>./packs/sys/helpers/*</file>
+  </files>
+</phpdoc>

@@ -1,0 +1,17 @@
+{
+    "DB_APP": "database1",
+    "DATABASES": {
+        "database1": {
+            "dbms": "mysql",
+            "connector": "mysql",
+            "hostname": "127.0.0.1",
+            "port": "3306",
+            "databasename": "insiderti_frame",
+            "username": "root",
+            "password": "root",
+            "persistent": false,
+            "charset": "utf8",
+            "isolationLevel": "REPEATABLE READ"
+        }
+    }
+}

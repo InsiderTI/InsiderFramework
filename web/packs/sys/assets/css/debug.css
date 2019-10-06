@@ -1,0 +1,35 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+html,
+body {
+    height: 100%;
+}
+
+/* Barra de debug do framework */
+#debugbarinsiderframe{
+    font-family: 'Arial';
+    font-weight: bold;
+    color: #a7a7a7;
+    position: fixed;
+    bottom: 0;
+    border-top: #ddd 1px inset;
+    background-color: #333;
+    padding: 10px;
+    font-size: 0.8em;
+    float: left;
+    line-height: 30px;
+    background: #070707;
+    z-index: 99999;
+    width: 100%;
+}
+
+#debugbarinsiderframeimg{
+   position: relative;
+   top: 0em;
+   width: 32px;
+   height: auto;
+   float: left;
+   margin-right: 15px;
+}
