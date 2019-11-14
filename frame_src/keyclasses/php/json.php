@@ -21,7 +21,7 @@ class JSON{
      
         @package KeyClass\JSON
      
-        @param  string  $filepath    Caminho do arquivo JSON
+        @param  string  $filepath    Path of the JSON file 
         @param  bool    $assoc       Retorna um array associativo ao invés de objeto
      
         @return  array|bool  Informações do arquivo JSON se conseguir ler. Se não
@@ -54,7 +54,7 @@ class JSON{
         @package KeyClass\JSON
      
         @param  mixed   $data       Dados a serem armazenados no arquivo JSON
-        @param  string  $filepath   Caminho do arquivo JSON
+        @param  string  $filepath   Path of the JSON file 
         @param  bool    $overwrite  Sobreescrever dados ou não
      
         @return  bool  Retorno de sucesso ou não da gravação do arquivo

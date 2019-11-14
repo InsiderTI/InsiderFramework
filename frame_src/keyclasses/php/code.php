@@ -181,7 +181,7 @@ class Code{
 
             // If founds a final commment
             else {
-                // Is necessary check where the comment is.
+                // It is necessary check where the comment is.
                 // If is located on the end of line
                 if (strpos((trim($newline)),'*/') == strlen(trim($newline))) {
                     // Então a linha fica em branco

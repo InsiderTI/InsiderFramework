@@ -19,7 +19,7 @@ ob_start();
 chdir('..'.DIRECTORY_SEPARATOR);
 
 /**
-    Função que limpa e reinicia o buffer do php
+    Clear and restart the php buffer
 
     @author Marcello Costa
 
@@ -59,7 +59,7 @@ function primaryError(string $msg, int $errorCode = 500) : array {
     
     $consoleRequest = $kernelspace->getVariable('consoleRequest','insiderFrameworkSystem');
     
-    // Se é um erro que está ocorrendo dentro de um terminal (console)
+    // If it's an error inside a terminal (console)
     if ($consoleRequest){
         die();
     }
@@ -67,7 +67,7 @@ function primaryError(string $msg, int $errorCode = 500) : array {
     // Writing to the log
     error_log($msg);
 
-    // Limpa e reinicia o buffer de saída
+    // Clear and restart the buffer
     clearAndRestartBuffer();
     
     http_response_code($errorCode);
@@ -82,8 +82,7 @@ function primaryError(string $msg, int $errorCode = 500) : array {
     // $xml->addChild('error', $msg);
     // $output=$xml->asXML();
     // header("Content-type: text/xml; charset=utf-8");
-    
-    die($output);
+      die($output);
 }
 
 // Initializes environment variables

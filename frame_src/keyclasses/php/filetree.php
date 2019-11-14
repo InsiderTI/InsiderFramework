@@ -1,13 +1,12 @@
 <?php
 /**
-  Arquivo KeyClass\FileTree
+  KeyClass\FileTree
 */
 
-// Namespace das KeyClass
 namespace KeyClass;
 
 /**
-  KeyClass de tratamento de arquivos e diretórios
+  KeyClass of handle files and directories
  
   @package KeyClass\FileTree
 
@@ -15,17 +14,17 @@ namespace KeyClass;
 */
 class FileTree{
     /**
-        Remove um diretório recursivamente
+        Remove an directory recursively
       
         @author Marcello Costa
      
         @package KeyClass\FileTree
      
-        @param  string     $path               Caminho do diretório
-        @param  int|float  $delaytry           Tempo (em segundos) entre as tentativas de remoção
-        @param  int        $maxToleranceLoops  Número máximo de loops aguardando o tempo $delaytry
+        @param  string     $path               Path of directory
+        @param  int|float  $delaytry           Time (in seconds) between the remove attempts
+        @param  int        $maxToleranceLoops  Maximum loop number waiting the $delaytry time
      
-        @return  bool  Retorna true se o diretório foi apagado com sucesso
+        @return  bool  Return true if the directory was sucessful removed
     */
     public static function deleteDirectory(string $path, $delaytry=0.15, int $maxToleranceLoops=null) : bool {
         if (!is_numeric($delaytry)) {
@@ -41,53 +40,52 @@ class FileTree{
             }
         }
 
-        // Remove o último caractere "/" da string e adiciona um "/" no final
-        // caso não exista
+        // Remove the last character "/" from the string and add an "/" in the end
+        // if did not exists
         $path = rtrim($path, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
 
-        // Abre o diretório para edição
+        // Open an directory for editting
         $handle = opendir($path);
 
-        // Enquanto o diretório puder ser lido, ele ainda existe
+        // While the directory can be readed, he still exists
         while(false !== ($file = readdir($handle))) {
-            // Se o arquivo não é "." ou ".."
+            // If the file is not "." or ".."
             if ($file != '.' and $file != '..' ) {
-                // Preenchendo a variável que guarda o path completo do arquivo
+                // Setting the variable that stores the full path of the file
                 $fullpath = $path.$file;
 
-                // Se for um diretório
+                // If it's an directory
                 if (is_dir($fullpath)) {
-                    // Chama a função novamente para apagar os arquivos dentro
-                    // do mesmo
+                    // Calls the function again to delete the files inside the directory
                     $result=\KeyClass\FileTree::deleteDirectory($fullpath);
 
-                    // Se algo saiu errado
+                    // If something went wrong
                     if ($result === false) {
                         \KeyClass\Error::i10nErrorRegister("Error trying to delete %".$fullpath."%", 'pack/sys');
                     }
                 }
-                // Se for um arquivo
+                // If it's an file
                 else {
-                    // Se o arquivo contiver uma trava
+                    // If the file have a lock
                     $countToleranceLoops=0;
                     $idError = null;
                     while(file_exists($fullpath.".lock")) {
                         $countToleranceLoops++;
 
-                        // Se demorar mais do que o normal para deleção do diretório
+                        // If it takes longer than normal for directory deletion
                         if ($countToleranceLoops > $maxToleranceLoops && $idError === null) {
                           $countToleranceLoops=0;
                           \KeyClass\Error::i10nErrorRegister('Too long waiting time detected to deletion of directory: %'.$path.'%', 'pack/sys', LINGUAS, "LOG");
                         }
 
-                        // Aguardar a trava sumir
+                        // Waiting for the lock is gone
                         sleep($delaytry);
                     }
 
-                    // Remove o arquivo
+                    // Removing the file
                     $result=unlink($fullpath);
 
-                    // Se algo saiu errado
+                    // If something went wrong
                     if ($result === false) {
                         \KeyClass\Error::i10nErrorRegister("Error trying to delete %".$fullpath."%", 'pack/sys');
                     }
@@ -95,34 +93,33 @@ class FileTree{
             }
         }
 
-        // Fecha a edição do diretório
+        // Close directory edit
         closedir($handle);
 
-        // Apaga o diretório raiz requisitado
+        // Erasing the root directory
         $result=rmdir($path);
 
-        // Se algo saiu errado
+        // If something went wrong
         if ($result === false) {
             \KeyClass\Error::i10nErrorRegister("Error trying to delete %".$path."%", 'pack/sys');
         }
 
-        // Retornando o sucesso
+        // Returning the success
         return true;
     }
 
     /**
-        Remove um arquivo
+        Remove an file
 
         @author Marcello Costa
      
         @package KeyClass\FileTree
       
-        @param  string     $path               Caminho do arquivo a ser excluído
-        @param  int|float  $delaytry           Tempo (em segundos) entre as tentativas
-                                               de remoção
-        @param  int        $maxToleranceLoops  Número máximo de loops aguardando o tempo $delaytry
+        @param  string     $path               Path of the file to be deleted
+        @param  int|float  $delaytry           Time (in seconds) between the remove attempts
+        @param  int        $maxToleranceLoops  Maximum loop number waiting the $delaytry time
      
-        @return  bool  Resultado da operação
+        @return  bool  Processing result
     */
     public static function deleteFile(string $path, $delaytry=0.15, int $maxToleranceLoops=null) : bool {
         if (!is_numeric($delaytry)) {
@@ -141,91 +138,91 @@ class FileTree{
         $countToleranceLoops=0;
         $idError = null;
 
-        // Se o arquivo contiver uma trava
+        // If the file have a lock
         while(file_exists($path.".lock")) {
             $countToleranceLoops++;
 
-            // Se demorar mais do que o normal para deletar um arquivo
+            // If it takes longer than normal for directory deletion
             if ($countToleranceLoops > $maxToleranceLoops && $idError === null) {
               $countToleranceLoops=0;
               \KeyClass\Error::i10nErrorRegister("Too long waiting time detected to deletion of directory: %".$path."%", 'pack/sys', LINGUAS, "LOG");
             }
 
-            // Aguardar a trava sumir
+            // Waiting for the lock is gone
             sleep($delaytry);
         }
 
-        // Remove o arquivo
-        // Se o arquivo existir
+        // Remove the file
+        // If the file does exists
         if (file_exists($path)) {
             $result=unlink($path);
 
-            // Se algo saiu errado
+            // If something went wrong
             if ($result === false) {
                 \KeyClass\Error::i10nErrorRegister("Error trying to delete %".$path."%", 'pack/sys');
             }
 
-            // Retornando o sucesso
+            // Returning the success
             return true;
         }
 
-        // Se o arquivo não existe
+        // If the file does not exists
         else {
             return false;
         }
     }
 
     /**
-        Cria um diretório na árvore do framework
+        Creates a directory in the framework directory tree
       
         @author Marcello Costa
      
         @package KeyClass\FileTree
      
-        @param  string  $path           Caminho completo do diretório
-        @param  int     $permission     Permissões do diretório (Linux Like)
-        @param  bool    $recursive      Criar diretório recursivamente ou não
-        @param  array    $ignorechars   Caracteres que não serão recusados no path
-                                        (validação de caracteres especiais)
+        @param  string  $path           Full path of the directory
+        @param  int     $permission     Permissions of the directory (Linux Like)
+        @param  bool    $recursive      Flag to recursively create (or not) the directory
+        @param  array   $ignorechars    Characters that must be ignored on the path
+                                        (special characters validation)
      
-        @return  bool  Resultado da operação
+        @return  bool  Processing result
     */
     public static function createDirectory(string $path, int $permission, bool $recursive=true, array $ignorechars=[]) : bool {
-        // Path especificado
+        // Specified has been specified
         if ($path !== null) {
-            // Tratando nome do diretório
+            // Handling the name of the directory
             $path=str_replace("\\".DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR , $path);
 
-            // Verifica se o path existe
+            // Checking if the path did exists
             if (is_dir($path)) {
-                // Se já existe, sucesso
+                // If did exists, success
                 return true;
             }
 
-            // Se ainda não existe
+            // If did not exists
             else {
-                //Cria o diretório
+                // Creates the directory
                 $createop=mkdir($path,octdec($permission),$recursive);
 
-                // Retorna o resultado
+                // Returning the result
                 return $createop;
             }
         }
 
-        // Path vazio
+        // Empty path
         return false;
     }
 
     /**
-        Reimplementação da função require do php que aceita os arquivos de trava (.lock)
+        Reimplementation of the require function of the PHP that allows lock for the files (.lock)
       
         @author Marcello Costa
      
         @package KeyClass\FileTree
      
-        @param  string     $filepath           Caminho do arquivo
-        @param  int|float  $delaytry           Tempo (em segundos) entre as tentativas de require
-        @param  int        $maxToleranceLoops  Número máximo de loops aguardando o tempo $delaytry
+        @param  string     $filepath           Path of the file
+        @param  int|float  $delaytry           Time (in seconds) between the require attempts
+        @param  int        $maxToleranceLoops  Maximum loop number waiting the $delaytry time
      
         @return Void
     */
@@ -246,17 +243,17 @@ class FileTree{
         $countToleranceLoops=0;
         $idError=null;
 
-        // Se o arquivo contiver uma trava
+        // If the file have a lock
         while(file_exists($filepath.".lock")) {
             $countToleranceLoops++;
 
-            // Se demorar mais do que o normal para requerer um arquivo
+            // If it takes longer than normal for require the file
             if ($countToleranceLoops > $maxToleranceLoops && $idError === null) {
               $countToleranceLoops=0;
               \KeyClass\Error::i10nErrorRegister("Too long waiting time detected to require file: %".$filepath."%", 'pack/sys', LINGUAS, "LOG");
             }
 
-            // Aguardar a trava sumir
+            // Waiting for the lock is gone
             sleep($delaytry);
         }
 
@@ -264,15 +261,15 @@ class FileTree{
     }
 
     /**
-        Reimplementação da função require_once do php que aceita os arquivos de trava (.lock)
+        Reimplementation of the require_once function of the PHP that allows lock for the files (.lock)
       
         @author Marcello Costa
      
         @package KeyClass\FileTree
      
-        @param  string     $filepath    Caminho do arquivo
-        @param  int|float  $delaytry    Tempo (em segundos) entre as tentativas de require
-        @param  int        $maxToleranceLoops  Número máximo de loops aguardando o tempo $delaytry
+        @param  string     $filepath            Path of the file
+        @param  int|float  $delaytry            Time (in seconds) between the require attempts
+        @param  int        $maxToleranceLoops   Maximum loop number waiting the $delaytry time
      
         @return void
     */
@@ -293,17 +290,17 @@ class FileTree{
         $countToleranceLoops=0;
         $idError=null;
 
-        // Se o arquivo contiver uma trava
+        // If the file have a lock
         while(file_exists($filepath.".lock")) {
             $countToleranceLoops++;
 
-            // Se demorar mais do que o normal para requerer em um arquivo
+            // If it takes longer than normal for require the file
             if ($countToleranceLoops > $maxToleranceLoops && $idError === null) {
               $countToleranceLoops=0;
               \KeyClass\Error::i10nErrorRegister("Too long waiting time detected to require file: %".$filepath."%", 'pack/sys', LINGUAS, "LOG");
             }
 
-            // Aguardar a trava sumir
+            // Waiting for the lock is gone
             sleep($delaytry);
         }
 
@@ -311,19 +308,19 @@ class FileTree{
     }
 
     /**
-        Função que escreve em um arquivo
+        Writes content in a file
       
         @author Marcello Costa
      
         @package KeyClass\FileTree
       
-        @param  string     $filepath    Caminho completo do arquivo
-        @param  mixed      $data        Dados a serem gravados no arquivo
-        @param  bool       $overwrite   Sobreescrever dados ou não
-        @param  int|float  $delaytry    Tempo (em segundos) entre as tentativas de gravação
-        @param  int        $maxToleranceLoops  Número máximo de loops aguardando o tempo $delaytry
+        @param  string     $filepath           Path of the file
+        @param  mixed      $data               Data to be written in the file
+        @param  bool       $overwrite          Overwrite data or not
+        @param  int|float  $delaytry           Time (in seconds) between the write attempts
+        @param  int        $maxToleranceLoops  Maximum loop number waiting the $delaytry time
      
-        @return  bool  Retorna o resultado da gravação do arquivo
+        @return  bool  Processing result
     */
     public static function fileWriteContent(string $filepath, $data, bool $overwrite=false, $delaytry=0.15, int $maxToleranceLoops=null) : bool {
         if (!is_numeric($delaytry)) {
@@ -342,35 +339,35 @@ class FileTree{
         $countToleranceLoops = 0;
 
         $idError = null;
-        // Se o arquivo contiver uma trava
+        // If the file have a lock
         while(file_exists($filepath.".lock")) {
             $countToleranceLoops++;
 
-            // Se demorar mais do que o normal para escrever em um arquivo
+            // If it takes longer than normal for write in the file
             if ($countToleranceLoops > $maxToleranceLoops && $idError === null) {
               $countToleranceLoops=0;
               \KeyClass\Error::i10nErrorRegister("Too long wait time to write to file: %".$filepath."%", 'pack/sys', LINGUAS, "LOG");
             }
 
-            // Aguardar a trava sumir
+            // Waiting for the lock is gone
             sleep($delaytry);
         }
         
-        // Verificando se o diretório existe
+        // Checking if the directory did exists
         if (!is_dir(dirname($filepath))){
-            // Criando o diretório
+            // Creating the directory
             \KeyClass\FileTree::createDirectory(dirname($filepath), 777);
             
-            // Verificando se o diretório existe
+            // Checking if the directory did exists
             if (!is_dir(dirname($filepath))){
                 \KeyClass\Error::i10nErrorRegister("Unable to create directory: %".dirname($filepath)."%", 'pack/sys');
             }
         }
 
-        // Então, escrever no arquivo, travando-o para leitura e escrita
+        // Creating the lock file until operation is done
         touch($filepath.".lock");
 
-        // Inserindo o conteúdo no arquivo
+        // Writing the content in the file
         if ($overwrite === false) {
             $result=file_put_contents($filepath, $data, FILE_APPEND);
         }
@@ -378,35 +375,35 @@ class FileTree{
             $result=file_put_contents($filepath, $data);
         }
 
-        // Removendo o arquivo de trava
+        // Releasing the lock
         if (file_exists($filepath.".lock")) {
             unlink($filepath.".lock");
         }
 
-        // Tudo certo, arquivo gravado com sucesso
+        // Everthing ok, so returning true
         if ($result !== false) {
             return true;
         }
 
-        // Erro na gravação
+        // Fail
         else {
             return false;
         }
     }
 
     /**
-        Função que recupera o conteúdo de um arquivo
+        Gets the content of an file
      
         @author Marcello Costa
      
         @package KeyClass\FileTree
      
-        @param  string     $filepath      Caminho completo do arquivo
-        @param  bool       $returnstring  Se true retorna uma string, se false retorna um array
-        @param  int|float  $delaytry      Tempo (em segundos) entre as tentativas de leitura
-        @param  int        $maxToleranceLoops  Número máximo de loops aguardando o tempo $delaytry
+        @param  string     $filepath           Path of the file
+        @param  bool       $returnstring       If true, the function will return a string, otherwise will return an array
+        @param  int|float  $delaytry           Time (in seconds) between the read attempts
+        @param  int        $maxToleranceLoops  Maximum loop number waiting the $delaytry time
      
-        @return  string  Conteúdo do arquivo
+        @return  string  Content of the file
     */
     public static function fileReadContent(string $filepath, bool $returnstring=true, $delaytry=0.15, int $maxToleranceLoops=null) : string {
         if (!is_numeric($delaytry)) {
@@ -428,68 +425,66 @@ class FileTree{
 
         $countToleranceLoops=0;
         $idError = null;
-        // Se o arquivo contiver uma trava
+        // If the file have a lock
         while(file_exists($filepath.".lock")) {
             $maxToleranceLoops++;
 
-            // Se demorar mais do que o normal para ler um arquivo
+            // If it takes longer than normal for read the file
             if ($countToleranceLoops > $maxToleranceLoops && $idError === null) {
               $countToleranceLoops=0;
               \KeyClass\Error::i10nErrorRegister("Too long waiting time detected to read file: %".$filepath."%", 'pack/sys', LINGUAS, "LOG");
             }
 
-            // Aguardar a trava sumir
+            // Waiting for the lock is gone
             sleep($delaytry);
         }
         
-        // Verificando se o arquivo existe
+        // Checking if the file did exists
         if (!file_exists($filepath) || !is_readable($filepath)) {
             return false;
         }
 
-        // Lendo o conteúdo no arquivo
+        // Reading the content of the file
         if ($returnstring === true) {
-            // Retorna string
+            // Returning a string
             $result=file_get_contents($filepath);
         }
         else {
-            // Retorna array
+            // Returning an array
             $result=file($filepath);
         }
 
-        // Tudo certo, arquivo lido com sucesso
+        // Everything ok, file successful read
         if ($result !== false) {
-            // Removendo o arquivo de trava
+            // Releasing the lock
             return $result;
         }
 
-        // Erro na leitura
+        // Read error
         else {
             return false;
         }
     }
 
     /**
-        Função que constroe um array contendo a árvore de diretórios e arquivos
-        de um caminho
+        Creates a map in format of an array of a path
 
         @author Marcello Costa
      
         @package KeyClass\FileTree
      
-        @param  string  $dir        Caminho a ser mapeado
-        @param  bool    $sortitems  Divide o resultado dentro de um array
-                                    organizado por diretórios
+        @param  string  $dir        Path to be mapped
+        @param  bool    $sortitems  Splits the result inside the array ordering by directories
      
-        @return  array  Array do caminho mapeado
+        @return  array  Array of the mapped path
     */
     public static function dirTree(string $dir, bool $sortitems=false) : array {
-        // Retirando a última barra da string $dir (caso exista)
+        // Removing the last bar from the string $dir (if did exists)
         if ($dir[strlen($dir)-1] === DIRECTORY_SEPARATOR) {
             $dir=\KeyClass\Code::extractString($dir, 0, strlen($dir)-1);
         }
 
-        // Mapeando diretório
+        // Mapping the directory
         $path = [];
         $stack[] = $dir;
         while ($stack) {
@@ -513,30 +508,30 @@ class FileTree{
             }
         }
 
-        // Se for preciso organizar o resultado obtido
+        // If the result needs to be organized
         if ($sortitems === true) {
-            // Chama a função que organiza os arquivos contidos no path em um array
+            // Calls the function which is responsable for organize the files inside the path
             $dirarray=($fileData = \KeyClass\FileTree::fillArrayWithFileNodes(new \DirectoryIterator($dir)));
 
-            // Retornando o resultado organizado
+            // Returning the organized result
             return $dirarray;
         }
 
-        // Retornando o resultado sem organizar o array
+        // Returning the result without arranging the array
         return $path;
     }
 
     /**
-       Mapeia os nós do diretório em um array
+       Maps directory nodes in an array
 
        @author 'Peter Bailey'
        @see <http://stackoverflow.com/questions/952263/deep-recursive-array-of-directory-structure-in-php>
 
        @package KeyClass\FileTree    
     
-       @param  \DirectoryIterator  $dir    Objeto DirectoryIterator contendo o path
+       @param  \DirectoryIterator  $dir    DirectoryIterator object containing path
     
-       @return  array  Array organizado do path informado
+       @return  array  Array of the informed path
    */
    public static function fillArrayWithFileNodes(\DirectoryIterator $dir) : array {
        $data = array();
@@ -557,18 +552,18 @@ class FileTree{
    }
 
     /**
-        Função para renomear arquivos
+        Function for renaming files
 
         @author Marcello Costa
         @package KeyClass\FileTree
      
-        @param  string     $origpath    Path original do arquivo
-        @param  string     $destpath    Path de destino do arquivo
-        @param  bool       $overwrite   Sobreescrever arquivo
-        @param  int|float  $delaytry    Tempo (em segundos) entre as tentativas de mover
-        @param  int        $maxToleranceLoops  Número máximo de loops aguardando o tempo $delaytry
+        @param  string     $origpath           Original path of the file
+        @param  string     $destpath           Destination path of the copied file
+        @param  bool       $overwrite          If true, when the destination file already exists, overwrite it
+        @param  int|float  $delaytry           Time (in seconds) between the move attempts
+        @param  int        $maxToleranceLoops  Maximum loop number waiting the $delaytry time
      
-        @return bool  Resultado da operação
+        @return bool  Processing result
     */
     public static function renameFile(string $origpath, string $destpath, bool $overwrite=false, $delaytry=0.15, int $maxToleranceLoops=null) : bool {
         if (!is_numeric($delaytry)) {
@@ -586,55 +581,55 @@ class FileTree{
 
         $countToleranceLoops=0;
 
-        // Se o arquivo contiver uma trava
+        // If the file have a lock
         $idError = null;
         while(file_exists($origpath.".lock")) {
             $countToleranceLoops++;
 
-            // Se demorar mais do que o normal para renomear um arquivo
+            // If it takes longer than normal for rename the file
             if ($countToleranceLoops > $maxToleranceLoops && $idError === null) {
               $countToleranceLoops=0;
               \KeyClass\Error::i10nErrorRegister("Too long waiting time detected to rename file: %".$origpath."%", 'pack/sys', LINGUAS, "LOG");
             }
 
-            // Aguardar a trava sumir
+            // Waiting for the lock is gone
             sleep($delaytry);
         }
 
-        // Verificando se o diretório de destino existe
+        // Checking if the directory did exists
         if (!(is_dir(dirname($destpath)))) {
             return false;
         }
 
-        // Se o arquivo existe e é para sobreescever ou se o arquivo não existe
+        // If the file did exists and it is to rewrite or if the file did not exists
         if (((file_exists($destpath) === true) && ($overwrite === true)) ||
              (file_exists($destpath) === false)) {
 
-            // Renomeando o arquivo
+            // Renaming the file
             $rename=rename($origpath, $destpath);
         }
         else {
             $rename=false;
         }
 
-        // Retornando o resultado da função
+        // Returning the result
         return $rename;
     }
 
     /**
-        Função para copiar arquivos
-     
+        Function for copying files
+        
         @author Marcello Costa
      
         @package KeyClass\FileTree
      
-        @param  string     $origpath    Path original do arquivo
-        @param  string     $destpath    Path de destino do arquivo
-        @param  bool       $overwrite   Path de destino do arquivo
-        @param  int|float  $delaytry    Tempo (em segundos) entre as tentativas de mover
-        @param  int        $maxToleranceLoops  Número máximo de loops aguardando o tempo $delaytry
+        @param  string     $origpath           Original path of the file
+        @param  string     $destpath           Destination path of the copied file
+        @param  bool       $overwrite          If true, when the destination file already exists, overwrite it
+        @param  int|float  $delaytry           Time (in seconds) between the copy attempts
+        @param  int        $maxToleranceLoops  Maximum loop number waiting the $delaytry time
      
-        @return bool  Resultado da operação
+        @return bool  Processing result
     */
     public static function copyFile(string $origpath, string $destpath, bool $overwrite=false, $delaytry=0.15, int $maxToleranceLoops=null) : bool {
         if (!is_numeric($delaytry)) {
@@ -653,7 +648,7 @@ class FileTree{
         $countToleranceLoops=0;
 
         $idError = null;
-        // Se o arquivo contiver uma trava
+        // If the file have a lock
         while(file_exists($origpath.".lock")) {
             $countToleranceLoops++;
 
@@ -663,44 +658,44 @@ class FileTree{
               \KeyClass\Error::i10nErrorRegister("Too long waiting time detected to copy file: %".$origpath."%", 'pack/sys', LINGUAS, "LOG");
             }
 
-            // Aguardar a trava sumir
+            // Waiting for the lock is gone
             sleep($delaytry);
         }
 
-        // Verificando se o diretório de destino existe
+        // Checking if the directory did exists
         if (!(is_dir(dirname($destpath)))) {
             return false;
         }
 
-        // Se o arquivo existe e é para sobreescever ou se o arquivo não existe
+        // If the file did exists and it is to rewrite or if the file did not exists
         if (((file_exists($destpath) === true) && ($overwrite === true)) ||
              (file_exists($destpath) === false)) {
 
-            // Copiando o arquivo
+            // Copying the file
             $copy=copy($origpath, $destpath);
         }
         else {
             $copy=false;
         }
 
-        // Retornando o resultado da função
+        // Returning the result
         return $copy;
     }
 
     /**
-        Função que move um arquivo. Esta função é alias da função renameFile
+        Function that moves a file. This function is an alias for the renameFile function.
      
         @author Marcello Costa
      
         @package KeyClass\FileTree
      
-        @param  string  $origpath     Path original do arquivo
-        @param  string  $destpath     Path de destino do arquivo
-        @param  bool  $overwrite      Sobreescrever arquivo
-        @param  int|float  $delaytry  Tempo (em segundos) entre as tentativas de mover
-        @param  int        $maxToleranceLoops  Número máximo de loops aguardando o tempo $delaytry
+        @param  string     $origpath           Original path of the file
+        @param  string     $destpath           Destination path of the moved file
+        @param  bool       $overwrite          If true, when the destination file already exists, overwrite it
+        @param  int|float  $delaytry           Time (in seconds) between the move attempts
+        @param  int        $maxToleranceLoops  Maximum loop number waiting the $delaytry time
      
-        @return  bool Resultado da operação
+        @return  bool Processing result
     */
     public static function moveFile(string $origpath, string $destpath, bool $overwrite=false, $delaytry=0.15, int $maxToleranceLoops=null) : bool {
         if (!is_numeric($delaytry)) {
@@ -716,116 +711,116 @@ class FileTree{
             }
         }
 
-        // Movendo o arquivo com a função rename
+        // Moving the fiel with the rename function
         $result=\KeyClass\FileTree::renameFile($origpath, $destpath, $overwrite, $delaytry, $maxToleranceLoops);
 
-        // Retornando o resultado da função
+        // Returning the result
         return $result;
     }
 
     /**
-        Copia um diretório recursivamente
+        Copies a directory recursively
      
         @author Marcello Costa
      
         @package KeyClass\FileTree
      
-        @param  string  $src    Diretório de origem
-        @param  string  $dst    Diretório de destino
+        @param  string  $src    Origin directory
+        @param  string  $dst    Destination directory
      
-        @return bool  Retorno da operação
+        @return bool Processing result
     */
     public static function copyDirectory(string $src, string $dst) : bool {
-        // Abrindo o diretório de origem
+        // Opening the origin directory
         $dir = opendir($src);
 
-        // Criando o diretório de destino (se não existir)
+        // Creating the destination directory (if did not already exists)
         if (!is_dir($dst)) {
             mkdir($dst);
         }
 
-        // Enquanto for possível ler um arquivo dentro do diretório de origem
+        // While is possible read a file inside the origin directory
         while(false !== ($file = readdir($dir))) {
-            // Se não for o diretório . ou ..
+            // If it is not the "." or ".." directory
             if (($file != '.') && ($file != '..')) {
-                // Se é um diretório o item dentro do loop
+                // If is a directory
                 if (is_dir($src.DIRECTORY_SEPARATOR.$file)) {
-                    // Chama a função novamente
+                    // Calls the function again
                     \KeyClass\FileTree::copyDirectory($src.DIRECTORY_SEPARATOR.$file, $dst.DIRECTORY_SEPARATOR.$file);
                 }
 
-                // Se é um arquivo
+                // If it is a file
                 else {
-                    // Copia o arquivo de origem para o diretório de destino
+                    // Copy the origin file to the destination directory
                     copy($src . DIRECTORY_SEPARATOR . $file,$dst . DIRECTORY_SEPARATOR . $file);
                 }
             }
         }
 
-        // Fecha o diretório de origem
+        // Closes the origin directory
         closedir($dir);
 
-        // Retorna o sucesso
+        // Returning the result
         return true;
     }
 
     /**
-        Altera as permissões recursivamente de diretórios e arquivos
+        Changes the permissions of directories and files recursively 
      
         @author Marcello Costa
      
         @package KeyClass\FileTree
      
-        @param  string  $dir               Caminho do diretório
-        @param  int     $dirPermissions    Novas permissões dos diretórios
-        @param  int     $filePermissions   Novas permissões dos arquivo
+        @param  string  $dir               Path of directory
+        @param  int     $dirPermissions    New directory permissions
+        @param  int     $filePermissions   New files permissions
      
         @return void Without return
     */
     public static function changePermissionRecursively(string $dir, int $dirPermissions, int $filePermissions) : void {
-        // Abre o diretório alvo
+        // Opening the target directory
         $dp = opendir($dir);
 
-        // Enquanto existirem itens dentro do diretório
+        // While did exists files inside a directory
         while($file = readdir($dp)) {
-           // Se é o diretório "." ou "..", ignora-os
+            // If the file is "." or ".." ignore them
             if (($file == ".") || ($file == ".."))
                 continue;
 
-            // Montando o caminho ao arquivo
+            // Setting the variable that stores the full path of the file
             $fullPath = $dir.DIRECTORY_SEPARATOR.$file;
 
-            // Se é um diretório
+            // If it's a directory
             if (is_dir($fullPath)) {
-                // Altera a permissão do diretório
+                // Changing the directory permissions
                 chmod($fullPath, $dirPermissions);
 
-                // Chama a funcão novamente
+                // Calling the function again
                 \KeyClass\FileTree::changePermissionRecursively($fullPath, $dirPermissions, $filePermissions);
             }
 
-            // Se é um arquivo
+            // If it's a file
             else {
-                // Altera a permissão do arquivo
+                // Changing the file permissions
                 chmod($fullPath, $filePermissions);
             }
         }
 
-        // Fecha o diretório alvo
+        // Closing the target directory
         closedir($dp);
     }
 
     /**
-        Realiza o download de um arquivo remoto para o servidor local
+        Downloads a remote file to the local file system
      
         @author Marcello Costa
      
         @package KeyClass\FileTree
      
-        @param  string  $url    URL de origem do arquivo
-        @param  string  $path   Diretório de destino do arquivo
+        @param  string  $url    File origin URL
+        @param  string  $path   Directory destination for the file
      
-        @return  bool Retorno da operação
+        @return  bool Processing result
     */
     public static function downloadFile(string $url, string $path) : bool {
         $newfname = $path;

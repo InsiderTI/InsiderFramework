@@ -1,13 +1,12 @@
 <?php
 /**
-  Arquivo KeyClass\Image
+  KeyClass\Image
 */
 
-// Namespace das KeyClass
 namespace KeyClass;
 
 /**
-  KeyClass de tratamento de imagens
+  KeyClass for the image handling
 
   @package KeyClass\Image
   
@@ -15,62 +14,61 @@ namespace KeyClass;
 */
 class Image{
     /**
-        Verifica se um arquivo é uma imagem
+        Checks if a file it's an image
      
         @author 'Silver Moon'
         @see http://www.binarytides.com/php-check-if-file-is-an-image/
      
         @package KeyClass\Image
      
-        @param  string  $path    Caminho do arquivo
+        @param  string  $path    Path of the file
      
-        @return  bool  Retorno da função
+        @return  bool  Processing result
     */
     public static function isImage(string $path) : bool {
-        // Captura o tamanho da imagem
+        // Getting the size of the image
         $size = getimagesize($path);
 
-        // Verificando o tipo de imagme pelo array retornado
+
+        // Checking if the type of the image with the info inside the array
         $image_type = $size[2];
 
-        // Se no tipo retornado contiver os tipos GIF, JPEG, PNG ou BMP
+        // If the returning type is GIF, JPEG, PNG or BMP
         if (in_array($image_type , array(IMAGETYPE_GIF , IMAGETYPE_JPEG ,IMAGETYPE_PNG , IMAGETYPE_BMP)))
         {
-            // É um imagem
+            // It's an image
             return true;
         }
 
-        // Não é uma imagem
+        // It's not an image
         return false;
     }
 
     /**
-        Converte imagens GIF, PNG, BMP, JPG para JPG e PNG
+        Converts images GIF, PNG, BMP and JPG to JPG or PNG
      
         @author Marcello Costa
      
         @package KeyClass\Image
      
-        @param  string     $desttype       Tipo do formato de saída da nova imagem
-        @param  string     $origpath       Path de origem da imagem
-        @param  string     $destpath       Path de destino da imagem
-        @param  string     $widthdest      Largura da imagem final (opcional):
-                                           O valor deve ser dado em pixels (Ex.: 10px)
-                                           Em caso de uma largura proporcinal à
-                                           uma altura, o valor da variável deverá
-                                           ser "relative"
-        @param  string     $heightdest     Altura da imagem final (opcional):
-                                           O valor deve ser dado em pixels (Ex.: 10px)
-                                           Em caso de uma altura proporcinal à
-                                           uma largura, o valor da variável deverá
-                                           ser "relative"
-        @param  array      $transparency   Array com a cor que será substituída por
-                                           transparência (RGB). Válido para conversão
-                                           de imagens para PNG.
+        @param  string     $desttype       Output format type for image
+        @param  string     $origpath       Path of the original image
+        @param  string     $destpath       Path of the destination image       
+        @param  string     $widthdest      Width for the destination image (optional):
+                                           The value of this variable must be in pixels
+                                           If the width size is proportional to the height,
+                                           the value of this variable must be the string
+                                           "relative".
+                                           $widthdest = 10px
+                                           $height = "relative"
+        @param  string     $heightdest     Height for the destination image (optional):
+                                           analogous to what happens with the width
+        @param  array      $transparency   Array with the color that will be replaced with the transparency (RGB). 
+                                           This is valid for image conversion to PNG format.
      
-        @param  int        $permission     Permissão do arquivo de destino (Linux Like)
+        @param  int        $permission     Destination file permission (Linux Like)
      
-        @return  bool  Resultado da operação
+        @return  bool  Processing result
     */
     public static function convertImageToFormat(string $desttype, string $origpath, string $destpath, $widthdest=false, $heightdest="relative", array $transparency = [], int $permission=700) : bool {
         $desttype=strtoupper(trim($desttype));
@@ -253,7 +251,7 @@ class Image{
      
         @package KeyClass\Image
       
-        @param  string  $filename    Caminho do arquivo
+        @param  string  $filename    Path of the file
      
         @return  resource  Objeto de imagem
     */

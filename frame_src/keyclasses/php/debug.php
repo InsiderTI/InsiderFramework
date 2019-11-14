@@ -1,70 +1,70 @@
 <?php
 /**
-  Arquivo KeyClass\Debug
+  KeyClass\Debug
 */
 
-// Namespace das KeyClass
+// Namespace of KeyClass
 namespace KeyClass;
 
 /**
-  KeyClass de debug do código
-
+  KeyClass for debugging the code
+  
   @package KeyClass\Debug
 
   @author Marcello Costa
 */
 class Debug{
     /**
-        Função que exibe a calculadora de renderização
-     
-        @author Marcello Costa
+      Shows the debugBar
+    
+      @author Marcello Costa
 
-        @package KeyClass\Debug
+      @package KeyClass\Debug
 
-        @param  string  $action    Ação a ser tomada ("count" ou "render")
-     
-        @return void
+      @param  string  $action    Action to be fired ("count" or "render")
+    
+      @return void
     */
     public function debugBar(string $action) : void {
         global $kernelspace;
         
-        // Requerendo arquivo (manualmente)
+        // Require file manually
         require_once(INSTALL_DIR.DIRECTORY_SEPARATOR."frame_src".DIRECTORY_SEPARATOR."keyclasses".DIRECTORY_SEPARATOR."php".DIRECTORY_SEPARATOR."security.php");
 
         switch($action) {
-            // Se for o início da contagem da renderização
+            // If it's the beggining of counting 
             case "count":
-                // Inicializa cookie que marca o início do script
-                // (se já não foi inicializado)
+                // Setting the cookie who marks the start of the script
+                // (if it's not already initialized)
                 $startTest=\KeyClass\Security::getCookie('starttime');
                 if ($startTest == '0' || $startTest === false) {
                     \KeyClass\Security::setCookie('starttime', microtime());
                 }
             break;
 
-            // Parando o contador e renderizando
+            // Stopping the counter and rendering
             case "render":
-                // Recuperando informações do tempo da requisição
+                // Recovering the info about the time of the request
                 $starttime=floatval(\KeyClass\Security::getCookie('starttime'));
 
-                // Inicializa a variável que marca o fim do script
+                // Initializing the variable which marks the end of the script
                 $end = floatval(microtime());
 
-                // Resetando cookie
+                // Resetting the counter
                 \KeyClass\Security::setCookie('starttime', 0);
 
-                // Calculando quando tempo se passou e o uso de memória
+                // Calculating how much time was spent and how much memory is used
                 $elapsedTime = round(floatval($end) - floatval($starttime), 2);
                 $memoryUsage = round(((memory_get_peak_usage(true) / 1024) / 1024), 2);
 
-                // Talvez não tenha dado tempo para o navegador enviar o cookie
+                // Maybe was not enough time to browser send the cookie
                 if ($elapsedTime < 0) {
-                  // Calculando quando tempo se passou e o uso de memória com o start em 0
+                  // Calculating how much time was spent and the memory usage starts in 0
                   $elapsedTime = round(floatval($end) - floatval(0), 2);
                   $memoryUsage = round(((memory_get_peak_usage(true) / 1024) / 1024), 2);
                 }
 
-                // Exibimos uma mensagem na página
+                // Displaying an message in the page
                 $msg='<div id="debugbarinsiderframe">';                    
                 $msg.='<img src="'.REQUESTED_URL.'/favicon.png" id="debugbarinsiderframeimg"/> Processing time: <span style="color:#2C89A0;">'.$elapsedTime.'</span>s / Memory Usage: <span style="color:#FF0000;">'.$memoryUsage.'Mb</span>';
                 $msg.='</div>';
