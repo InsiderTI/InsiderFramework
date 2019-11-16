@@ -53,7 +53,7 @@ $proto = 'http';
 if (isset($_SERVER["HTTP_X_FORWARDED_PROTO"])){
     $proto = $_SERVER["HTTP_X_FORWARDED_PROTO"];
 }
-if (!isset($_SERVER['SHELL'])){
+if (!isset($_SERVER['SHELL']) && isset($_SERVER['HTTP_HOST'])){
     define('REQUESTED_URL', $proto."://".$_SERVER['HTTP_HOST']);
 }
 else{
