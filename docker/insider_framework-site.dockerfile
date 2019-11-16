@@ -46,8 +46,8 @@ RUN apt install zip -y
 
 # **********************************************************************************************************
 ###### Vhost ######
-ADD insiderframework.conf /etc/apache2/sites-available/
-RUN a2ensite insiderframework; exit 0
+ADD insiderframework-site.conf /etc/apache2/sites-available/
+RUN a2ensite insiderframework-site; exit 0
 
 RUN a2enmod rewrite
 RUN a2enmod headers
