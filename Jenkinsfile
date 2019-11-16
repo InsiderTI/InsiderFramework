@@ -4,8 +4,12 @@ pipeline {
     }
     stages {
         stage ("Checkout") {
-            node('slave') {
-                checkout scm
+            steps{
+                sh "mkdir -p /var/www/"
+                sh "chmod 777 -R /var/www/"
+                dir('/var/www/insiderframework-site'){
+                    checkout scm
+                }
             }
         }
 
@@ -20,13 +24,17 @@ pipeline {
                 // def registryHost = "127.0.0.1:30400/"
                 // def imageName = "${registryHost}${appName}:${tag} docker/insider_framework-site.dockerfile"
                     
-                sh "docker-compose build"
+                dir('/var/www/insiderframework-site'){
+                    sh "docker-compose build"
+                }
             }
         }
         stage ("Deploy"){
             steps {
                 // Simple deployment
-                sh "docker-compose up -d"
+                dir('/var/www/insiderframework-site'){
+                    sh "docker-compose up -d"
+                }
             
                 // Deploy with Kubernetes
                 // input "Deploy to PROD"
