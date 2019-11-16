@@ -1,1 +1,1 @@
-docker/insider_framework-site.dockerfile
+insider_framework-site.dockerfile
