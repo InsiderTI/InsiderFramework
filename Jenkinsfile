@@ -25,7 +25,7 @@ pipeline {
                 // def imageName = "${registryHost}${appName}:${tag} docker/insider_framework-site.dockerfile"
                     
                 dir('/var/www/insiderframework-site/docker'){
-                    sh "sudo docker-compose buid"
+                    sh "sudo docker-compose build"
                 }
             }
         }
