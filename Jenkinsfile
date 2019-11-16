@@ -5,6 +5,7 @@ pipeline {
     stages {
         stage ("Checkout") {
             steps{
+                sh "whoami"
                 sh "sudo mkdir -p /var/www/"
                 sh "sudo chmod 777 -R /var/www/"
                 dir('/var/www/insiderframework-site'){
