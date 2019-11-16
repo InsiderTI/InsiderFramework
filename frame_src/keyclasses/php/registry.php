@@ -158,7 +158,7 @@ class Registry{
         @param  string  $section           Nome da section do pacote
         @param  string  $info              Especifica qual dado será retornado
 
-        @return  array  Informação do package
+        @return array|string  Informação do item
     */
     public static function getItemInfo(string $itemsearch=null, string $section=null, string $info=null) : array {
         // Tratando nome da info

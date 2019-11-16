@@ -82,7 +82,7 @@ function primaryError(string $msg, int $errorCode = 500) : array {
     // $xml->addChild('error', $msg);
     // $output=$xml->asXML();
     // header("Content-type: text/xml; charset=utf-8");
-      die($output);
+    die($output);
 }
 
 // Initializes environment variables
