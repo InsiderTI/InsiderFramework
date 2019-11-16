@@ -1,6 +1,7 @@
 node {
     stage "Checkout"
-        sh "mkdir -p /var/www/"
+        sh "sudo mkdir -p /var/www/"
+        sh "sudo chmod 777 -R /var/www/"
         dir('/var/www/insiderframework-site'){
             checkout scm
             // Pega o commit id para ser usado de tag (versionamento) na imagem
