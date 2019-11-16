@@ -1,13 +1,17 @@
 node {
-    checkout scm
-    // Pega o commit id para ser usado de tag (versionamento) na imagem
-    sh "git rev-parse --short HEAD > commit-id"
-    tag = readFile('commit-id').replace("\n", "").replace("\r", "")
-    
-    // Configura o nome da aplicação, o endereço do repositório e o nome da imagem com a versão
-    appName = "app"
-    registryHost = "127.0.0.1:30400/"
-    imageName = "${registryHost}${appName}:${tag} docker/insider_framework-site.dockerfile"
+    stage "Checkout"
+        sh "mkdir -p /var/www/"
+        dir('/var/www/insiderframework-site'){
+            checkout scm
+            // Pega o commit id para ser usado de tag (versionamento) na imagem
+            sh "git rev-parse --short HEAD > commit-id"
+            tag = readFile('commit-id').replace("\n", "").replace("\r", "")
+            
+            // Configura o nome da aplicação, o endereço do repositório e o nome da imagem com a versão
+            appName = "app"
+            registryHost = "127.0.0.1:30400/"
+            imageName = "${registryHost}${appName}:${tag} docker/insider_framework-site.dockerfile"
+        }
     
     // Configuramos os estágios
     stage "Build"
