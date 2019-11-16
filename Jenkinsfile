@@ -25,7 +25,7 @@ pipeline {
                 // def imageName = "${registryHost}${appName}:${tag} docker/insider_framework-site.dockerfile"
                     
                 dir('/var/www/insiderframework-site/docker'){
-                    sh "sudo docker-compose build"
+                    // sh "sudo docker-compose build"
                 }
             }
         }
@@ -33,7 +33,7 @@ pipeline {
             steps {
                 // Simple deployment
                 dir('/var/www/insiderframework-site/docker'){
-                    sh "sudo docker-compose up -d"
+                    // sh "sudo docker-compose up -d"
                 }
             
                 // Deploy with Kubernetes
