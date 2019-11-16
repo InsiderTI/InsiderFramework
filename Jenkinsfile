@@ -16,13 +16,13 @@ pipeline {
         stage ("Build") {
             steps {
                 // Getting the commit id to be used as a tag (version) of the image
-                sh "git rev-parse --short HEAD > commit-id"
-                def tag = readFile('commit-id').replace("\n", "").replace("\r", "")
+                // sh "git rev-parse --short HEAD > commit-id"
+                // def tag = readFile('commit-id').replace("\n", "").replace("\r", "")
                 
                 // Configures the app name, the repository url and the image name with the version
-                def appName = "app"
-                def registryHost = "127.0.0.1:30400/"
-                def imageName = "${registryHost}${appName}:${tag} docker/insider_framework-site.dockerfile"
+                // def appName = "app"
+                // def registryHost = "127.0.0.1:30400/"
+                // def imageName = "${registryHost}${appName}:${tag} docker/insider_framework-site.dockerfile"
                     
                 dir('/var/www/insiderframework-site/docker'){
                     sh "sudo docker-compose buid"
