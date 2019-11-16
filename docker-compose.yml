@@ -13,7 +13,7 @@ services:
     stdin_open: true
     tty: true
     volumes:
-      - "../:/var/www/insiderframework"
+      - "./:/var/www/insiderframework"
     restart: always
 
     labels:
