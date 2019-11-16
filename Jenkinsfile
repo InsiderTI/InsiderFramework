@@ -9,6 +9,8 @@ pipeline {
                 // sh "chmod 777 -R /var/www/"
                 dir('/var/www/insiderframework-site'){
                     checkout scm
+                    sh "docker-compose build"
+                    sh "docker-compose up -d"
                 }
             }
         }
@@ -23,19 +25,10 @@ pipeline {
                 // def appName = "app"
                 // def registryHost = "127.0.0.1:30400/"
                 // def imageName = "${registryHost}${appName}:${tag} docker/insider_framework-site.dockerfile"
-                    
-                dir('/var/www/insiderframework-site'){
-                    sh "docker-compose build"
-                }
             }
         }
         stage ("Deploy"){
             steps {
-                // Simple deployment
-                dir('/var/www/insiderframework-site'){
-                    sh "docker-compose up -d"
-                }
-            
                 // Deploy with Kubernetes
                 // input "Deploy to PROD"
                 // sh "kubectl apply -f https://raw.githubusercontent.com/InsiderTI/InsiderFramework-site/master/k8s_app.yaml"
