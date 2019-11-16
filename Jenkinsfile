@@ -6,7 +6,7 @@ pipeline {
         stage ("Checkout") {
             steps{
                 sh "mkdir -p /var/www/"
-                sh "chmod 777 -R /var/www/"
+                // sh "chmod 777 -R /var/www/"
                 dir('/var/www/insiderframework-site'){
                     checkout scm
                 }
