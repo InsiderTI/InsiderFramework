@@ -24,16 +24,16 @@ pipeline {
                 // def registryHost = "127.0.0.1:30400/"
                 // def imageName = "${registryHost}${appName}:${tag} docker/insider_framework-site.dockerfile"
                     
-                dir('/var/www/insiderframework-site/docker'){
-                    // sh "sudo docker-compose build"
+                dir('/var/www/insiderframework-site'){
+                    sh "docker-compose build"
                 }
             }
         }
         stage ("Deploy"){
             steps {
                 // Simple deployment
-                dir('/var/www/insiderframework-site/docker'){
-                    // sh "sudo docker-compose up -d"
+                dir('/var/www/insiderframework-site'){
+                    sh "docker-compose up -d"
                 }
             
                 // Deploy with Kubernetes
