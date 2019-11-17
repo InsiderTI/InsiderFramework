@@ -7,6 +7,9 @@ stages:
       # buildContext: .
       pushRemote: true
       tag: if-site:${CICD_EXECUTION_SEQUENCE}
+    env:
+      PLUGIN_DEBUG: "true"
+      PLUGIN_INSECURE: "true"
 - name: Deploy
   steps:
   - applyYamlConfig:
