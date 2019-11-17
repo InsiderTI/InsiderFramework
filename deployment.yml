@@ -1,7 +1,7 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: if-site
+  name: if-site-service
 spec:
   selector:
     app: if-site

@@ -6,3 +6,7 @@ stages:
       dockerfilePath: ./Dockerfile
       buildContext: .
       tag: if-site:${CICD_EXECUTION_SEQUENCE}
+- name: Deploy
+  steps:
+  - applyYamlConfig:
+      path: ./deployment.yaml
