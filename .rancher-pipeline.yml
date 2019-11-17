@@ -4,6 +4,7 @@ stages:
   - justBuild:
       image: php:7.3-apache
       dockerfilePath: ./Dockerfile
+      pushRemote: true
       buildContext: .
       tag: if-site:${CICD_EXECUTION_SEQUENCE}
       
