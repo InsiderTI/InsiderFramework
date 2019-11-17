@@ -1,0 +1,18 @@
+stages:
+- name: Build
+  steps:
+  - justBuild:
+      image: php:7.3-apache
+      dockerfilePath: ./Dockerfile
+      buildContext: .
+      tag: if-site:${CICD_EXECUTION_SEQUENCE}
+      
+      shellScript: |-
+        # Do something
+        # apt-get update
+        # apt-get install vim -y
+        
+- name: Deploy
+  steps:
+  - applyYamlConfig:
+      path: ./deployment.yaml
