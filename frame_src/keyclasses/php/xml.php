@@ -1,13 +1,12 @@
 <?php
 /**
-  Arquivo KeyClass\XML
+  KeyClass\XML
 */
 
-// Namespace das KeyClass
 namespace KeyClass;
 
 /**
-   KeyClass de tratamento de arquivos XML
+   KeyClass for handling the XML files
 
    @package KeyClass\XML
    
@@ -15,19 +14,18 @@ namespace KeyClass;
 */
 class XML{
     /**
-        Converte um objeto em um array
+        Converts an object to an XML structured array
 
         @author Marcello Costa
 
         @package KeyClass\XML
      
-        @param  Array         $data            Array a ser convertido
-        @param  bool|string   $xmlData        Objeto de dados do XML
-        @param  bool|string   $fixNumericKeys  Se diferente de false, seta um
-                                               prefixo para chaves numéricas no
-                                               XML
+        @param  Array         $data            Data to be converted
+        @param  bool|string   $xmlData         Data object to XML
+        @param  bool|string   $fixNumericKeys  If it's not false, sets a prefix
+                                               for the numeric keys in the XML
      
-        @return  SimpleXMLObject  Objeto SimpleXML
+        @return  SimpleXMLObject  SimpleXML Object
      */
     public static function arrayToXML(Array $data, &$xmlData, $fixNumericKeys=false) : SimpleXMLObject {
         $keys=array_keys($data);
@@ -67,15 +65,15 @@ class XML{
     }
 
     /**
-        Função que verifica se um string é um XML
+        Checks if a string is a XML
      
         @author Marcello Costa
 
         @package KeyClass\XML
      
-        @param  string  $xmlstr    String a ser verificada
+        @param  string  $xmlstr    String to be verified
      
-        @return  bool  Se for um XML retorna true
+        @return  bool  If it's a XML returns true
     */
     public static function isXML(string $xmlstr) : bool {
         libxml_use_internal_errors(true);

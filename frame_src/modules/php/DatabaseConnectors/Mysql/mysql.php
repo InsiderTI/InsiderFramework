@@ -21,42 +21,44 @@ class Mysql_Connector{
 
       @package DatabaseConnectors\Mysql_Connector
    
-      @param  string  $connection   Nome do pack do controller
+      @param  KeyClass\Model  $model   Model linked to connection
    
-      @return bool Retorno da operação
+      @return bool Return of operation
   */
-  public static function connect(&$connection) : bool {
-    // Se o DMBS está errado
-    if (property_exists($connection, "dbms") && strtolower(trim($connection->dbms)) !== "mysql") {
+  public static function connect($model) : bool {
+    $typeOfModel = strtolower(strtok((new \ReflectionObject($model))->getNamespaceName(),"\\"));
+    
+    // Checks if the $model it's not a model
+    if ($typeOfModel !== "models"){
+        \KeyClass\Error::errorRegister('');
+    }
+    
+    if (property_exists($model, "dbms") && strtolower(trim($model->dbms)) !== "mysql") {
       primaryError("Incorrect DBMS option for connector");
     }
 
-    // Colocando o charset correto
-    if ($connection->persistent === false) {
-        $connection->conexao = new \PDO(
-            "mysql:host=".$connection->hostname.";dbname=".$connection->databasename.""."; port=".$connection->port."; charset=".$connection->charset, $connection->username, $connection->password,array(\PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8")
+    if ($model->persistent === false) {
+        $model->connection = new \PDO(
+            "mysql:host=".$model->hostname.";dbname=".$model->databasename.""."; port=".$model->port."; charset=".$model->charset, $model->username, $model->password,array(\PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8")
         );
 
-        $connection->conexao->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+        $model->connection->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
     }
 
-    // Conexão persistente
     else {
-        $connection->conexao = new \PDO(
-            "mysql:host=".$connection->hostname.";dbname=".$connection->databasename."; port=".$connection->port."; charset=".$connection->charset, $connection->username, $connection->password,array(\PDO::ATTR_PERSISTENT => true, \PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8")
+        $model->connection = new \PDO(
+            "mysql:host=".$model->hostname.";dbname=".$model->databasename."; port=".$model->port."; charset=".$model->charset, $model->username, $model->password,array(\PDO::ATTR_PERSISTENT => true, \PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8")
         );
     }
 
-    // Nível do lock do mysql para as transações deste model (caso necessário)
-    if (strtolower(trim($connection->isolationLevel)) != "default" &&
-        strtolower(trim($connection->isolationLevel)) != "" &&
-        strtolower(trim($connection->isolationLevel)) != null
+    if (strtolower(trim($model->isolationLevel)) != "default" &&
+        strtolower(trim($model->isolationLevel)) != "" &&
+        strtolower(trim($model->isolationLevel)) != null
        ) {
-        $connection->conexao->query("SET SESSION TRANSACTION ISOLATION LEVEL ".$connection->isolationLevel);
+        $model->connection->query("SET SESSION TRANSACTION ISOLATION LEVEL ".$model->isolationLevel);
     }
     
-    // Ativando os erros
-    $connection->conexao->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+    $model->connection->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
     
     return true;
   }

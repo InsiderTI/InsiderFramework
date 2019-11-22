@@ -1,13 +1,12 @@
 <?php
 /**
-  Arquivo KeyClass\JSON
+  KeyClass\JSON
 */
 
-// Namespace das KeyClass
 namespace KeyClass;
 
 /**
-   KeyClass de tratamento de arquivos JSON
+   KeyClass to handle JSON files
 
    @package KeyClass\JSON
 
@@ -15,21 +14,21 @@ namespace KeyClass;
  */
 class JSON{
     /**
-        Recupera informações de um arquivo JSON
+        Get the data of a JSON file
       
         @author Marcello Costa
      
         @package KeyClass\JSON
      
         @param  string  $filepath    Path of the JSON file 
-        @param  bool    $assoc       Retorna um array associativo ao invés de objeto
+        @param  bool    $assoc       If this is true the function will return 
+                                     an associative array instead of an object
      
-        @return  array|bool  Informações do arquivo JSON se conseguir ler. Se não
-                             conseguir ler, retorna false.
+        @return  array|bool  Data of JSON file if the file can be read. If not, returns false
     */
     public static function getJSONDataFile(string $filepath, bool $assoc = true) {
         if (file_exists($filepath)) {
-            // Recuperando as linhas do arquivo
+            // Getting the content of the file
             $filecontent=\KeyClass\FileTree::fileReadContent($filepath);
 
             $t=json_decode($filecontent);
@@ -38,7 +37,7 @@ class JSON{
                 return false;
             }
 
-            // Retornando as informações
+            // Retuning the data
             return(json_decode($filecontent, $assoc));
         }
         else {
@@ -47,23 +46,23 @@ class JSON{
     }
 
     /**
-        Grava informações em um arquivo JSON
+        Records data to a JSON file
      
         @author Marcello Costa
       
         @package KeyClass\JSON
      
-        @param  mixed   $data       Dados a serem armazenados no arquivo JSON
+        @param  mixed   $data       Data to be recorded
         @param  string  $filepath   Path of the JSON file 
-        @param  bool    $overwrite  Sobreescrever dados ou não
+        @param  bool    $overwrite  If this is true, overwrites the data of JSON file
      
-        @return  bool  Retorno de sucesso ou não da gravação do arquivo
+        @return  bool  Processing result
     */
     public static function setJSONDataFile($data,  string $filepath, bool $overwrite=false) : bool {
-        // Encodando os dados
+        // Encoding the data
         $datafile=\KeyClass\JSON::jsonEncodePrivateObject($data);
 
-        // Gravando no arquivo
+        // Recording the content in the file
         $return=\KeyClass\FileTree::fileWriteContent($filepath, $datafile, $overwrite);
         
         if ($return === false) {
@@ -74,26 +73,26 @@ class JSON{
     }
 
     /**
-        Função que verifica se um string é um JSON
+        Checks if a string is a JSON 
      
         @author Marcello Costa
       
         @package KeyClass\JSON
      
-        @param  string  $value    String a ser verificada
+        @param  string  $value    String to be verified
      
-        @return  bool  Se for um JSON retorna true
+        @return  bool  If the string is an JSON, return true
     */
     public static function isJSON(string $value) : bool {
-        // Tentando decodificar o JSON
+        // Trying decode the JSON
         $r=json_decode($value);
 
-        // Se for um JSON, retorna true
+        // If it is a JSON, returns true
         if ($r !== null) {
             return true;
         }
 
-        // Se não for um JSON, retorna false
+        // If it is not a JSON, return false
         else {
             return false;
         }
@@ -101,7 +100,8 @@ class JSON{
     
     
     /**
-        Função que extrai as propriedades privadas de um objeto
+        Function that extract the private properties of an object and
+        return this properties as a JSON string
 
         @author Marcello Costa
         @author Petah
@@ -110,9 +110,9 @@ class JSON{
 
         @package Core
 
-        @param  Object  $object    Objeto a ter as propriedades extraídas
+        @param  Object  $object    Object that will be readed/extracted
 
-        @return  string  Objeto convertido em string
+        @return  string  String that represents the object
     */
     public static function jsonEncodePrivateObject($object) : string {
         if (is_object($object)){
@@ -124,7 +124,7 @@ class JSON{
     }
 
     /**
-        Função que extrai as propriedades privadas de um objeto
+        Function that extract the private properties of an object
 
         @author Marcello Costa
         @author Petah
@@ -133,9 +133,9 @@ class JSON{
 
         @package Core
 
-        @param  Object  $object    Objeto a ter as propriedades extraídas
+        @param  Object  $object    Object that will be readed/extracted
 
-        @return  array|bool  Array que equivale ao objeto ou false se não for um objeto
+        @return  array|bool  Array that represents the object or false (if it is not an object)
     */
     public static function extractObjectPrivateProps($object) : array {
         $public = [];
