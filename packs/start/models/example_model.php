@@ -26,11 +26,6 @@ class Example_Model extends \KeyClass\Model{
             $dummydata=$this->select($query, null, true);
         }
 
-        // Se algo errado acontenceu
-        if (empty($dummydata)) {
-            \KeyClass\Error::errorRegister('Error retrieving data');
-        }
-
         return $dummydata;
     }
 }

@@ -4,7 +4,7 @@
         "database1": {
             "dbms": "mysql",
             "connector": "mysql",
-            "hostname": "127.0.0.1",
+            "hostname": "172.19.0.3",
             "port": "3306",
             "databasename": "insiderti_frame",
             "username": "root",

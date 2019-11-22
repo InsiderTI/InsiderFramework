@@ -54,8 +54,10 @@ class Error {
         $file = $debugbacktrace[0]['file'];
         $line = $debugbacktrace[0]['line'];
         if (isset($debugbacktrace[2])){
-            $file = $debugbacktrace[2]['file'];
-            $line = $debugbacktrace[2]['line'];
+            if (isset($debugbacktrace[2]['file']) && isset($debugbacktrace[2]['line'])){
+                $file = $debugbacktrace[2]['file'];
+                $line = $debugbacktrace[2]['line'];
+            }
         }
 
         switch (strtoupper(trim($type))) {

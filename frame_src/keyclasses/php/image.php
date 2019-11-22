@@ -85,86 +85,84 @@ class Image{
             break;
         }
         
-        // Se não for uma imagem
+        // If it's not an image
         $imgInfo = getimagesize($origpath);
         if ($imgInfo === FALSE) {
             return false;
         }
 
-        // Se o arquivo original não existir
+        // If the original file does not exist
         if (!(file_exists($origpath))) {
             return false;
         }
 
-        // Se o diretório de destino não existir
+        // If the destination directory does not exist
         if (!(is_dir(dirname($destpath)))) {
             $mkdirectory = \KeyClass\FileTree::createDirectory(dirname($destpath), $permission);
 
-            // Se algo deu errado
+            // If something goes wrong
             if (!($mkdirectory)) {
                 \KeyClass\Error::i10nErrorRegister("Error on creating directory %".$destpath."%", 'pack/sys');
             }
         }
 
-        // Dimensões da imagem
-        // Largura
+        // Image dimensions
+        // Width
         if ($widthdest === "relative") {
-            // Usando dimensão passada
             if ($heightdest !== false) {
-                // Extraindo altura do valor repassado
+                // Getting the height
                 $heightdest=floatval(str_replace('px', null, $heightdest));
             }
 
-            // Se algo errado ocorreu
+            // If something goes wrong
             if ($heightdest === 0 && $heightdest === false) {
                 \KeyClass\Error::i10nErrorRegister("Error resizing image with invalid dimensions", 'pack/sys');
             }
 
-            // Porcentagem a ser redimensionada
+            // Getting the resizing percent
             $respercent=(($heightdest*100)/$imgInfo[1]);
 
-            // Calculando qual será a largura relativa de imagem
+            // Calculation of relative image width
             $widthdest=$imgInfo[0]*($respercent/100);
         }
 
-        // A largura de origem deve ser definida para uso do algoritmo
+        // The original width of the image must be defined to be used
         $widthorig = $imgInfo[0];
 
-        // Altura
+        // Height
         if ($heightdest === "relative") {
-            // Usando dimensão passada
             if ($widthdest !== false) {
-                // Extraindo largura do valor repassado
+                // Getting the width
                 $widthdest=floatval(str_replace('px', null, $widthdest));
             }
 
-            // Se algo errado ocorreu
+            // If something goes wrong
             if ($widthdest === 0 && $widthdest === false) {
                 \KeyClass\Error::i10nErrorRegister("Error resizing image with invalid dimensions", 'pack/sys');
             }
 
-            // Porcentagem a ser redimensionada
+            // Getting the resizing percent
             $respercent=(($widthdest*100)/$imgInfo[0]);
 
-            // Calculando qual será a largura relativa de imagem
+            // Calculation of relative image height
             $heightdest=$imgInfo[1]*($respercent/100);
         }
 
-        // A altura de origem deve ser definida para uso do algoritmo
+        // The original height of the image must be defined to be used
         $heightorig = $imgInfo[1];
 
-        // Se a altura e largura não foram definidas, mantem as originais
+        // If the height and the width are not already defined, keep the original ones
         if ($heightdest === false && $widthdest === false) {
             $heightdest=$heightorig;
             $widthdest=$widthorig;
         }
 
-        // Se a altura ou a largura não foram definidas, erro!
+        // If the variables heightdest or the widthdest still not defined, error!
         if ($heightdest === false || $widthdest === false) {
             \KeyClass\Error::i10nErrorRegister("Target image height or width not set! You must specify the value \"relative\" or a specific value for one of the dimensions of the destination image", 'pack/sys');
         }
 
-        // Verificando tipo da imagem
+        // Checking the image type
         switch ($imgInfo[2]) {
             case IMAGETYPE_GIF  : $src = imagecreatefromgif ($origpath);                  break;
             case IMAGETYPE_JPEG : $src = imagecreatefromjpeg($origpath);                  break;
@@ -174,20 +172,20 @@ class Image{
 
         $widthdest=str_replace("px","",trim(strtolower($widthdest."")));
         $heightdest=str_replace("px","",trim(strtolower($heightdest."")));
-                
-        // Convertendo imagem para JPEG com 100% de qualidade
+
+        // Convert the image to JPEG with 100% of quality and saving the image file
         // e salvando o arquivo final
         switch (strtoupper(trim($desttype))) {
             case "PNG":
-                // Criando resource da nova imagem
+                // Create the resource of the new image
                 $newImage = imagecreatetruecolor($widthdest, $heightdest);
-                
-                // Se a transparência foi definida incorretamente
+
+                // If the transparency was incorrectly defined
                 if (count($transparency) !== 3 && count($transparency) !== 0) {
                     \KeyClass\Error::i10nErrorRegister('Transparency must be an array with 3 float values in convertImageToFormat', 'pack/sys');
                 }
                 
-                // Preenchendo com fundo branco por padrão
+                // Fill the image with a white background by default
                 if (count($transparency) === 0) {
                     $R=255;
                     $G=255;
@@ -201,52 +199,52 @@ class Image{
 
                 $tBackground = imagecolorallocate($newImage, $R, $G, $B); 
                 imagefill($newImage, 0, 0, $tBackground);
-                
-                // Copiando o objeto da imagem antiga ($src) para a nova ($newImage)
+
+                // Copies the old image object ($src) to the new one ($newImage)
                 $op1=imagecopyresampled($newImage, $src, 0, 0, 0, 0, $widthdest, $heightdest, $widthorig, $heightorig);
-                
-                // Definindo cor como transparente
+
+                // Setting color to transparent
                 if (count($transparency) === 3) {
                     imagecolortransparent($newImage, ImageColorAllocate($newImage, $transparency[0], $transparency[1], $transparency[2]));
                     imagealphablending($newImage, true);
                 }
                 
-                // Salvando imagem
+                // Saving the image
                 $op2=imagepng($newImage, $destpath, 0);
             break;
             case "JPG":
             case "JPEG":
-                // Criando resource da nova imagem
+                // Create the resource of the new image
                 $newImage = imagecreatetruecolor($widthorig, $heightorig);
                 
-                // Colocando background branco
+                // Fill the image with a white background by default
                 $background = imagecreatetruecolor($widthorig, $heightorig);
                 $whiteBackground = imagecolorallocate($background, 255, 255, 255);
                 imagefill($newImage, 0, 0, $whiteBackground);
 
-                // Copiando o objeto da imagem antiga ($src) para a nova ($newImage)
+                // Copies the old image object ($src) to the new one ($newImage)
                 $op1=imagecopyresampled($newImage, $src, 0, 0, 0, 0, $widthorig, $heightorig, $widthorig, $heightorig);
 
-                // Redimensionando imagem
+                // Resizing the image
                 $fimage = imagecreatetruecolor($widthdest, $heightdest);
                 imagecopyresized($fimage, $newImage, 0, 0, 0, 0, $widthdest, $heightdest, $widthorig, $heightorig);
 
-                // Salvando imagem
+                // Saving the image
                 $op2=imagejpeg($fimage, $destpath, 100);
             break;
         }
 
-        // Se a conversão/salvamento funcionou corretamente
+        // If the conversion worked
         if ($op2) {
             return true;
         }
 
-        // Erro
+        // Error
         return false;
     }
 
     /**
-        Cria um objeto de imagem através de um arquivo BMP
+        Create an image object with a BMP file
       
         @author AeroX @ aerox-studios
         @see http://php.net/manual/pt_BR/function.imagecreatefromwbmp.php

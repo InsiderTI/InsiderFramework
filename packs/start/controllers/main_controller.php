@@ -26,9 +26,9 @@ class Main_Controller extends \KeyClass\Controller {
     */
     public function home() {
         // Requesting test model
-        // $ExampleModel=\KeyClass\Request::Model($this->pack.'::Example', BD_APP);
+        $ExampleModel=\KeyClass\Request::Model($this->pack.'::Example', BD_APP);
 
-        // $ReturnOfModel=$ExampleModel->QueryTest();
+        $ReturnOfModel=$ExampleModel->QueryTest();
 
         // Send info to viewBag
         $ReturnOfModel = array(

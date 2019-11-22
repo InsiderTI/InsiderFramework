@@ -77,7 +77,10 @@ function requireKeyFile(string $file, string $soughtitem) : void {
     }
 
     // Classe de erro
-    require_once('frame_src'.DIRECTORY_SEPARATOR.'keyclasses'.DIRECTORY_SEPARATOR.'php'.DIRECTORY_SEPARATOR.'error.php');
+    if (!defined('INSTALL_DIR')){
+        define('INSTALL_DIR', '.');
+    }
+    require_once(INSTALL_DIR.DIRECTORY_SEPARATOR.'frame_src'.DIRECTORY_SEPARATOR.'keyclasses'.DIRECTORY_SEPARATOR.'php'.DIRECTORY_SEPARATOR.'error.php');
 
     // Se o arquivo existir
     $filepath = INSTALL_DIR.DIRECTORY_SEPARATOR.$file;
