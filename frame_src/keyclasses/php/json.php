@@ -20,8 +20,9 @@ class JSON{
      
         @package KeyClass\JSON
      
-        @param  string  $filepath    Caminho do arquivo JSON
-        @param  bool    $assoc       Retorna um array associativo ao invés de objeto
+        @param  string  $filepath    Path of the JSON file 
+        @param  bool    $assoc       If this is true the function will return 
+                                     an associative array instead of an object
      
         @return  array|bool  Data of JSON file if the file can be read. If not, returns false
     */
@@ -51,9 +52,9 @@ class JSON{
       
         @package KeyClass\JSON
      
-        @param  mixed   $data       Dados a serem armazenados no arquivo JSON
-        @param  string  $filepath   Caminho do arquivo JSON
-        @param  bool    $overwrite  Sobreescrever dados ou não
+        @param  mixed   $data       Data to be recorded
+        @param  string  $filepath   Path of the JSON file 
+        @param  bool    $overwrite  If this is true, overwrites the data of JSON file
      
         @return  bool  Processing result
     */

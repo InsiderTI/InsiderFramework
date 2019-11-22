@@ -1,7 +1,7 @@
 <?php
 
 /**
-  KeyClass\Error File
+  KeyClass\Error
  */
 
 namespace KeyClass;
@@ -35,17 +35,17 @@ class Error {
     }
 
     /**
-      Função que registra/exibe erros
+      Register/Show errors
 
       @author Marcello Costa
 
       @package KeyClass\Error
 
-      @param  string  $message             Mensagem de erro
-      @param  string  $type                Tipo de erro
-      @param  int     $responseCode        Código de resposta do erro
+      @param  string  $message             Error message
+      @param  string  $type                Type of error
+      @param  int     $responseCode        Response code of the error
 
-      @return void|string Retorna o unidid do erro se for do tipo LOG
+      @return void|string Returns the uniqid of the error if it's of type LOG
      */
     public static function errorRegister(string $message, string $type = "CRITICAL", int $responseCode = null) : ?string {
         global $kernelspace;
@@ -61,38 +61,39 @@ class Error {
         }
 
         switch (strtoupper(trim($type))) {
-            // Erro que apenas escreve no arquivo de log
+            // This type of error just writes in the log file
             case "LOG":
-                // Gera ID único para este erro
+                // Generates and unique ID for this error
                 $id = uniqid();
 
-                // Cria um log novo caso o arquivo já esteja sendo usado
+                // Creates a new log in case of the file already exists
                 $logfilepath = INSTALL_DIR . "/frame_src/cache/logs/logfile-" . $id;
                 while (file_exists($logfilepath . ".lock")) {
                     $logfilepath = INSTALL_DIR . "/frame_src/cache/logs/logfile-" . $id;
                 }
 
-                // Inserindo o formato à mensagem (por enquanto é fixo)
+                // Inserts and prefix in the message (for now, hard-coded)
                 $date = new \DateTime('NOW');
                 $dataFormat = $date->format('Y-m-d H:i:s');
                 $message = $dataFormat . "    " . $message;
 
-                // Escrevendo no arquivo de log
+                // Writing in the log file
                 \KeyClass\FileTree::fileWriteContent($logfilepath, $message);
 
-                // Retorna o ID do erro
+                // Returning the error ID
                 return $id;
             break;
 
-            // Erro crítico
+            // Critical error
             case "CRITICAL":
                 if ($responseCode === null) {
                     $responseCode = 500;
                 }
-                // Resposta HTTP 500
+
+                // HTTP 500 response
                 http_response_code($responseCode);
 
-                // Populando objeto do erro
+                // Populate the error object
                 $manageErrorMsg = new \Modules\insiderErrorHandler\manageErrorMsg(array(
                     'type' => $type,
                     'text' => $message,
@@ -102,37 +103,36 @@ class Error {
                     'subject' => 'Critical Error - Report Agent InsiderFramework'
                 ));
 
-                // Definindo variável global
+                // Setting the global variable
                 $kernelspace->setVariable(array('fatalError' => true), 'insiderFrameworkSystem');
 
-                // Tratando erro
+                // Managing the error
                 \KeyClass\Error::manageError($manageErrorMsg);
             break;
 
-            // Provável ataque ao site
+            // Ataque to the system
             case "ATTACK_DETECTED":
                 if ($responseCode === null) {
                     $responseCode = 405;
                 }
 
-                // Resposta HTTP 405
+                // HTTP 405 response
                 http_response_code($responseCode);
 
-                // Nomes dos cookies
-                // Email User = eu
+                // Name of identify cookie
                 $cookie1Name = md5('user_identify_cookie_insider');
 
-                // Cookie IDsession (nome encriptado com outro método)
+                // IDSession cookie
                 $cookie2Name = htmlspecialchars("idsession");
 
-                // Capturando valores dos cookies
+                // Getting the cookies values
                 $cookie1Value = \KeyClass\Security::getCookie($cookie1Name);
                 $cookie2Value = \KeyClass\Security::getCookie($cookie2Name);
 
-                // Montando mensagem
+                // Building the message
                 $message .= '- Cookies: (1)' . $cookie1Value . ' (2)' . $cookie2Value;
 
-                // Construindo array do erro
+                // Building the error array
                 $error = new \Modules\insiderErrorHandler\manageErrorMsg(array(
                     'type' => $type,
                     'text' => $message,
@@ -142,25 +142,23 @@ class Error {
                     'subject' => 'Attack Error - Report Agent InsiderFramework'
                 ));
 
-                // Definindo variável global
+                // Setting the global variable
                 $kernelspace->setVariable(array('fatalError' => true), 'insiderFrameworkSystem');
 
 
-                // Tratando erro
+                // Managing the error
                 \KeyClass\Error::manageError($error);
             break;
 
-            // Este é um tipo de erro que irá retornar um JSON para
-            // o usuário (útil em requisições ajax, por exemplo)
+            // This is the kind of error which will return an JSON for
+            // the user (usefull in ajax requests, for example)
             case 'JSON_PRE_CONDITION_FAILED':
                 if ($responseCode === null) {
                     $responseCode = 412;
                 }
 
-                // Definindo como 412 Precondition Failed
                 http_response_code($responseCode);
 
-                // Construindo array do erro
                 $error = array(
                     'error' => $message
                 );
@@ -169,17 +167,15 @@ class Error {
                 exit();
             break;
 
-            // Este é um tipo de erro que irá retornar um XML para
-            // o usuário (útil em requisições ajax, por exemplo)
+            // This is the kind of error which will return an XML for
+            // the user (usefull in ajax requests, for example)
             case 'XML_PRE_CONDITION_FAILED':
                 if ($responseCode === null) {
                     $responseCode = 412;
                 }
 
-                // Definindo como 412 Precondition Failed
                 http_response_code($responseCode);
 
-                // Construindo array do erro
                 $error = array(
                     'error' => $message
                 );
@@ -195,13 +191,13 @@ class Error {
                 exit();
             break;
 
-            // Erro comum (ou "STANDARD")
+            // Standard error
             default:
                 if ($responseCode !== null) {
                     http_response_code($responseCode);
                 }
 
-                // Construindo array do erro
+                // Building the error array
                 $error = new \Modules\insiderErrorHandler\manageErrorMsg(array(
                     'type' => $type,
                     'text' => $message,
@@ -211,32 +207,32 @@ class Error {
                     'subject' => 'Standard Error - Report Agent InsiderFramework'
                 ));
 
-                // Definindo variável global
+                // Setting the global variable
                 $kernelspace->setVariable(array('fatalError' => false), 'insiderFrameworkSystem');
 
-                // Tratando erro
+                // Managing the error
                 \KeyClass\Error::manageError($error);
             break;
         }
     }
 
     /**
-      Função que recupera o debug atual
+      Use this to get the current state of debug
 
       @author Marcello Costa
 
       @package KeyClass\Error
 
-      @return bool Estado do debug atual
+      @return bool Current state of debug
      */
     public static function getFrameworkDebugStatus() : bool {
         global $kernelspace;
 
         $contentConfig = $kernelspace->getVariable('contentConfig', 'insiderFrameworkSystem');
         
-        // Se o DEBUG não está definido, as variáveis de ambiente devem ser carregadas manualmente
-        // O path provavelmente não será mapeado corretamente com getcwd(), então a constante __DIR__
-        // é recuperada e tratada de acordo
+        // If the DEBUG it's not defined, the environment variables must be manually loaded
+        // The path will not be mapped correctly with getcwd(), so the constante __DIR__
+        // is recovery and treated accordingly
         $path = __DIR__;
         $path = explode(DIRECTORY_SEPARATOR, $path);
         if (count($path) === 0) {
@@ -263,7 +259,7 @@ class Error {
         }
         $kernelspace->setVariable(array('contentConfig' => $contentConfig), 'insiderFrameworkSystem');
         
-        // Definindo o debug manualmente para uma variável
+        // Setting the debug manually to a variable
         $debugNow = $contentConfig->DEBUG;
 
         return $debugNow;
@@ -281,9 +277,9 @@ class Error {
       @return void
      */
     public static function manageError(\Modules\insiderErrorHandler\manageErrorMsg $error) : void {
-        // Inicializando a variável de erro (se ainda não existe)
+        // Initializing the error variable (if not exists yet)
         global $kernelspace;
-       
+ 
         // Registered errors
         $registeredErrors = $kernelspace->getVariable('registeredErrors', 'insiderFrameworkSystem');
         if (!is_array($registeredErrors))
@@ -291,7 +287,8 @@ class Error {
             $registeredErrors = [];
             $kernelspace->setVariable(array('registeredErrors' => $registeredErrors));
         }
-        // A primeira coisa a fazer é gravar o erro no log do webserver
+
+        // The first thing to be done it's write the error in the web server log
         error_log(\KeyClass\JSON::jsonEncodePrivateObject($error), 0);
 
         $responseFormat = $kernelspace->getVariable('responseFormat', 'insiderFrameworkSystem');
@@ -300,21 +297,20 @@ class Error {
           $kernelspace->setVariable(array('responseFormat' => $responseFormat), 'insiderFrameworkSystem');
         }
         
-        // Esta primeira parte é exibida se o processamento não for bem sucedido
-        // nas próximas linhas
+        // The first part it's displayed if the processing has not successful in the next lines
         clearAndRestartBuffer();
         
-        // Gravando a mensagem padrão para o usuário
+        // Writing the default message to the user
         $defaultMsg = 'Oops, something is wrong with this URL. See the error_log for details';
         if (!isset($registeredErrors['messageToUser']) || !in_array($defaultMsg, $registeredErrors['messageToUser'])){
             $registeredErrors['messageToUser'][]=$defaultMsg;
             $kernelspace->setVariable(array('registeredErrors' => $registeredErrors), 'insiderFrameworkSystem');
         }
 
-        // Recuperando variável de erro fatal
+        // Recovering the fatal error variable
         $fatal = $kernelspace->getVariable('fatalError', 'insiderFrameworkSystem');
         
-        // Recuperando contador de erros
+        // Recovering the error counter
         $errorCount = $kernelspace->getVariable('errorCount', 'insiderFrameworkSystem');
         
         $debugbacktrace = $kernelspace->getVariable('debugbacktrace', 'insiderFrameworkSystem');
@@ -327,7 +323,7 @@ class Error {
             $kernelspace->setVariable(array('debugbacktrace' => $debugbacktrace), 'insiderFrameworkSystem');
         }
 
-        // Se não houve um erro anterior
+        // If there is not an error
         if ($errorCount === null){
             $errorCount = 0;
         }
@@ -336,31 +332,31 @@ class Error {
         }
         $kernelspace->setVariable(array('errorCount' => $errorCount), 'insiderFrameworkSystem');
 
-        // Se mais de 10 erros foram mapeados
+        // If more than 10 errors as mappeded
         if ($errorCount > 10){
             $finalErrorMsg = "Max log errors on framework";
-            
-            // Definindo o response code como 500
+
+            // Setting the reponse code as 500
             http_response_code(500);
 
-            // Gravando os detalhes do erro no log
+            // Writing the error details in the log
             error_log(json_encode($debugbacktrace));
 
-            // Se o debug não está ativado
+            // If the debug it's not enable
             if (!DEBUG){
-                // Parando a execução com a mensagem default
+                // Stopping the execution with a default message
                 clearAndRestartBuffer();
                 primaryError($finalErrorMsg);
             }
-            // Se o debug está ativado
+            // If the debug it's enable
             else{
-                // Parando a execução e exibindo o objeto de erro
+                // Stopping the execution and displaying the error object
                 clearAndRestartBuffer();
                 primaryError($finalErrorMsg);
             }
         }
 
-        // Tratando o path do erro (para mostrar o caminho relativo)
+        // Handling the error path (to display the relative path)
         $path = __DIR__;
         $path = explode(DIRECTORY_SEPARATOR, $path);
         if (count($path) === 0) {
@@ -388,27 +384,28 @@ class Error {
             'msgError' => str_replace($relativePath, "", $error->getMessageOrText())
         );
 
-        // Registrando erro no kernelspace (para acesso posterior da view)
+
+        // Recording the error in the kernelspace (to be accessed by the View)
         if (!isset($registeredErrors['messagesToAdmin']) || !array_key_exists($msgToAdmin['jsonMessage'], $registeredErrors['messagesToAdmin'])){
             $registeredErrors['messagesToAdmin'][$msgToAdmin['jsonMessage']]=$msgToAdmin;
             $kernelspace->setVariable(array('registeredErrors' => $registeredErrors), 'insiderFrameworkSystem');
         }
         
-        // Se o DEBUG está ativo
+        // If the DEBUG it's enable
         if (DEBUG){                        
             switch ($responseFormat) {
                 case 'XML':
                     $xml = new \SimpleXMLElement('<error/>');
                     unset($msgToAdmin['jsonMessage']);
-                    
-                    // Invertendo chaves e valores do array
+
+                    // Flipping the key and values of the array
                     $msgToAdmin=array_flip($msgToAdmin);
                     array_walk_recursive($msgToAdmin, array($xml, 'addChild'));
                     clearAndRestartBuffer();
 
-                    // Todos os erros em XML devem ser exibidos apenas
-                    // eles (sem outras interferências) caso contrário
-                    // o XML não será válido
+                    // All the XML errors must be displayed alone
+                    // (without any interferences). Otherwise the XML
+                    // will not be a valid one.
                     exit($xml->asXML());
                 break;
 
@@ -419,14 +416,14 @@ class Error {
                         
                     clearAndRestartBuffer();
 
-                    // Todos os erros em JSON devem ser exibidos apenas
-                    // eles (sem outras interferências) caso contrário
-                    // o JSON não será válido
+                    // All the JSON errors must be displayed alone
+                    // (without any interferences). Otherwise the JSON
+                    // will not be a valid one.
                     exit(json_encode($msgError));
                 break;
 
                 default:
-                    // Recuperando a mensagem para o admin formatada
+                    // Recovering the admin message to be handled
                     \KeyClass\FileTree::requireOnceFile(INSTALL_DIR . DIRECTORY_SEPARATOR . 'packs' . DIRECTORY_SEPARATOR . 'sys' . DIRECTORY_SEPARATOR . 'controllers' . DIRECTORY_SEPARATOR . 'error_controller.php');
                     $C = new \Controllers\sys\Error_Controller('\\Controllers\\sys\\sys', null, false);
                     
@@ -436,9 +433,10 @@ class Error {
                 break;
             }
         }
-        // Se o DEBUG não está ativo
+
+        // If the DEBUG it's not enable
         else{
-            // De acordo com a política de envio de email
+            // Getting the send mail policy
             $contentConfig = $kernelspace->getVariable('contentConfig', 'insiderFrameworkSystem');
             if ($contentConfig === null){
                 \KeyClass\Error::getFrameworkDebugStatus();
@@ -452,11 +450,11 @@ class Error {
 
             switch (strtolower(trim($contentConfig->ERROR_MAIL_SENDING_POLICY))) {
                 case "debug-off-only":
-                    // Enviando o e-mail
-                    // Se não conseguir enviar um email para o email default
+                    // Sending the e-mail
+                    // If cannot be able to send the e-mail
                     if (!(\KeyClass\Mail::sendMail(MAILBOX, MAILBOX, MAILBOX_PASS, $error['subject'], $htmlMessageToAdmin, $htmlMessageToAdmin, MAILBOX_SMTP, MAILBOX_SMTP_PORT, MAILBOX_SMTP_AUTH, MAILBOX_SMTP_SECURE))) {
                         clearAndRestartBuffer();
-                        // Envia uma mensagem para o log do servidor web
+                        // Record a message in the web server log
                         primaryError("Unable to send an error message via email to the default mailbox when triggering an error!");
                     }
                 break;
@@ -472,28 +470,28 @@ class Error {
                 break;
             }
 
-            // Mostrando a mensagem default de erro
+            // Displaying the default error message
             \KeyClass\FileTree::requireOnceFile(INSTALL_DIR . DIRECTORY_SEPARATOR . 'packs' . DIRECTORY_SEPARATOR . 'sys' . DIRECTORY_SEPARATOR . 'controllers' . DIRECTORY_SEPARATOR . 'error_controller.php');
             $C = new \Controllers\sys\Error_Controller('\\Controllers\\sys\\sys', null, false);
             clearAndRestartBuffer();
             $C->genericError();
         }
 
-        // Matando o processamento se o erro for fatal
+        // Killing the processing if it's a fatal error
         if ((isset($fatal) && $fatal === true) || $error->getFatal() === true) {
             exit();
         }
     }
 
     /**
-      Quando a classe não é encontrada, gera uma excecão exibida por esta função
+      When a class cannot be found, this method is used to fire a exception
 
       @author Marcello Costa
 
       @package KeyClass\Error
 
-      @param  string  $class    Nome da classe
-      @param  string  $file     Nome do arquivo da classe
+      @param  string  $class    Name of the class
+      @param  string  $file     Name of the file of the class
 
       @return void  Without return
      */
@@ -502,16 +500,15 @@ class Error {
     }
 
     /**
-      Quando o arquivo da classe não é encontrado, gera uma excecão exibida
-      por esta função
+      When an file of a class cannot be found, this method is used to fire a exception
 
       @author Marcello Costa
 
       @package KeyClass\Error
 
-      @param  string  $file           Nome do arquivo da classe
-      @param  string  $soughtclass    Nome da classe que requisitou o arquivo
-      @param  string  $namespace      Nome do namespace
+      @param  string  $file           Name of the file of the class
+      @param  string  $soughtclass    Class name how is requested the file
+      @param  string  $namespace      Namespace
 
       @return void  Without return
      */

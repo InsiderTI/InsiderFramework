@@ -1,13 +1,12 @@
 <?php
 /**
-  Arquivo KeyClass\Helper
+  KeyClass\Helper
 */
 
-// Namespace das KeyClass
 namespace KeyClass;
 
 /**
-  KeyClass de tratamento de helpers
+  KeyClass for handling helpers
 
   @package KeyClass\Helper
 
