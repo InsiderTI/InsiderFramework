@@ -14,7 +14,7 @@ https://quire.io/w/insider-framework/35/Implement_progres...?board=PhpVersion
 If you would like to help develop the framework, feel free to submit a PR or suggest a new feature by opening an issue.
 
 
-## Social Media
+## About author
 
 My name is Marcello Costa and I started this project about 2010. Since then, everything in the framework has changed and much more will continue change for better :)
 Follow me:
