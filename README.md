@@ -21,6 +21,6 @@ Follow me:
 
 instagram: @marcelloti
 
-linkedin: https://www.linkedin.com/in/marcello-costa-36a27a7b#search
+linkedin: https://www.linkedin.com/in/marcello-costa
 
 my personal github: https://github.com/marcelloti
