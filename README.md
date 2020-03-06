@@ -15,8 +15,8 @@ If you would like to help develop the framework, feel free to submit a PR or sug
 You can also send some cash to support this project through the Paypal:
 
 <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=contato%40insiderti.com.br&currency_code=USD&source=url">
-  <img src="https://avatars1.githubusercontent.com/u/476675?s=200&v=4" alt="Donate with PayPal" width="64px" />
-  <h3>Donate!</h3>
+  <img style='display:inline;float:right;' src="https://avatars1.githubusercontent.com/u/476675?s=200&v=4" alt="Donate with PayPal" width="64px" />
+  <span>Donate clicking in the image</span>
 </a>
 
 ## About author
