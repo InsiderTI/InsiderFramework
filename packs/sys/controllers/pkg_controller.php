@@ -35,42 +35,42 @@ class Pkg_Controller extends \KeyClass\Controller{
     }
     
     /**
-        Função que retorna as informações de um item instalado
+        Função que retorna as informações de um package instalado
 
         @author Marcello Costa
 
         @package Controllers\sys\Pkg_Controller
 
-        @Route (path="getinstallediteminfo")
+        @Route (path="getinstalledpackageinfo")
 
-        @param String $item               Item que está sendo buscado
+        @param String $package            Package que está sendo buscado
         @param String $authorization      Token de autorização
         @param bool   $requestCall        Flag que determina se a função está
                                           sendo chamada via request ou não
 
-        @return string Dados do item 
+        @return string Dados do package 
     */
-    public function getInstalledItemInfo(string $item = null, string $authorization = null, bool $requestCall = false) {
+    public function getInstalledPackageInfo(string $package = null, string $authorization = null, bool $requestCall = false) {
         global $kernelspace;
         $POST = $kernelspace->getVariable('POST', 'insiderFrameworkSystem');
         
-        if ($item === null || $authorization === null){
+        if ($package === null || $authorization === null){
             if (!is_array($POST)){
                 primaryError('Wrong request body');
             }
-            if (\Helpers\globalHelper::existAndIsNotEmpty($POST, 'item')){
-                $item = $POST['item'];
+            if (\Helpers\globalHelper::existAndIsNotEmpty($POST, 'package')){
+                $package = $POST['package'];
             }
             if (\Helpers\globalHelper::existAndIsNotEmpty($POST, 'authorization')){
                 $authorization = $POST['authorization'];
             }
 
-            if ($item === null || $authorization === null){
+            if ($package === null || $authorization === null){
                 if (!$requestCall){
-                    \KeyClass\Error::errorRegister('Invalid arguments for sys/getinstallediteminfo route');
+                    \KeyClass\Error::errorRegister('Invalid arguments for sys/getinstalledpackageinfo route');
                 }
                 else{
-                    return 'Invalid arguments for sys/getinstallediteminfo route';
+                    return 'Invalid arguments for sys/getinstalledpackageinfo route';
                 }
             }
         }
@@ -81,7 +81,7 @@ class Pkg_Controller extends \KeyClass\Controller{
         // Requisição local
         // Se o token de autorização é válido
         if ($authorization === $localAuthorization) {
-            $dataReturn = \KeyClass\Registry::getItemInfo($item);
+            $dataReturn = \KeyClass\Registry::getItemInfo($package);
 
             if (!$requestCall){
                 return json_encode($dataReturn);
@@ -114,32 +114,32 @@ class Pkg_Controller extends \KeyClass\Controller{
 
         @package Core
 
-        @param  array  $dataInfoItem    Dados de um único package
+        @param  array  $dataInfoPackage    Dados de um único package
 
         @return  string  Versão do pacote
     */
-    public function getVersionFromInfo(array $dataInfoItem) {
-        if (isset($dataInfoItem['part1']) && isset($dataInfoItem['part2']) && isset($dataInfoItem['part3'])){
-            return $dataInfoItem['part1'].".".$dataInfoItem['part2'].".".$dataInfoItem['part3'];
+    public function getVersionFromInfo(array $dataInfoPackage) {
+        if (isset($dataInfoPackage['part1']) && isset($dataInfoPackage['part2']) && isset($dataInfoPackage['part3'])){
+            return $dataInfoPackage['part1'].".".$dataInfoPackage['part2'].".".$dataInfoPackage['part3'];
         }
         return false;
     }
     
     /**
-        Registra um item no registro do framework
+        Registra um package no registro do framework
 
         @author Marcello Costa
 
         @package Core
 
-        @param  string  $item         desc
+        @param  string  $package      desc
         @param  string  $version      desc
         @param  string  $directory    desc
 
         @return  bool  Retorno da operação
     */
-    public function registerItem($section, $item, $version, $directory = null) {
-        $item = strtolower($item);
+    public function registerPackage($section, $package, $version, $directory = null) {
+        $package = strtolower($package);
         switch($section){
             case 'guild':
                 $filePath = INSTALL_DIR.DIRECTORY_SEPARATOR."frame_src".DIRECTORY_SEPARATOR."registry".DIRECTORY_SEPARATOR."guilds.json";
@@ -168,7 +168,7 @@ class Pkg_Controller extends \KeyClass\Controller{
             \KeyClass\Error::errorRegister("Cannot read control file: ".$filePath);
         }
         
-        // Verificando se o item já está registrado no arquivo
+        // Verificando se o package já está registrado no arquivo
         $jsonData = array_change_key_case($jsonData, CASE_LOWER);
         
         // Construindo array com as novas informações
@@ -189,7 +189,7 @@ class Pkg_Controller extends \KeyClass\Controller{
         }
         
         // Atualizando/criando registro
-        $jsonData[$item]=$dataArray;
+        $jsonData[$package]=$dataArray;
         return \KeyClass\JSON::setJSONDataFile($jsonData, $filePath, true);
     }
     
@@ -214,7 +214,7 @@ class Pkg_Controller extends \KeyClass\Controller{
 
         // Buscando qual a versão do pacote instalada locamente (se instalado)
         $authorization = \KeyClass\Registry::getLocalAuthorization(REQUESTED_URL);
-        $localVersion = json_decode($this->getInstalledItemInfo($package, $authorization, false));
+        $localVersion = json_decode($this->getInstalledPackageInfo($package, $authorization, false));
 
         // Variável que guarda todos os repositórios mapeados
         $repoData = [];
@@ -223,96 +223,96 @@ class Pkg_Controller extends \KeyClass\Controller{
             return "false";
         }
         
+        // Inicializando variável de domínio
         $domain = "";
-        // Para cada repositório configurado
+        
+        // Para cada repositório remoto configurado
         foreach (REMOTE_REPOSITORIES as $repo) {
-            if ($domain === ""){
-                $parsedDomain=parse_url($repo['DOMAIN']);
-                $domain = $parsedDomain['scheme']."://".$parsedDomain['host'];
+            // Parseando domínio do repositório
+            $parsedDomain=parse_url($repo['DOMAIN']);
+            $domain = $parsedDomain['scheme']."://".$parsedDomain['host'];
+
+            // Se o domínio já foi inserido
+            if (isset($repoData[$domain])){
+                continue;
             }
             
-            if (!isset($repoData[$domain])){
-                $path = $parsedDomain['path'];
+            // Se o repositório não tem a informação de autorização
+            if (!isset($repo['AUTHORIZATION'])){
+                \KeyClass\Error::errorRegister("Authorization not found for ".$repo['DOMAIN']);
+            }
+
+            // Criando o array de informações do repositório
+            $post = array(
+                'package' => $package,
+                'authorization' => $repo['AUTHORIZATION']
+            );
+
+            // Mapeando domínio
+            $repoData[$domain]=$post;
             
-                $post = array(
-                    'item' => $package,
-                    'path' => array(
-                        $path => $repo['AUTHORIZATION']
-                    )
-                );
+            $url = $domain."/sys/existsinmirror";
 
-                $repoData[$domain]=$post;
+            // Requisitando mirror
+            $ch = curl_init();
+
+            // Buscando pacote no servidor
+            curl_setopt($ch, CURLOPT_POST, true); 
+            curl_setopt($ch, CURLOPT_POSTFIELDS, array('package' =>  $package, 'authorization' => $authorization));
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_USERAGENT, 'Framework_Internal_UserAgent');
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            $content = curl_exec($ch);
+
+            // Se não conseguiu alcançar o servidor
+            if (curl_errno($ch)) {
+                $msg = "Could not send request to server. ERROR: " . curl_error($ch);
+                $climate->br();
+                $climate->to('error')->red($msg)->br();
+                primaryError($msg);
             }
-            else{
-                $repoData[$domain]['path'][$path]=$repo['AUTHORIZATION'];
-            }
-        }
+            
+            // Pegando o código HTTP de retorno
+            $resultStatus = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            if ($resultStatus == 200) {
+                if ($content !== NULL){
+                    $data = json_decode($content);
 
-        // Para cada domínio
-        foreach($repoData as $domain => $domainData){
-            // Para cada path
-            foreach($domainData['path'] as $path => $authorization){
-                $url = $domain."/sys/existsinmirror";
-
-                // Requisitando mirror
-                $ch = curl_init();
-
-                curl_setopt($ch, CURLOPT_POST, true); 
-                curl_setopt($ch, CURLOPT_POSTFIELDS, array('item' =>  $package,'path' => $path, 'authorization' => $authorization));
-                curl_setopt($ch, CURLOPT_URL, $url);
-                curl_setopt($ch, CURLOPT_USERAGENT, 'Framework_Internal_UserAgent');
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                $content = curl_exec($ch);
-
-                // Se não conseguiu alcançar o servidor
-                if (curl_errno($ch)) {
-                    $msg = "Could not send request to server. ERROR: " . curl_error($ch);
-                    $climate->br();
-                    $climate->to('error')->red($msg)->br();
-                    primaryError($msg);
-                } else {
-                    // Pegando o código HTTP de retorno
-                    $resultStatus = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-                    if ($resultStatus == 200) {
-                        if ($content !== NULL){
-                            $data = json_decode($content);
-
-                            // Se retornou a versão, o pacote existe no mirror
-                            if (is_object($data) && (property_exists($data, 'version'))) {
-                                // Incluindo pacote no array
-                                $remoteVersion = $data->version;
-                                $foundPackages[$domain]=array(
-                                    'version' => $remoteVersion,
-                                    'authorization' => $authorization,
-                                    'path' => $path
-                                );
-                            }
-                            // Falha na resposta
-                            else{
-                                $msg = "Request to server failed with content: '" . $content;
-                                $climate->br();
-                                $climate->to('error')->red($msg)->br();
-                                primaryError($msg);
-                            }
-                        }
-                    }
-                    // Falha dentro do método no servidor remoto
-                    else {
-                        $addMessError = "";
-                        if (curl_error($ch) !== "" && curl_error($ch) !== null) {
-                            $addMessError = " Details: " . curl_error($ch);
-                        }
-                        else{
-                            $addMessError = " Details: " . $content;
-                        }
-                        $msg = "Request to server failed with status '" . $resultStatus . "'." . $addMessError;
+                    // Falha na resposta
+                    if (!is_object($data) || (!property_exists($data, 'version'))) {
+                        $msg = "Request to server failed with content: '" . $content;
                         $climate->br();
                         $climate->to('error')->red($msg)->br();
                         primaryError($msg);
+                        
                     }
+                    
+                    // Se retornou a versão, o pacote existe no mirror
+                    // Incluindo pacote no array
+                    $remoteVersion = $data->version;
+                    $foundPackages[$domain]=array(
+                        'version' => $remoteVersion,
+                        'authorization' => $authorization,
+                    );
                 }
-                curl_close($ch);
             }
+
+            // Falha dentro do método no servidor remoto
+            else {
+                $addMessError = "";
+                if (curl_error($ch) !== "" && curl_error($ch) !== null) {
+                    $addMessError = " Details: " . curl_error($ch);
+                }
+                else{
+                    $addMessError = " Details: " . $content;
+                }
+                $msg = "Request to server failed with status '" . $resultStatus . "'." . $addMessError;
+                $climate->br();
+                $climate->to('error')->red($msg)->br();
+                primaryError($msg);
+            }
+
+            curl_close($ch);
         }
 
         // Quando terminar a busca, para cada pacote encontrado, verifica
@@ -363,6 +363,8 @@ class Pkg_Controller extends \KeyClass\Controller{
 
         // Se encontrou algum servidor com o pacote atualizado
         if (filter_var($latestServer, FILTER_VALIDATE_URL) !== false) {
+            var_dump(Pkg_Controller::$mirrorDir.$foundPackages[$latestServer]);
+die("FILE: " . __FILE__ . "<br/>LINE: " . __LINE__);
             $packageDir = Pkg_Controller::$mirrorDir.$foundPackages[$latestServer]['path'];
             if (!is_dir($packageDir)){
                 \KeyClass\FileTree::createDirectory($packageDir, 777);
@@ -451,20 +453,17 @@ class Pkg_Controller extends \KeyClass\Controller{
 
         $error = false;
         if (
-            !\Helpers\globalHelper::existAndIsNotEmpty($POST, 'item')
+            !\Helpers\globalHelper::existAndIsNotEmpty($POST, 'package')
            ) {
             $error = true;
         }
-        if (
-            !\Helpers\globalHelper::existAndIsNotEmpty($POST, 'path')
-           ) {
-            $error = true;
-        }
+
         if (
             !\Helpers\globalHelper::existAndIsNotEmpty($POST, 'authorization')
            ) {
             $error = true;
         }
+
         if ($error){
             $msg = 'Invalid request parameters';
             $errorCode = $kernelspace->getVariable('routingActions', 'insiderRoutingSystem')['CriticalError'];
@@ -473,12 +472,13 @@ class Pkg_Controller extends \KeyClass\Controller{
             $this->responseJSON($msg);
         }
 
-        $path = $POST['path'];
-        $item = $POST['item'];
+        $package = $POST['package'];
         $authorization = $POST['authorization'];
 
         // Chave de autorização local do framework
-        $localAuthorization = \KeyClass\Registry::getLocalAuthorization(REQUESTED_URL.$path);
+        $parsedDomain=parse_url(REQUESTED_URL);
+        $domain = $parsedDomain['scheme']."://".$parsedDomain['host'];
+        $localAuthorization = \KeyClass\Registry::getLocalAuthorization($domain);
 
         // Se o token de autorização é inválido
         if ($authorization !== $localAuthorization) {
@@ -502,7 +502,7 @@ class Pkg_Controller extends \KeyClass\Controller{
             die();
         }
 
-        $fileName = Pkg_Controller::$mirrorDir.$path.DIRECTORY_SEPARATOR.$item."-*.pkg";
+        $fileName = Pkg_Controller::$mirrorDir.DIRECTORY_SEPARATOR.$package."-*.pkg";
 
         $list = glob($fileName);
 
@@ -526,7 +526,7 @@ class Pkg_Controller extends \KeyClass\Controller{
         }
 
         // Package not found
-        $msg = "Package '".$item."' not found";
+        $msg = "Package '".$package."' not found";
         $notFoundCode = $kernelspace->getVariable('routingActions', 'insiderRoutingSystem')['NotFound'];
         http_response_code($notFoundCode['responsecode']);
         $this->responseJSON($msg);
@@ -550,15 +550,15 @@ class Pkg_Controller extends \KeyClass\Controller{
             !is_array($POST) ||
             !\Helpers\globalHelper::existAndIsNotEmpty($POST, 'authorization') ||
             !\Helpers\globalHelper::existAndIsNotEmpty($POST, 'version') ||
-            !\Helpers\globalHelper::existAndIsNotEmpty($POST, 'path') ||
             !\Helpers\globalHelper::existAndIsNotEmpty($POST, 'package')
            ){
             \KeyClass\Error::errorRegister('Missing parameters on request');
         }
         
         // Chave de autorização local do framework
-        $path = $POST['path'];
-        $localAuthorization = \KeyClass\Registry::getLocalAuthorization(REQUESTED_URL.$path);
+        $parsedDomain=parse_url(REQUESTED_URL);
+        $domain = $parsedDomain['scheme']."://".$parsedDomain['host'];
+        $localAuthorization = \KeyClass\Registry::getLocalAuthorization($domain);
         $authorization = $POST['authorization'];
         $version = $POST['version'];
         $package = $POST['package'];
@@ -575,7 +575,7 @@ class Pkg_Controller extends \KeyClass\Controller{
         }
 
         // Verificando se o pacote existe no cache de mirror
-        $pathOfPackage = Pkg_Controller::$mirrorDir.$path.DIRECTORY_SEPARATOR.$package."-".$version.".pkg";
+        $pathOfPackage = Pkg_Controller::$mirrorDir.DIRECTORY_SEPARATOR.$package."-".$version.".pkg";
         if (!file_exists($pathOfPackage)){
             $i10nMsg = \KeyClass\I10n::getTranslate("The %".$package."% has not found in mirror", "pack/sys");
             $this->responseJSON($i10nMsg, 404);

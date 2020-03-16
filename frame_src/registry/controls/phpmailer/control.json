@@ -2,14 +2,9 @@
   "package": "phpmailer",
   "version": "5.2.13",
   "authors": "https://github.com/PHPMailer/PHPMailer",
-  "installed-size": 1152585,
   "section": "module",
   "provides": {},
   "depends": {},
   "recommends": {},
-  "postinst-cmd": "",
-  "postrm-cmd": "",
-  "preinst-cmd": "",
-  "prerm-cmd": "",
   "description": "The classic email sending library for PHP"
 }

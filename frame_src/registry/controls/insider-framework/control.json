@@ -2,7 +2,6 @@
   "package": "insider-framework",
   "version": "0.2.1",
   "authors": "Marcello Costa <marcello@insiderframework.com>",
-  "installed-size": 0,
   "section": "guild",
   "provides": {
     "sagacious": "0.2.1",
@@ -18,9 +17,5 @@
     "moment.js": ">= 2.22.1, < 3.0.0"
   },
   "recommends": {},
-  "postinst-cmd": "",
-  "postrm-cmd": "",
-  "preinst-cmd": "",
-  "prerm-cmd": "",
   "description": "The Insider Framework is a web framework that links two languages (PHP and Node.Js), delivering a versatile solution for building applications and web APIs"
 }

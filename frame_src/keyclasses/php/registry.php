@@ -106,24 +106,49 @@ class Registry{
         $versionData = [];
         preg_match_all($regexVersion, $version, $versionMatches, PREG_SET_ORDER);
         
+        // Initializing array of parts
+        $parts = [];
+        $parts["part1"] = 0;
+        $parts["part2"] = 0;
+        $parts["part3"] = 0;
+        $parts["part4"] = null;
+        
         if (count($versionMatches) == 0){
+            return $parts;
+        }
+        
+        $parts["part1"] = intval($versionMatches[0]['part1']);
+        $parts["part2"] = intval($versionMatches[0]['part2']);
+        $parts["part3"] = intval($versionMatches[0]['part3']);
+        $parts["part4"] = null;
+        if (isset($versionMatches[0]['part4'])){
+            $parts["part4"] = $versionMatches[0]['part4'];
+        }
+        
+        return $parts;
+    }
+    
+    /**
+        Validate version syntax
+
+        @author Marcello Costa
+
+        @package Core
+
+        @param  string  $version  Version to be validated
+
+        @return  bool Return of validation
+    */
+    public static function validateVersionSyntax(string $version) : bool {
+        // If version typed is not valid
+        $parts = \KeyClass\Registry::getVersionParts($version);
+
+        // Error
+        if ($parts["part1"] === 0 && $parts["part2"] === 0 && $parts["part3"] === 0){
             return false;
         }
         
-        $part1 = intval($versionMatches[0]['part1']);
-        $part2 = intval($versionMatches[0]['part2']);
-        $part3 = intval($versionMatches[0]['part3']);
-        $part4 = null;
-        if (isset($versionMatches[0]['part4'])){
-            $part4 = $versionMatches[0]['part4'];
-        }
-        
-        return array(
-            'part1' => $part1,
-            'part2' => $part2,
-            'part3' => $part3,
-            'part4' => $part4,
-        );
+        return true;
     }
     
     /**

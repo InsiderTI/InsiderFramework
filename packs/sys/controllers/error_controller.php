@@ -52,11 +52,16 @@ class Error_Controller extends \KeyClass\Controller{
     public function adminMessageError() {
         global $kernelspace;
         $registeredErrors = $kernelspace->getVariable('registeredErrors', 'insiderFrameworkSystem');
+        $consoleRequest = $kernelspace->getVariable('consoleRequest', 'insiderFrameworkSystem');
         
         if (\Helpers\globalHelper::existAndIsNotEmpty($registeredErrors, 'messagesToAdmin')){
-            $error = array_pop($registeredErrors['messagesToAdmin']);
-            $this->AddViewBag($error, 'msgError');
-            $this->renderView('sys::error/sys_error_msg.sgv');
+            // Do not display if is console request. Don`t need this because 
+            // "error_log" callfunction in KC_ERROR will display error in 
+            // console output automatically without developer intervention.
+            if (!$consoleRequest){
+                $this->AddViewBag($registeredErrors, 'msgError');
+                $this->renderView('sys::error/sys_error_msg.sgv');
+            }
         }
     }
 

@@ -202,10 +202,7 @@ class FileTree{
             // If did not exists
             else {
                 // Creates the directory
-                $createop=mkdir($path,octdec($permission),$recursive);
-
-                // Returning the result
-                return $createop;
+                return mkdir($path,octdec($permission),$recursive);
             }
         }
 
@@ -861,7 +858,7 @@ class FileTree{
     
        @return  string  Absolute path
    */
-    public static function getAbsolutePath($path) {
+    public static function getAbsolutePath(string $path) : string {
         $path = str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $path);
         $parts = array_filter(explode(DIRECTORY_SEPARATOR, $path), 'strlen');
         $absolutes = array();
@@ -874,5 +871,159 @@ class FileTree{
             }
         }
         return implode(DIRECTORY_SEPARATOR, $absolutes);
+    }
+    
+    /**
+        Compress a directory of file to the specified format
+
+        @author Marcello Costa
+
+        @package Core
+
+        @param  string  $sourcePath       Source to be compressed
+        @param  string  $destinationPath  Destination path of compressed file
+        @param  string  $format           Format of compression (default: zip).
+                                          Supported types are:
+                                            - zip
+                                            - tar
+                                            - bz2
+
+        @return  string  Path of compressed file
+    */
+    public static function compressDirectoryOrFile(string $sourcePath, string $destinationPath, string $format = "zip") {
+        /**
+         * VALIDATIONS
+         */
+        $format = trim(strtolower($format));
+        
+        switch($format){
+            case "zip":
+            case "gz":
+            case "bz2":
+            break;
+        
+            default:
+                \KeyClass\Error::errorRegister('Error creating compressed file. Format unknown: '.$format);
+            break;
+        }
+        
+        $dirname = $sourcePath;
+        $patchInfoSource = pathinfo($dirname);
+        if (!is_dir($dirname)){
+            $dirname = $patchInfoSource['dirname'];
+        }
+        
+        if (!is_readable($sourcePath)){
+            \KeyClass\Error::errorRegister('Error creating compressed file. Source path is not readable: '.$sourcePath);
+        }
+
+        $pathInfoDest = pathinfo($destinationPath);
+        if (!is_dir($pathInfoDest['dirname'])){
+            \KeyClass\Filetree::createDirectory($pathInfoDest['dirname'], 777);
+        }
+        else{
+            if (!is_writable($pathInfoDest['dirname'])){
+                \KeyClass\Error::errorRegister('Error creating compressed file. Directory is not writable: '.$pathInfoDest['dirname']);
+            }
+        }
+
+        if(isset($pathInfoDest['basename']) && trim($pathInfoDest['basename']) !== ""){
+            $ext = pathinfo($destinationPath, PATHINFO_EXTENSION);
+            if ($ext == "" || strtolower($ext) !== $format){
+                $destinationPath .= ".".$format; 
+            }
+        }
+        else{
+            $destinationPath = $pathInfoDest['dirname'].DIRECTORY_SEPARATOR.uniqid().$format;
+        }
+        
+        // Checking if all files are readable
+        $files = [];
+        if (is_dir($sourcePath)){
+            $sourcePath = str_replace('\\', DIRECTORY_SEPARATOR, realpath($sourcePath));
+
+            $mappedfiles = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($sourcePath), \RecursiveIteratorIterator::SELF_FIRST);
+
+            foreach ($mappedfiles as $mfile)
+            {
+                if (!is_readable($mfile)){
+                    \KeyClass\Error::errorRegister('Error creating compressed file. Cannot read file '.$mfile);
+                }
+                else{
+                    $files[] = $mfile;
+                }
+            }
+        }
+        else{
+            if (!is_readable($sourcePath)){
+                \KeyClass\Error::errorRegister('Error creating compressed file. Cannot read file '.$sourcePath);
+            }
+            $files[] = $sourcePath;
+        }
+        
+        /**
+         * OPERATIONS
+        */
+        try{
+            switch ($format){
+                case "zip":
+                    if (!extension_loaded('zip')) {
+                        \KeyClass\Error::errorRegister('Error creating compressed file. Zip extension not loaded');
+                    }
+                    
+                    $zip = new \ZipArchive();
+                    if ($zip->open($destinationPath, \ZipArchive::CREATE) !== true) {
+                        \KeyClass\Error::errorRegister('Error creating compressed file. Cannot open '.$destinationPath);
+                    }
+
+                    foreach ($files as $file) {
+                        $file = str_replace('\\', DIRECTORY_SEPARATOR, $file);
+
+                        if(in_array(substr($file, strrpos($file, DIRECTORY_SEPARATOR)+1), array('.', '..'))){
+                            continue;
+                        }
+
+                        $file = realpath($file);
+
+                        if (is_dir($file) === true){
+                            $zip->addEmptyDir(str_replace($sourcePath . DIRECTORY_SEPARATOR, '', $file . DIRECTORY_SEPARATOR));
+                        }
+                        else {
+                            if (is_file($file) === true){
+                                $zip->addFromString(str_replace($sourcePath . DIRECTORY_SEPARATOR, '', $file), file_get_contents($file));
+                            }
+                        }                        
+                    }
+
+                    $zip->close();
+                break;
+                case "gz":
+                    if (!extension_loaded('zlib')) {
+                        \KeyClass\Error::errorRegister('Gz compress extension (Zlib) not loaded');
+                    }
+                    
+                    if (!is_readable($sourcePath)){
+                        \KeyClass\Error::errorRegister('Error creating compressed file. Cannot read file '.$sourcePath);
+                    }
+                    
+                    $archive = new \PharData($destinationPath);
+                    $archive->buildFromDirectory($sourcePath);
+                    $archive->compress(Phar::GZ);
+                break;
+                case "bz2":
+                    if (!extension_loaded('bz2')) {
+                        \KeyClass\Error::errorRegister('BZ2 extension not loaded');
+                    }
+                    $archive = new \PharData($destinationPath);
+                    $archive->buildFromDirectory($sourcePath);
+                    $archive->compress(Phar::BZ2);
+                break;
+            }
+        }
+        catch(\Exception $e){
+            \KeyClass\Error::errorRegister('Error compressing file '.$sourcePath.' to '.$destinationPath.'. Details: '.$e->getMessage());
+        }
+
+        return $destinationPath;
     }
 }
