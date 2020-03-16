@@ -50,14 +50,6 @@ class Build {
             
             $buildDirectory = $dataExp[0];
             $packageFile = $dataExp[1];
-            
-            $patchInfo = pathinfo($packageFile);
-            if(isset($patchInfo['basename']) && trim($patchInfo['basename']) !== ""){
-                $ext = pathinfo($packageFile, PATHINFO_EXTENSION);
-                if ($ext == "" || strtolower($ext) !== "pkg"){
-                    $packageFile .= ".pkg"; 
-                }
-            }
         }
         
         // Checking if it's an valid build directory
@@ -65,9 +57,21 @@ class Build {
         if(count($validationErrors) !== 0){
             \KeyClass\Error::errorRegister(implode($validationErrors, " | "));
         }
+        
+        // Getting version from controle file
+        $jsonData = \Modules\insiderconsole\Validate::getDataFromPackageControlFile($buildDirectory.DIRECTORY_SEPARATOR."registry".DIRECTORY_SEPARATOR."control.json");
+        
+        // Removing extension
+        $ext = pathinfo($packageFile, PATHINFO_EXTENSION);
+        if ($ext !== ""){
+            $packageFile = substr($packageFile, 0, strlen($packageFile)-4);
+        }
 
+        // Adding version + extension
+        $packageFile .= "-".$jsonData['version']; 
+  
         $compressedPathFile = \KeyClass\FileTree::compressDirectoryOrFile($buildDirectory, $packageFile);
-        $finalPackageFileName = substr($packageFile, 0, strlen($compressedPathFile)-4);
+        $finalPackageFileName = substr($packageFile, 0, strlen($compressedPathFile)-4).".pkg";
         \KeyClass\FileTree::renameFile($compressedPathFile, $finalPackageFileName, true);
 
         $climate->br()->write("Package file builded: ".$finalPackageFileName)->br();
