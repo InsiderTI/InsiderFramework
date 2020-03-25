@@ -130,7 +130,7 @@ class UserAdmin_Model extends \KeyClass\Model{
         @param  String  $login      Email do usuário
         @param  String  $newpass    Nova senha
       
-        @return  Bool  Resultado da operação
+        @return  Bool  Processing result
     */
     function UpdatePassUser(string $login, string $newpass) {
         // Apagando sessão do usuário que está
@@ -209,7 +209,7 @@ class UserAdmin_Model extends \KeyClass\Model{
         @param  string  $password    Senha do usuário
         @param  array   $groups      ID dos grupos ao qual o usuário pertence
       
-        @return  bool  Resultado da operação de cadastro
+        @return  bool  Processing result de cadastro
     */
     function AddUser(string $login, string $password, array $groups=null) {
         // Tabela users
@@ -474,7 +474,7 @@ class UserAdmin_Model extends \KeyClass\Model{
         @param  string  $login          Login do usuário
         @param  string  $valuecookie    Valor do cookie de identificação
       
-        @return  bool  Resultado da operação
+        @return  bool  Processing result
     */
     function Login(string $login, string $valuecookie) {
         // Recuperando ID do usuário
@@ -533,7 +533,7 @@ class UserAdmin_Model extends \KeyClass\Model{
      
         @param  string  $login   Login do usuário
       
-        @return  bool  Resultado da operação
+        @return  bool  Processing result
     */
     function Logout(string $login) {
         // Recuperando ID do usuário

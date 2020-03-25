@@ -48,7 +48,7 @@ class Pkg_Controller extends \KeyClass\Controller{
         @param bool   $requestCall        Flag que determina se a função está
                                           sendo chamada via request ou não
 
-        @return float Versão do framework
+        @return string Dados do item 
     */
     public function getInstalledItemInfo(string $item = null, string $authorization = null, bool $requestCall = false) {
         global $kernelspace;
@@ -480,13 +480,14 @@ class Pkg_Controller extends \KeyClass\Controller{
         // Chave de autorização local do framework
         $localAuthorization = \KeyClass\Registry::getLocalAuthorization(REQUESTED_URL.$path);
 
-        // Se o token de autorização é válido
+        // Se o token de autorização é inválido
         if ($authorization !== $localAuthorization) {
             $msg = 'Invalid Authorization Token';
             $noAuthCode = $kernelspace->getVariable('routingActions', 'insiderRoutingSystem')['NotAuth'];
             http_response_code($noAuthCode['responsecode']);
             error_log($msg);
             $this->responseJSON($msg);
+            die();
         }
 
         // Verificando se o pacote existe no cache de mirror
@@ -498,6 +499,7 @@ class Pkg_Controller extends \KeyClass\Controller{
             http_response_code($errorCode);
             error_log($msg);
             $this->responseJSON($msg);
+            die();
         }
 
         $fileName = Pkg_Controller::$mirrorDir.$path.DIRECTORY_SEPARATOR.$item."-*.pkg";
@@ -562,7 +564,7 @@ class Pkg_Controller extends \KeyClass\Controller{
         $package = $POST['package'];
 
         // Requisição local
-        // Se o token de autorização é válido
+        // Se o token de autorização é inválido
         if ($authorization !== $localAuthorization) {
             \KeyClass\Error::errorRegister('Invalid Authorization Token');
         }

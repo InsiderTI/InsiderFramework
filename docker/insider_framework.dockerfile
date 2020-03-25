@@ -18,10 +18,15 @@ RUN apt-get update
 RUN apt-get install -y --no-install-recommends apt-utils
 # **********************************************************************************************************
 
+# **********************************************************************************************************
+####### Installing php extensions ############
+RUN docker-php-ext-install pdo pdo_mysql mysqli 
+# **********************************************************************************************************
+
 
 # **********************************************************************************************************
 ####### Vim and git ############
-RUN apt-get install vim git sudo -y
+RUN apt-get install vim git -y
 # **********************************************************************************************************
 
 
@@ -35,7 +40,6 @@ RUN apt-get install vim git sudo -y
 # **********************************************************************************************************
 ####### Composer #######
 RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && \
-    php -r "if (hash_file('sha384', 'composer-setup.php') === 'a5c698ffe4b8e849a443b120cd5ba38043260d5c4023dbf93e1558871f1f07f58274fc6f4c93bcfd858c6bd0775cd8d1') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;" && \
     php composer-setup.php --install-dir=/usr/local/bin --filename=composer && \
     php -r "unlink('composer-setup.php');" && \
     chmod +x /usr/local/bin/composer
@@ -46,8 +50,9 @@ RUN apt install zip -y
 
 # **********************************************************************************************************
 ###### Vhost ######
-ADD insiderframework-site.conf /etc/apache2/sites-available/
-RUN a2ensite insiderframework-site; exit 0
+ADD insiderframework.conf /etc/apache2/sites-available/
+RUN a2ensite insiderframework; exit 0
+RUN a2dissite 000-default; exit 0;
 
 RUN a2enmod rewrite
 RUN a2enmod headers

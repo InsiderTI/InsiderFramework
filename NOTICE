@@ -1,0 +1,33 @@
+Insider Framework
+Copyright 2019 The Apache Software Foundation
+
+This product includes software developed at
+The Apache Software Foundation (http://www.apache.org/).
+
+This software was originally developed by 
+Marcello Costa (marcello@insiderframework.com)
+and contains open source components or contributions made available in the 
+public domain (on websites and other sources).
+
+Thanks to:
+
+@author 'Silver Moon'
+@see http://www.binarytides.com/php-check-if-file-is-an-image/
+Wrote the isImage function and posted on internet
+---------------------------------------------------------------------------------------------
+@author AeroX @ aerox-studios
+@see http://php.net/manual/pt_BR/function.imagecreatefromwbmp.php
+Wrote the imageCreateFromBMP function and posted on internet
+---------------------------------------------------------------------------------------------
+@author 'Peter Bailey'
+@see <http://stackoverflow.com/questions/952263/deep-recursive-array-of-directory-structure-in-php>
+Wrote the fillArrayWithFileNodes function and posted on internet
+---------------------------------------------------------------------------------------------
+@author Daniel <daniel (at) danielsmedegaardbuus (dot) dk>
+@author Gabriel Sobrinho <gabriel (dot) sobrinho (at) gmail (dot) com>
+@see <http://php.net/manual/pt_BR/function.array-merge-recursive.php>
+Wrote the arrayMergeRecursiveDistinct function and posted on internet
+---------------------------------------------------------------------------------------------
+@author yura_imbp at mail dot ru
+@see <https://www.php.net/manual/en/function.readfile.php>
+Wrote an function to limit download rate while serving files and posted on internet

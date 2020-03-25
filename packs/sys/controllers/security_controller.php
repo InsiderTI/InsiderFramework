@@ -23,7 +23,7 @@ class Security_Controller extends \KeyClass\Controller{
   
         @package Controllers\sys\Security_Controller
      
-        @return  bool   Resultado da operação
+        @return  bool   Processing result
     */
     private function renewAccess():bool {
         // Exemplo de código de renovação da sessão/cookie do usuário

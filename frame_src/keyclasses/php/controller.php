@@ -540,59 +540,60 @@ class Controller{
     }
 
     /**
-        Método Alias para modificar propriedades de um componente
+        Alias method to modify the properties of an component
 
         @author Marcello Costa
 
         @package KeyClass\Controller
            
-        @param  int     $id       ID do componente
-        @param  string  $state    Estado do componente a ser modificado
-        @param  array   $props    Propriedades a serem modificadas no componente
+        @param  int     $id       Component ID
+        @param  string  $state    State of component to be modified
+        @param  array   $props    Properties to be modified in the component
      
         @return void
     */
     protected function changeComponentProps(int $id, string $state, array $props) : void {
-        // Chamando a função que modifica os estados do componente na componentsBag
+        // Calling the function how modifies the states of the component in componentsBag
         $this->componentsBag->changeComponentProps($id, $state, $props, $this);
     }
 
     /**
-        Função que converte uma string recebida via requisição
+        Convert an string received in the request
 
         @author Marcello Costa
 
         @package KeyClass\Controller
            
-        @param  string  $data         Dados recebidos via requisição
-        @param  bool    $origjson     Se os dados recebidos forem json
-        @param  bool    $returnarray  Se o retorno for um array
+        @param  string  $data         Data received in request
+        @param  bool    $origjson     If the data received are JSON
+        @param  bool    $returnarray  If the return must be an array
      
-        @return  mixed  Retorno indefinido
+        @return  mixed  Unknown type of return
     */
     protected function convertDataOfPost(string $data, bool $origjson=true, bool $returnarray=true) {
-        // Se for JSON
+        // If it's an JSON
         if ($origjson) {
             $newdata=str_replace("\/", "/", $data);
 
-            // Se os dados convertidos forem um JSON válido
+            // If the data converted are an valid JSON
             if (\KeyClass\JSON::isJSON($newdata)) {
-                // Se o retorno for um array
+                // If the return it's an array
                 if ($returnarray === true) {
                     return (json_decode($newdata, true));
                 }
-                // Se o retorno for em formato array
+
+                // If the return it's not an array
                 else {
                     return (json_decode($newdata));
                 }
             }
-            // Se os dados recebidos não forem um JSON válido
+            // If the data converted are not an valid JSON
             else {
                 return false;
             }
         }
 
-        // Se não for um JSON
+        // If it's not an JSON
         else {
             $newdata=str_replace("\/", "/", $data);
             return $newdata;
@@ -600,13 +601,13 @@ class Controller{
     }
 
     /**
-        Retorna um JSON como resposta do controller (método)
+        Return an JSON as an response of controller (method)
       
         @author Marcello Costa
 
         @package KeyClass\Controller
      
-        @param  mixed  $data          Dados a serem retornados
+        @param  mixed  $data          Data to be returned
         @param  int    $responseCode  Response code
      
         @return void
@@ -620,15 +621,14 @@ class Controller{
     }
 
     /**
-        Retorna um XML como resposta do controller (método)
+        Return an XML as an response of controller (method)
 
         @author Marcello Costa
 
         @package KeyClass\Controller
      
-        @param  mixed         $data            Dados a serem retornados
-        @param  bool          $fixNumericKeys  Se true, seta um prefixo para 
-                                               chaves numéricas no XML
+        @param  mixed         $data            Data to be returned
+        @param  bool          $fixNumericKeys  If true, set an preffix to the numeric keys of XML
      
         @param  int    $responseCode  Response code
      
@@ -655,7 +655,7 @@ class Controller{
             echo $xml->asXML();
         }
 
-        // Inteiro
+        // Object
         else if (is_object($data)) {
             $data=\KeyClass\Code::objectToArray($data);
             $this->responseXML($data);
@@ -671,20 +671,20 @@ class Controller{
             echo $xml->asXML();
         }
 
-        // Tipo inválido/desconhecido
+        // Invalid/unknow type
         else {
             \KeyClass\Error::i10nErrorRegister('It is not possible to convert a resource into an XML', 'pack/sys');
         }
     }
 
     /**
-        Retorna a resposta apropriada de API da action como resposta do controller (método)
+        Return an API response for the action of controller (method)
 
         @author Marcello Costa
         @package KeyClass\Controller      
      
-        @param  mixed  $data       Dados a serem retornados
-        @param  array  $arrayArgs  Argumentos adicionais para as funções
+        @param  mixed  $data       Data to be returned
+        @param  array  $arrayArgs  Additional arguments to the function
      
         @return void
     */
@@ -692,7 +692,7 @@ class Controller{
         global $kernelspace;
         $debugBacktrace=debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
 
-        // Se um erro foi gerado
+        // If some error occours
         if (
             isset($debugBacktrace[0]) && 
             isset($debugBacktrace[0]["object"]) &&
@@ -713,7 +713,7 @@ class Controller{
            }
         }
         
-        // Tudo certo
+        // Everything Ok!
         else {          
           $controllerClass=explode("\\", $debugBacktrace[1]["class"]);
           if (count($controllerClass) >= 3) {
@@ -725,7 +725,7 @@ class Controller{
 
           $controller=strtolower(str_replace("_Controller", "", $controllerClass));
 
-          // Função original que disparou a resposta
+          // Original function who fired the response
           $origFunction=$debugBacktrace[1]['function'];
         }
 
@@ -774,29 +774,28 @@ class Controller{
     }
     
     /**
-        Função para servir arquivos via http
+        Serve files with http
 
         @author Marcello Costa
 
         @package Core
 
-        @param  string  $originalFilePath  Path do arquivo a ser servido
-        @param  string  $serveFileName     Nome do arquivo servido
-        @param  string  $contentType       Tipo do arquivo
-        @param  float   $downloadRate      Taxa limite para o download. Quando
-                                           especificado 0 fica sem limite
+        @param  string  $originalFilePath  File path of the file to be served
+        @param  string  $serveFileName     File name of the file to be served
+        @param  string  $contentType       Type of file
+        @param  float   $downloadRate      Download rate for download. When specified 0, no limit will be applied
 
-        @return string  Binário que representa o arquivo
+        @return string  Binary representing file
     */
     public function serveFile(string $originalFilePath, string $serveFileName, string $contentType = "application/octet-stream", float $downloadRate = 0){
         if (file_exists($originalFilePath) && is_file($originalFilePath)) {
-            // Definindo os headers
+            // Setting headers
             header('Content-Type: '.$contentType);
             header('Content-Disposition: filename=' . $originalFilePath);
             header('Cache-control: private');
             header('Content-Length: ' . filesize($originalFilePath));
 
-            // Abrindo o arquivo
+            // Opening the file
             $file = fopen($originalFilePath, "r");
             print fread($file, filesize($originalFilePath));
                 flush();

@@ -1,13 +1,12 @@
 <?php
 /**
-  Arquivo KeyClass\Kernelspace
+  KeyClass\Kernelspace
 */
 
-// Namespace das KeyClass
 namespace KeyClass;
 
 /**
-  KeyClass de kernelspace
+  KeyClass of kernelspace
   
   @author Marcello Costa
 
@@ -18,40 +17,40 @@ class KernelSpace{
     private $kernelspace;
     
     /**
-        Função que seta uma variável em um contexto
+        Sets a variable inside a context
      
         @author Marcello Costa
 
         @package KeyClass\KernelSpace
 
-        @param  array  $variable    Variável a ser inserida no contexto
-        @param  string $context     Contexto em que está sendo inserida a variável
+        @param  array  $variable    Variable to be inserted inside the context
+        @param  string $context     Context where the variable will be putted in
      
-        @return bool Retorno da operação
+        @return bool Processing result
     */
     public function setVariable(array $variable, string $context = "global") : bool {
-        // Verificando se o contexto já existe
+        // Checking if the context did already exists
         if (!isset($this->kernelspace[$context])){
             $this->kernelspace[$context]=[];
         }
-        
-        // Gravando a variável no contexto
+
+        // Putting the variable in the context
         $this->kernelspace[$context] = array_merge($this->kernelspace[$context], $variable);
         
         return true;
     }
     
     /**
-        Função que recupera o valor de uma variável em um contexto
+        Gets the value of a variable which is inside a context
      
         @author Marcello Costa
 
         @package KeyClass\KernelSpace
 
-        @param  array  $variableName    Nome da variável
-        @param  string $context         Contexto em que está sendo inserida a variável
+        @param  array  $variableName    Name of the variable
+        @param  string $context         Context where the variable belongs
      
-        @return mixed Valor da variável ou nulo (caso não exista)
+        @return mixed Value of the variable or null (if the variable did not exists)
     */
     public function getVariable(string $variableName, string $context = "global"){
         // Verificando se o contexto já existe
@@ -59,7 +58,7 @@ class KernelSpace{
             \KeyClass\Error::i10nErrorRegister("Context not found in kernelspace %".$context."%", "pack/sys");
         }
 
-        // Retornando o valor da variável no contexto
+        // Returning the value of the variable
         if (isset($this->kernelspace[$context][$variableName])){
             return $this->kernelspace[$context][$variableName];
         }

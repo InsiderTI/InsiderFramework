@@ -1,13 +1,12 @@
 <?php
 /**
-  Arquivo KeyClass\I10n
+  KeyClass\I10n
 */
 
-// Namespace das KeyClass
 namespace KeyClass;
 
 /**
-  KeyClass de tradução
+  KeyClass for globalization
 
   @package KeyClass\I10n
   
@@ -15,18 +14,17 @@ namespace KeyClass;
 */
 class I10n{
     /**
-        Função que busca uma string para ser traduzida
+        Gets a translation for a string
 
         @author Marcello Costa
 
         @package KeyClass\I10n
 
+        @param  string  $stringToTranslate  String to be translated
+        @param  string  $domain             Domain which the translation belongs
+        @param  string  $linguas            Languague which the string will be translated
 
-        @param  string  $stringToTranslate  String a ser traduzida
-        @param  string  $domain             Domínio ao qual a tradução pertence
-        @param  string  $linguas            Idioma para o qual será traduzido
-
-        @return string  String traduzida
+        @return string  Translated string
     */
     public static function getTranslate($stringToTranslate, $domain, $linguas=LINGUAS) : string {
         global $kernelspace;
@@ -36,7 +34,7 @@ class I10n{
             primaryError('$10n variable not initialized');
         }
 
-        // If not exists translation for the message
+        // If there is no translation for the message
         if (!isset($i10n[$domain]) || !isset($i10n[$domain][$linguas])) {
             return str_replace("%", "", $stringToTranslate);
         }
@@ -52,7 +50,7 @@ class I10n{
             $lev = levenshtein($tmpString, $original);
             
             if ($lev <= $shortest || $shortest < 0) {
-                // Set the closest match, and shortest distance
+                // Set the closest match (with shortest distance)
                 $closest  = $translate;
                 $shortest = $lev;
             }
@@ -65,7 +63,7 @@ class I10n{
             $matchesClosest = [];
             preg_match_all($regex, $closest, $matchesClosest, PREG_SET_ORDER);
             
-            // Para cada "match" (string a ser substituída)
+            // For each "match" (string to be replaced)
             foreach ($matchesString as $mS){
                 $newString = str_replace('%','',$mS['matches']);
                 
@@ -77,15 +75,15 @@ class I10n{
     }
     
     /**
-        Função que carrega um arquivo de tradução
+        Function that load a translation file 
 
         @author Marcello Costa
 
         @package KeyClass\I10n
 
 
-        @param  string  $domain    Domínio ao qual a tradução pertence
-        @param  string  $filePath  Caminho do arquivo de tradução
+        @param  string  $domain    Domain which the translation belongs
+        @param  string  $filePath  Path to the translation file
 
         @return void  Without return
     */
@@ -101,15 +99,15 @@ class I10n{
             }
         }
 
-        // If file not exists
+        // If file did not exists
         if (!file_exists($filePath)){
             \KeyClass\Error::errorRegister("Cannot load file %".$filePath."%", "LOG");
         }
         
-        // Idioma da tradução
+        // Language of the translation
         $language=basename(dirname(strtolower($filePath)));
 
-        // Lendo o arquivo de tradução
+        // Reading the translation file
         $i10nData = \KeyClass\JSON::getJSONDataFile($filePath);
         
         if (!$i10nData) {
@@ -117,7 +115,7 @@ class I10n{
         }
 
         else{
-            // Inserindo os dados no domínio de traduções
+            // Placing the data inside the translation domain
             if (!isset($i10n[$domain])){
                 $i10n[$domain]=[];
             }

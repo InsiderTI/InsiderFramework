@@ -8,8 +8,13 @@
     @package Core
 */
 
+list($tmpBasePath) = get_included_files();
+$basePath = dirname($tmpBasePath);
+unset($tmpBasePath);
+chdir($basePath);
+
 // Initializing framework
-require_once('../frame_src/init.php');
+require_once($basePath.DIRECTORY_SEPARATOR.'init.php');
 
 /** 
   @global array Variable used by framework to control requests that are maked by console
@@ -376,7 +381,7 @@ switch (strtolower($action)) {
         $section = $climate->arguments->get('section');
         if (!($section)) {
             $climate->br();
-            $climate->to('error')->red("Syntax error: section needs to be specified for install from mirrors!")->br();
+            $climate->to('error')->red("Syntax error: section needs to be specified for uninstall from mirrors!")->br();
             $climate->to('error')->write("Type <light_blue>console.php --help</light_blue> for help")->br();
             die();
         }
