@@ -1,20 +1,16 @@
 <?php
 
 /**
-  Arquivo KeyClass\Route
- */
-// Namespace das KeyClass
+  KeyClass\Route
+*/
 
 namespace KeyClass;
 
-// Adicionando a classe Security
 require_once("frame_src" . DIRECTORY_SEPARATOR . "keyclasses" . DIRECTORY_SEPARATOR . "php" . DIRECTORY_SEPARATOR . "security.php");
-
-// Adicionando a classe Request
 require_once("frame_src" . DIRECTORY_SEPARATOR . "keyclasses" . DIRECTORY_SEPARATOR . "php" . DIRECTORY_SEPARATOR . "request.php");
 
 /**
-  KeyClass responsável por tratar rotas
+  KeyClass for handling routes
 
   @package KeyClass\Route
 
@@ -25,7 +21,7 @@ class Route {
     private $routeData;
     
     /**
-      Função de construção do objeto
+      Object build function
 
       @author Marcello Costa
 

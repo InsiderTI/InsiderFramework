@@ -8,8 +8,16 @@
                 <img id='logo' src='android-chrome-192x192.png' /><br/>
                 <span class="grey">Welcome to</span> <h1>Insider Framework</h1>
             </div>
+            <br/><br/>
+
             <br/>
             <span class="grey">The site is under construction</span>
+	    <br/><br/>
+            <span id='moreinfo'>
+                Access 
+		<a href="https://github.com/marcelloti/InsiderFramework">the official repository</a> 
+		for more information
+            <span>
         </div>
     </span>
 {/block}
@@ -17,6 +25,9 @@
 <style>
     .grey{
         color: #777;
+    }
+    #moreinfo{
+        font-size: 12px;
     }
     #logo{
         width: 96px;

@@ -1,22 +1,21 @@
 {
   "package": "insider-framework",
-  "version": "2.1.1",
+  "version": "0.2.1",
   "authors": "Marcello Costa <marcello@insiderframework.com>",
   "installed-size": 0,
   "section": "guild",
   "provides": {
-    "sagacious": "2.1.1",
+    "sagacious": "0.2.1",
     "phpmailer": "5.2.13",
     "php-openssl-cryptor": "1.0.1",
     "moment.js": "2.22.1",
     "jquery": "3.3.1"
   },
   "depends": {
-    "sagacious": "=2.1.1",
+    "sagacious": "=0.2.1",
     "phpmailer": "=5.2.13",
     "php-openssl-cryptor": "=1.0.1",
-    "moment.js": ">= 2.22.1, < 3.0.0",
-    "jquery": ">= 3.3.1, < 4.0.0"
+    "moment.js": ">= 2.22.1, < 3.0.0"
   },
   "recommends": {},
   "postinst-cmd": "",

@@ -17,7 +17,6 @@ if [ ! -f "$FILE" ] && [ ! -f "$FILE2" ]; then
     if [ ! -d "$CACHEDIR" ]; then
         mkdir -p /var/www/insiderframework/frame_src/cache
     fi
-
     chown -R www-data:www-data /var/www/insiderframework
     chmod 770 -R /var/www/insiderframework/frame_src
 

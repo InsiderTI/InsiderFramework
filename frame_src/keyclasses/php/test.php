@@ -1,13 +1,13 @@
 <?php
 /**
-  Arquivo KeyClass\Test
+  KeyClass\Test
 */
 
 // Namespace das KeyClass
 namespace KeyClass;
 
 /**
-   KeyClass de testes
+   KeyClass for classes of tests
 
    @package KeyClass\Test
 

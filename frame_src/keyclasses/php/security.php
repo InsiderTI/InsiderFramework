@@ -1,16 +1,15 @@
 <?php
 /**
-  Arquivo KeyClass\Security
+  KeyClass\Security
 */
 
-// Namespace das KeyClass
 namespace KeyClass;
 
 use KeyClass\Model;
 use ioncube\phpOpensslCryptor\Cryptor;
 
 /**
-   KeyClass que contém funções de segurança e sessão
+   KeyClass containing security and session functions
 
    @package KeyClass\Security
 
@@ -18,34 +17,31 @@ use ioncube\phpOpensslCryptor\Cryptor;
 */
 class Security{
     /**
-        Função que retorna o nível acesso do usuário para uma rota
+        
+        Function that returns user access level for a route
       
         @author Marcello Costa
 
         @package KeyClass\Security
       
-        @param  routeData  $routeObj      Objeto da rota atual
+        @param  routeData  $routeObj    Object of the current route
 
-        @return  mixed  Retorna o nível de acesso.
+        @return  mixed  Returns the access level
     */
     public static function getUserAccessLevel(\Modules\insiderRoutingSystem\routeData $routeObj) {
         global $kernelspace;
         $ajaxrequest = $kernelspace->getVariable('ajaxrequest', 'insiderRoutingSystem');
         $permissions = $routeObj->getPermissions();
         
-        // Se o arquivo de controller de segurança existe
         if (file_exists(INSTALL_DIR.DIRECTORY_SEPARATOR.'packs'.DIRECTORY_SEPARATOR.'sys'.DIRECTORY_SEPARATOR.'controllers'.DIRECTORY_SEPARATOR.'security_controller.php')) {
             switch (strtolower($permissions['type'])){
-                // Se a checagem de segurança de acesso do framework está habilitada
                 case 'native':
                     return \Modules\insiderRoutingSystem\Permission::getNativeAccessLevel();
                 break;
-                // Se a checagem de segurança de acesso customizada está habilitada
                 case 'custom':
                     \KeyClass\FileTree::requireOnceFile(INSTALL_DIR.DIRECTORY_SEPARATOR.'packs'.DIRECTORY_SEPARATOR.'sys'.DIRECTORY_SEPARATOR.'controllers'.DIRECTORY_SEPARATOR.'security_controller.php');
                     $SecurityController = new \Controllers\sys\Security_Controller('sys', null, $ajaxrequest);
 
-                    // Retornando resultado da verificação
                     return $SecurityController->getCustomAccessLevel();
                 break;
                 default:
@@ -53,14 +49,13 @@ class Security{
                 break;
             }
         }
-        // Se o arquivo do controller não existe
         else {
             \KeyClass\Error::i10nErrorRegister("Security controller not found for user privilege verification", 'pack/sys');
         }
     }
 
     /**
-        Destrói a sessão php de forma plena
+        Destroy the php session
      
         @author Marcello Costa
 
@@ -71,9 +66,7 @@ class Security{
     public static function destroySession() : void {
         $sessionParams = session_get_cookie_params();
         
-        // Se é um array
         if (is_array($sessionParams)) {
-            // Setando o cookie de sessão
             \KeyClass\Security::setCookie(
                 session_name(), 
                 '', 
@@ -85,26 +78,23 @@ class Security{
             );
         }
         
-        // Destruindo a sessão
         session_destroy();
     }
 
     /**
-        Verifica se um cookie existe
+        Checks if a cookie exist
      
         @author Marcello Costa
 
         @package KeyClass\Security
      
-        @param  string  $cookieName      Nome do cookie
-        @param  string|int|bool  $value   Valor esperado do cookie
+        @param  string           $cookieName  Name of the cookie
+        @param  string|int|bool  $value       Expected value of the cookie
      
-        @return  bool  Retorno booleano
+        @return  bool  Validation return
     */
     public static function checkCookie(string $cookieName, $value=NULL) : bool {
-        // Se o cookie existir
         if (isset($_COOKIE[$cookieName])) {
-            // Se for esperado algum valor específico no cookie
             if ($value !== NULL) {
                 if (\KeyClass\Security::getRequest('cookie')[$cookieName] !== $value) {
                     return false;
@@ -113,83 +103,66 @@ class Security{
                     return true;
                 }
             }
-
-            // Se não for esperado algum valor específico no cookie
-            // ou o valor for o especificado
-            else {
-                return true;
-            }
-
+            
+            return true;
         }
 
-        // Cookie não existe
         return false;
     }
 
     /**
-        Função que cria um cookie
+        Create a cookie
      
         @author Marcello Costa
 
         @package KeyClass\Security
      
-        @param  string  $name           Nome do cookie
-        @param  string  $cookievalue    Valor do cookie
-        @param  string  $path           Caminho de acesso do cookie (url). Se não for
-                                        definido qual é a região do cookie, ele então
-                                        serve para o site inteiro.
-        @param  string  $expiretime     Validade em minutos do cookie.
-        @param  string  $domain         Domínio (url) do cookie.
-        @param  bool    $https          Indica que o cookie só podera ser transimitido sob
-                                        uma conexão segura (HTTPS) do cliente . Se não foi
-                                        especificado que é https, então desativa esta opção.
-        @param  bool    $htmlOnly       Quando for TRUE o cookie será acessível somente
-                                        sob o protocolo HTTP. Isso significa que o
-                                        cookie não será acessível por linguagens de
-                                        script, como JavaScript. Valor padrão: false;
+        @param  string  $name           Cookie name
+        @param  string  $cookievalue    Cookie value
+        @param  string  $path           Path of cookie. If it's null, the cookie
+                                        can be used by the entire site.
+        @param  string  $expiretime     Expire time
+        @param  string  $domain         Domain (url) of cookie
+        @param  bool    $https          Indicates that cookie can only be transmitted throw an safe connection (HTTPS).
+        @param  bool    $htmlOnly       When this is true the cookie will be only valid for http protocol. It's means
+                                        that the cookie cannot be accessed by script languages (like JavaScript).
+                                        Default value: false;
      
         @return void Without return
     */
     public static function setCookie(string $name, string $cookievalue=null, string $path=null, string $expiretime=null, string $domain=null, bool $https=false, bool $htmlOnly=false) : void {
-        // Se não existir um value, é uma chave encriptada + time + idúnico
         if ($cookievalue == null) {
             $cookievalue=time().uniqid();
 
-            // Pega o IP do usuário (não funciona localmente)
             $ipuser=getenv("REMOTE_ADDR");
 
-            // Usando a senha abaixo, gera uma chave e armazena na variável $hash
             $cookievalue = \KeyClass\Security::encryptString($cookievalue.$ipuser);
         }
 
-        // Se não existir um path, pega a home
         if ($path == null) {
             $path="/";
         }
 
-        // Se não houver tempo para expirar, coloca a validade para 24 horas
         if ($expiretime == null) {
             $expiretime=time()+3600*24;
         }
 
-        // Se não for especifcado o domínio, pega o domínio padrão
         if ($domain == null) {
             $domain=str_replace("http://","",REQUESTED_URL);
             $domain=str_replace("https://","",$domain);
         }
 
-        // Cria o cookie
         setcookie($name, $cookievalue, $expiretime, $path, $domain, $https, $htmlOnly);
     }
 
     /**
-        Função alias para unset dos cookies
+        Alias function for unset cookies
 
         @author Marcello Costa
 
         @package KeyClass\Security
      
-        @param  string  $name    Nome do cookie
+        @param  string  $name    Cookie name
      
         @return void Without return
     */
@@ -200,49 +173,44 @@ class Security{
     }
 
     /**
-        Função que captura e trata o valor de um cookie com a função addslashes
-        (nativa do php)
+        Function that captures and treats the value of a cookie with the 
+        addslashes function
      
         @author Marcello Costa
 
         @package KeyClass\Security
      
-        @param  string  $name    Nome identificador de cookie
+        @param  string  $name    Name of the cookie
      
-        @return  string  Valor do cookie tratado
+        @return  string  Value of the cookie
     */
     public static function getCookie(string $name) : ?string {
-        // Se o cookie existir
         if (\KeyClass\Security::checkCookie($name)) {
-            // Retornando o valor do cookie
             $cookieValue = \KeyClass\Security::getRequest('cookie')[$name];
             return (htmlspecialchars(addslashes($cookieValue)));
         }
 
-        // Se o cookie não existir
         else {
             return null;
         }
     }
 
     /**
-        Encripta uma string
+        Encrypt a string
 
         @author Marcello Costa
 
         @package KeyClass\Security
      
-        @param  string  $string    String a ser codificada
-        @param  string  $key       Chave de encriptação
-        @param  bool    $md5       Retorno em md5
+        @param  string  $string    String to be encripted
+        @param  string  $key       Encription key
+        @param  bool    $md5       If this is true, return a MD5 string
      
-        @return  string  String codificada
+        @return  string  Encripted string
     */
     public static function encryptString(string $string, string $key = null, bool $md5=false) : string {
         if ($string !== NULL) {
-            // Se a chave de encriptação não foi especificada
             if ($key === null) {
-                // Usa a chave definida globalmente
                 $key = ENCRYPT_KEY;
             }
             $encrypted = Cryptor::Encrypt($string, $key);
@@ -260,56 +228,49 @@ class Security{
     }
 
     /**
-        Decripta uma string
+        Decrypt a string
 
         @author Marcello Costa
 
         @package KeyClass\Security
 
-        @param  string  $string    String codificada
-        @param  string  $key       Chave de decriptação
+        @param  string  $string    String to be decripted
+        @param  string  $key       Decription key
      
-        @return  string  String decodificada
+        @return  string  Decrypted string
     */
     public static function decryptString(string $string, string $key = null) : string {
         if ($string !== NULL) {
-            // Se a chave de encriptação não foi especificada
             if ($key === null) {
-                // Usa a chave definida globalmente
                 $key = ENCRYPT_KEY;
             }
             $decrypted = Cryptor::Decrypt($string, $key);
 
             return $decrypted;
         }
-        else {
-            throw new \Exception('String for decryption has not been specified');
-        }
+        
+        throw new \Exception('String for decryption has not been specified');
     }
 
     /**
-        Seta na variável global informações de post
+        Sets the post info inside the global variable
       
         @author Marcello Costa
      
         @package KeyClass\Security
      
-        @param  array  $post       Conteúdo do post
-        @param  bool   $overwrite  Sobreescrever ou não
+        @param  array  $post       Post content
+        @param  bool   $overwrite  Overwrite flag
      
         @return void Without return
     */
     public static function setPost(array $post, bool $overwrite=true) : void {
-        // Sobreescrever informações existentes
         if ($overwrite) {
-            // Apaga todas as informações de post
             \KeyClass\Security::clearPost();
 
-            // Insere as novas informações na variável global
             $_REQUEST['POST']=$post;
         }
 
-        // Não sobreescrever informações existentes
         else {
             if (is_array($post)) {
                 $_REQUEST['POST'] = array_merge(\KeyClass\Security::getPost(), $post);
@@ -321,7 +282,7 @@ class Security{
     }
 
     /**
-        Apaga todas as informações de post da variável global
+        Erase all the information insde the post global variable
      
         @author Marcello Costa
      
@@ -334,41 +295,41 @@ class Security{
     }
 
     /**
-        Função que pega informações de post do array global de request
+        Function that takes post information from the global request array
      
         @author Marcello Costa
      
         @package KeyClass\Security
      
-        @return array Informações do post
+        @return array Post information
     */
     public static function getPost() : ?array {
         return (\KeyClass\Security::getRequest('post'));
     }
 
     /**
-        Função que pega informações de get do array global e request
+        Function that takes get information from global array and request
      
         @author Marcello Costa
      
         @package KeyClass\Security
      
-        @return array Informações do get
+        @return array Get information
     */
     public static function getGet() : ?array {
         return (\KeyClass\Security::getRequest('get'));
     }
 
     /**
-        Recupera informações filtradas da variável request
+        Gets filtered value of request variables
      
         @author Marcello Costa
      
         @package KeyClass\Security
      
-        @param  string  $type    O que será retornado do array da requisição
+        @param  string  $type    What will be returned from the request array
      
-        @return  array  Dados retornados da request
+        @return  array  Data returned from request
     */
     public static function getRequest(string $type) : ?array {
         switch(strtolower($type)) {
@@ -393,8 +354,7 @@ class Security{
             break;
 
             case "session":
-                // Ainda não implementado pelo PHP
-                //return filter_input_array(INPUT_SESSION);
+                // @todo Must be implemented
                 if (isset($_SESSION)) {
                     return $_SESSION;
                 }
@@ -404,8 +364,7 @@ class Security{
             break;
 
             case "request":
-                // Ainda não implementado pelo PHP
-                // return filter_input_array(INPUT_REQUEST);
+                // @todo Must be implemented 
                 return $_REQUEST;
             break;
 
