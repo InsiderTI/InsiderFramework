@@ -1,0 +1,6 @@
+{
+  "The %id% component was not initialized": "O componente %id% não foi inicializado",
+  "Status %defaultstate% of component %id% does not exist": "O estado %defaultstate% do componente %id% não existe",
+  "Component ID %id% not found in the app record!": "Componente ID %$id% não foi encontrado no registro do app!",
+  "Class/component %id% not found": "Classe/componente %id% não encontrado"
+}

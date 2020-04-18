@@ -1,0 +1,6 @@
+.genericerror{
+    background-image: url('/apps/sys/assets/img/background_error.jpg');
+    height: 400px;
+    width: 400px;
+    margin: 0 auto;
+}

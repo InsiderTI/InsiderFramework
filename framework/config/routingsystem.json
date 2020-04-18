@@ -1,0 +1,28 @@
+{
+    "settings": {
+        "routeCaseSensitive": false
+    },
+    "actions": {
+        "NotFound": {
+            "app": "sys",
+            "controller": "error",
+            "route": "/error",
+            "method": "notFound",
+            "responsecode": 404
+        },
+        "CriticalError": {
+            "app": "sys",
+            "controller": "error",
+            "route": "/error",
+            "method": "genericError",
+            "responsecode": 500
+        },
+        "NotAuth": {
+            "app": "start",
+            "controller": "login",
+            "route": "/login",
+            "method": "loginpage",
+            "responsecode": 401
+        }
+    }
+}

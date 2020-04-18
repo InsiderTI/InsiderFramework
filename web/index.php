@@ -1,27 +1,15 @@
 <?php
 
-    // Silence always comes with a price
-    // Starts the Framework
-    require_once('../frame_src/init.php');
+// Silence always comes with a price
 
-    // Global GET variable
-    global $kernelspace;
+require_once(
+    '..' . DIRECTORY_SEPARATOR .
+    'framework' . DIRECTORY_SEPARATOR .
+    'Modules' . DIRECTORY_SEPARATOR .
+    'InsiderFramework' . DIRECTORY_SEPARATOR .
+    'Core/System.php'
+);
 
-    // Check CPU usage
-    \KeyClass\System::checkCpuAvg();
-
-    // Route that redirects the user
-    // If class of native routing system exists, call it
-    if (class_exists('\Modules\insiderRoutingSystem\Request')) {
-        \Modules\insiderRoutingSystem\Request::requestRoute(
-                isset($kernelspace->getVariable('GET', 'insiderFrameworkSystem')['url']) ? $kernelspace->getVariable('GET', 'insiderFrameworkSystem')['url'] : "/"
-            );
-    }
-    else{
-        // If class of another routing system exists, call it
-        if (class_exists('\Modules\RoutingSystem\Request')) {
-            \Modules\RoutingSystem\Request::requestRoute(
-                    isset($kernelspace->getVariable('GET', 'insiderFrameworkSystem')['url']) ? $kernelspace->getVariable('GET', 'insiderFrameworkSystem')['url'] : "/"
-                );
-        }
-    }
+\Modules\InsiderFramework\Core\System::initializeFramework();
+\Modules\InsiderFramework\Core\System::checkCpuUsage();
+\Modules\InsiderFramework\Core\RoutingSystem\Request::requestRoute();

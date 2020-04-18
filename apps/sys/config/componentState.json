@@ -1,0 +1,13 @@
+{
+    "titletest": {
+        "states": {
+            "0": {
+                "class": "Title",
+                "properties": {
+                    "fixedtitle": "Error"
+                }
+            }
+        },
+        "defaultstateid": "0"
+    }
+}

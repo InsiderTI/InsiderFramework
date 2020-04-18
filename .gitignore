@@ -1,6 +1,8 @@
 
-frame_src/cache/
+framework/cache/
 
-frame_src/modules/php/vendor/
+framework/modules/php/vendor/
 
 nbproject/
+
+.vscode/

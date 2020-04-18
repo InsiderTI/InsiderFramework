@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang='pt-br'>
+<head>
+    <meta http-equiv='content-type' content='text/html; charset=<?php
+
+    echo ENCODE; ?>'>
+    <style>
+        <?php
+            global $css_injected;
+            echo $css_injected;
+        ?>
+    </style>
+</head>
+    <body>
+        <div style='text-align: center; padding-top: 50px;' id="all" unselectable='on' onselectstart='return false;' onmousedown='return false;'>
+            <h1 style='font-weight:bold;text-shadow: 4px -4rpx grey;'>Uau ! Quanta gente !</h1>
+            <br/>
+            <h2 style='font-size: 1.5em;'>
+                No momento, estamos enfrentando um excesso de tráfego.<br/>
+                Por favor, tente novamente em alguns minutos.
+            </h2>
+            <img src='/apps/sys/assets/img/error_queue.png' />
+        </div>
+    </body>
+</html>
+<?php
+    header('HTTP/1.1 503 Service Unavailable');
+    header('Retry-After: 3600');
+?>

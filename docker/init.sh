@@ -13,15 +13,15 @@ if [ ! -f "$FILE" ] && [ ! -f "$FILE2" ]; then
     echo $indexwait > /var/www/insiderframework/web/index.php
     
     # Changing chown and permissons
-    CACHEDIR=/var/www/insiderframework/frame_src/cache
+    CACHEDIR=/var/www/insiderframework/framework/cache
     if [ ! -d "$CACHEDIR" ]; then
-        mkdir -p /var/www/insiderframework/frame_src/cache
+        mkdir -p /var/www/insiderframework/framework/cache
     fi
     chown -R www-data:www-data /var/www/insiderframework
-    chmod 770 -R /var/www/insiderframework/frame_src
+    chmod 770 -R /var/www/insiderframework/framework
 
     # Installing php modules
-    cd /var/www/insiderframework/frame_src/modules/php && composer install
+    cd /var/www/insiderframework/framework/modules/php && composer install
     
     rm $FILE;
     rm /var/www/insiderframework/web/index.php;

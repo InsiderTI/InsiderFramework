@@ -1,0 +1,10 @@
+<div id='auxcontent'>
+    {* Aux block *}
+    {block id='auxcontent'}{/block}
+</div>
+<style>
+    #auxcontent{
+        padding-top: 30px;
+        text-align: center;
+    }
+</style>
