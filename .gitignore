@@ -1,7 +1,7 @@
 
 framework/cache/
 
-framework/modules/php/vendor/
+framework/Modules/vendor/
 
 nbproject/
 

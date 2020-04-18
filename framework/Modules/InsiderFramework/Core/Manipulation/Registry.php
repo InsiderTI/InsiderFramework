@@ -28,8 +28,6 @@ trait Registry
             INSTALL_DIR . DIRECTORY_SEPARATOR .
             'framework' . DIRECTORY_SEPARATOR .
             'registry' . DIRECTORY_SEPARATOR .
-            'Modules' . DIRECTORY_SEPARATOR .
-            'Sagacious' . DIRECTORY_SEPARATOR .
             'components.json'
         );
 
