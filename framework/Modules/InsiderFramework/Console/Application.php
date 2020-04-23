@@ -53,6 +53,20 @@ class Application
                 \Modules\InsiderFramework\Console\Application::remove($climate);
                 break;
 
+            case 'generate':
+                $package = $climate->arguments->get('package');
+                $destinationDirectory = $climate->arguments->get('destinationDirectory');
+                $version = $climate->arguments->get('version');
+                $authors = $climate->arguments->get('authors');
+                $description = $climate->arguments->get('description');
+                $section = $climate->arguments->get('section');
+                \Modules\InsiderFramework\Console\DirectoryTreeGenerator::generate($climate, $package, $destinationDirectory, $version, $authors, $description, $section);
+            break;
+
+            case 'build':
+                \Modules\InsiderFramework\Console\Build::buildPackage($climate, $argumentsAndDependencies);
+                break;
+
             case 'test':
             case 'create':
                 $climate->to('error')->red("----------------------------------------");
@@ -70,7 +84,7 @@ class Application
     }
 
     /**
-    * Install or Update a module
+    * Install or Update a package
     *
     * @author Marcello Costa
     *
@@ -94,46 +108,44 @@ class Application
             die();
         }
         
-        // Controller of modules and local authorization
         $pkgController = \Modules\InsiderFramework\Core\Loaders\CmLoader::controller('sys::pkg');
-        $authorization = \Modules\InsiderFramework\Core\Manipulation\Registry::getLocalAuthorization(REQUESTED_URL);
+        $authorization = \Modules\InsiderFramework\Core\Registry::getLocalAuthorization(REQUESTED_URL);
 
-        // Downloading the file from mirror
-        if ($remote."" === ""){
+        if ($remote."" !== ""){
             $target = $remote;
-            $completePkgPath = \Modules\InsiderFramework\Core\FileTree::getAbsolutePath($target);
+            $completePkgPath = $pkgController->downloadPackage($target);
         } else {
             $target = $file;
-            $completePkgPath = $pkgController->downloadModule($target);
+            $completePkgPath = \Modules\InsiderFramework\Core\FileTree::getAbsolutePath($target);
         }
 
         switch ($completePkgPath) {
             // If can't get the file
             case "false":
                 $climate->br();
-                $climate->to('error')->red("Module cannot be found or downloaded!")->br();
+                $climate->to('error')->red("Package cannot be found or downloaded!")->br();
                 die();
             break;
-            // If local module is on the latest version
+            // If local package is on the latest version
             case "up-to-date":
                 $climate->br();
-                $climate->to('error')->blue("Module already up-to-date")->br();
+                $climate->to('error')->blue("Package already up-to-date")->br();
                 die();
             break;
         }
         
-        // Checking if module is already storage on local file system
+        // Checking if package is already storage on local file system
         if (!file_exists($completePkgPath) || !is_readable($completePkgPath)) {
             $climate->br();
             $climate->to('error')->red("File not found or not readable: " . $completePkgPath)->br();
             die();
         }
 
-        // Checking extension of module
+        // Checking extension of package
         $extension = strtolower(pathinfo($completePkgPath)['extension']);
         if ($extension !== "pkg") {
             $climate->br();
-            $climate->to('error')->red("The file not seems to be a valid module: " . $completePkgPath)->br();
+            $climate->to('error')->red("The file not seems to be a valid package: " . $completePkgPath)->br();
             die();
         }
 
@@ -159,7 +171,7 @@ class Application
             die();
         }
 
-        // Verifying if the module version is later than the installed version
+        // Verifying if the package version is later than the installed version
         $controlFile = $tmpDir . DIRECTORY_SEPARATOR . "registry" . DIRECTORY_SEPARATOR . "control.json";
         if (!file_exists($controlFile) || !is_readable($controlFile)) {
             \Modules\InsiderFramework\Console\Application::stopInstallUpdate($tmpDir, "File not found or not readable: " . $controlFile);
@@ -172,8 +184,8 @@ class Application
         }
 
         $missingInfoError = [];
-        if (!isset($jsonData['module']) || trim($jsonData['module']) === "") {
-            $missingInfoError[] = "Information missing at control file: module";
+        if (!isset($jsonData['package']) || trim($jsonData['package']) === "") {
+            $missingInfoError[] = "Information missing at control file: package";
         }
         if (!isset($jsonData['version']) || trim($jsonData['version']) === "") {
             $missingInfoError[] = "Information missing at control file: version";
@@ -213,38 +225,38 @@ class Application
             \Modules\InsiderFramework\Console\Application::stopInstallUpdate($tmpDir, implode("|", $missingInfoError));
         }
 
-        $newModule = $jsonData['module'];
-        $newModuleVersion = $jsonData['version'];
-        $newModuleSection = $jsonData['section'];
+        $newPackage = $jsonData['package'];
+        $newPackageVersion = $jsonData['version'];
+        $newPackageSection = $jsonData['section'];
 
-        // Checking if module is installed
+        // Checking if package is installed
         $installedItemInfo = json_decode($pkgController->getInstalledItemInfo(
-            $newModule,
+            $newPackage,
             $authorization,
             false
         ), true);
 
         // If is installed, compare the current version with candidate version
         if ($installedItemInfo !== null) {
-            $installedVersionParts = \Modules\InsiderFramework\Core\Manipulation\Registry::getVersionParts(
+            $installedVersionParts = \Modules\InsiderFramework\Core\Registry::getVersionParts(
                 $installedItemInfo['version']
             );
             if ($installedVersionParts === false) {
                 \Modules\InsiderFramework\Console\Application::stopInstallUpdate(
                     $tmpDir,
-                    "Wrong version of installed module " . $newModule . ": " . $installedItemInfo['version']
+                    "Wrong version of installed package " . $newPackage . ": " . $installedItemInfo['version']
                 );
             }
 
-            $newModuleVersionParts = \Modules\InsiderFramework\Core\Manipulation\Registry::getVersionParts($newModuleVersion);
-            if ($newModuleVersionParts === false) {
-                \Modules\InsiderFramework\Console\Application::stopInstallUpdate("Wrong version of new module " . $newModule . ": " . $newModuleVersion);
+            $newPackageVersionParts = \Modules\InsiderFramework\Core\Registry::getVersionParts($newPackageVersion);
+            if ($newPackageVersionParts === false) {
+                \Modules\InsiderFramework\Console\Application::stopInstallUpdate("Wrong version of new package " . $newPackage . ": " . $newPackageVersion);
             }
 
             $installedVersionString = $pkgController->getVersionFromInfo($installedVersionParts);
-            $newModuleVersionString = $pkgController->getVersionFromInfo($newModuleVersionParts);
+            $newPackageVersionString = $pkgController->getVersionFromInfo($newPackageVersionParts);
 
-            $state = version_compare($installedVersionString, $newModuleVersionString);
+            $state = version_compare($installedVersionString, $newPackageVersionString);
             switch (true) {
                 case $state < 0:
                     break;
@@ -252,7 +264,7 @@ class Application
                     $climate->br();
                     $input = $climate
                              ->to('out')
-                             ->input('Installed module version equal to the new module. ' .
+                             ->input('Installed package version equal to the new package. ' .
                              'Do you want to overwrite (y / N)?')
                              ->accept(['s', 'S', 'y', 'Y', 'n', 'N']);
                     $response = $input->prompt();
@@ -271,7 +283,7 @@ class Application
                     $climate->br();
                     $input = $climate
                              ->to('out')
-                             ->input('Version of installed module greater than new module. ' .
+                             ->input('Version of installed package greater than new package. ' .
                                      'Do you wish to continue (y/N) ?')
                             ->accept(['s', 'S', 'y', 'Y', 'n', 'N']);
                     $response = $input->prompt();
@@ -289,32 +301,32 @@ class Application
                 default:
                     \Modules\InsiderFramework\Console\Application::stopInstallUpdate(
                         $tmpDir,
-                        "Error verifying module version " . $newModule . ": " . $newModuleVersion
+                        "Error verifying package version " . $newPackage . ": " . $newPackageVersion
                     );
                     break;
             }
         }
       
         // Copying registry files
-        $newmoduleDirectory = INSTALL_DIR . DIRECTORY_SEPARATOR . "framework" .
+        $newpackageDirectory = INSTALL_DIR . DIRECTORY_SEPARATOR . "framework" .
                                DIRECTORY_SEPARATOR . "registry" . DIRECTORY_SEPARATOR .
-                               "controls" . DIRECTORY_SEPARATOR . $newModule;
+                               "controls" . DIRECTORY_SEPARATOR . $newPackage;
 
-        if (!is_dir($newmoduleDirectory)) {
-            Modules\InsiderFramework\Core\FileTree::createDirectory($newmoduleDirectory, 777);
+        if (!is_dir($newpackageDirectory)) {
+            Modules\InsiderFramework\Core\FileTree::createDirectory($newpackageDirectory, 777);
         }
         Modules\InsiderFramework\Core\FileTree::copyDirectory(
             $tmpDir . DIRECTORY_SEPARATOR . "registry",
-            $newmoduleDirectory
+            $newpackageDirectory
         );
         
         $directory = null;
-        if (strtolower($newModuleSection) === 'component') {
+        if (strtolower($newPackageSection) === 'component') {
             $directory = $installedItemInfo['directory'];
         }
         
         // Registering new item
-        $pkgController->registerItem($newModuleSection, $newModule, $newModuleVersion, $directory);
+        $pkgController->registerItem($newPackageSection, $newPackage, $newPackageVersion, $directory);
 
         // Running the pre-install script
         $preInstallFile = $tmpDir . DIRECTORY_SEPARATOR . "registry" . DIRECTORY_SEPARATOR . "preinst.php";
@@ -335,12 +347,12 @@ class Application
         Modules\InsiderFramework\Core\FileTree::deleteDirectory($tmpDir);
         
         $climate->br();
-        $climate->to('error')->blue("Module installed succefully: " . basename($completePkgPath))->br();
+        $climate->to('error')->blue("Package installed succefully: " . basename($completePkgPath))->br();
         die();
     }
 
     /**
-    * Remove a module
+    * Remove a package
     *
     * @author Marcello Costa
     *
@@ -351,7 +363,7 @@ class Application
     * @return void
     */
     protected static function remove(&$climate): void {
-        $authorization = \Modules\InsiderFramework\Core\Manipulation\Registry::getLocalAuthorization(REQUESTED_URL);
+        $authorization = \Modules\InsiderFramework\Core\Registry::getLocalAuthorization(REQUESTED_URL);
         
         $section = $climate->arguments->get('section');
         if (!($section)) {
@@ -374,7 +386,7 @@ class Application
         if ($localVersion === null) {
             \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister("The $section/$target is not installed");
         } else {
-            die('to do: uninstall module');
+            die('to do: uninstall package');
         }
     }
 
@@ -410,45 +422,56 @@ class Application
             "description" => "
                               >> Install or update <<
 
-                              # Update module (from file)
-                              php console.php -a install --file insider-framework.ifm
-                          
-                              # Update module (from mirror)
+                              # Update package (from file)
+                              php console.php -a install --file insider-framework.pkg
+
+                              # Update package (from mirror)
                               php console.php -a install --remote sagacious
-                              
+
                               # Action 'update' is an alias to install
                               php console.php -a update --remote sagacious
-                              
-                              # Note that how to update the framework is the same 
-                              # as updating a module. This is because the 
-                              # framework is considered a module by itself",
+
+                              # Note that how to update the framework is the same
+                              # as updating a package. This is because the
+                              # framework is considered a package by itself",
             "class" => "Modules\\InsiderFramework\Console\\Application",
-            "function" => "installOrUpdate" 
+            "function" => "installOrUpdate"
         );
-        
+
         $validActions["remove"] = array (
             "aliases" => ["uninstall"],
             "description" => "
-                              >> Uninstall/remove <<
+                              >> Uninstall/remove pacakges <<
 
-                              # Uninstall module (from mirror)
-                              php console.php -a uninstall --module sagacious -s guild
-            
+                              # Uninstall package (from mirror)
+                              php console.php -a uninstall --package sagacious -s guild
+
                               # Action 'remove' is an alias to uninstall
-                              php console.php -a remove --module sagacious -s guild",
+                              php console.php -a remove --package sagacious -s guild",
             "class" => "Modules\\InsiderFramework\Console\\Application",
-            "function" => "remove" 
+            "function" => "remove"
         );
 
         $validActions["create"] = array (
             "aliases" => [],
             "description" => "
-                              >> Create <<
+                              >> Create actions <<
 
-                              # Create app:
+                              # Create a new app:
                               php console.php -a create -s app --appname newStart",
             "class" => "Modules\\InsiderFramework\Console\\Application",
-            "function" => "remove" 
+            "function" => "create"
+        );
+
+        $validActions["generate"] = array (
+            "aliases" => [],
+            "description" => "
+                              >> Generate actions <<
+
+                              # Generate a directory tree for a new package:
+                              php console.php -a generate [--package newStart --destinationDirectory mydir --version 1.0.0 --authors Author Name <author@email.com>, Author Name2 <author2@email.com> --description Package description --section SectionName]",
+            "class" => "Modules\\InsiderFramework\Console\\Application",
+            "function" => "generate"
         );
 
         $validActions["test"] = array (
@@ -459,7 +482,7 @@ class Application
                               # Running tests:
                               php console.php -a test --class sys/basic",
             "class" => "Modules\\InsiderFramework\Console\\Application",
-            "function" => "remove" 
+            "function" => "remove"
         );
 
         $additionalParameters = array(
@@ -471,9 +494,33 @@ class Application
                 'longPrefix'   => 'remote',
                 'description'  => 'Remote path',
             ],
-            'module' => [
-                'longPrefix'   => 'module',
-                'description'  => 'Module name',
+            'package' => [
+                'longPrefix'   => 'package',
+                'description'  => 'Package name',
+            ],
+            'destinationDirectory' => [
+                'longPrefix'   => 'destinationDirectory',
+                'description'  => 'Destination directory',
+            ],
+            'version' => [
+                'longPrefix'   => 'version',
+                'description'  => 'Package version',
+            ],
+            'section' => [
+                'longPrefix'   => 'section',
+                'description'  => 'Package section',
+            ],
+            'authors' => [
+                'longPrefix'   => 'authors',
+                'description'  => 'Package authors',
+            ],
+            'description' => [
+                'longPrefix'   => 'description',
+                'description'  => 'Package description',
+            ],
+            'section' => [
+                'longPrefix'   => 'section',
+                'description'  => 'Section of package: Guild, Module, App, Service, Component',
             ],
             'appname' => [
                 'longPrefix'   => 'appname',
@@ -555,7 +602,7 @@ class Application
     }
 
     /**
-     * Function thats process an update or install of module
+     * Function thats process an update or install of package
      *
      * @author Marcello Costa
      *

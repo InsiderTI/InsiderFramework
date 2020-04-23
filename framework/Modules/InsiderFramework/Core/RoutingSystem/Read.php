@@ -72,7 +72,7 @@ class Read
                     // Se não existir o diretório do app
                     if (!is_dir(INSTALL_DIR . DIRECTORY_SEPARATOR . 'apps' . DIRECTORY_SEPARATOR . $appName)) {
                         \Modules\InsiderFramework\Core\Error\ErrorHandler::i10nErrorRegister(
-                            "The module directory %" . $appName . "% was not found",
+                            "The app directory %" . $appName . "% was not found",
                             "app/sys"
                         );
                     }

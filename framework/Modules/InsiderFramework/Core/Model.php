@@ -159,8 +159,9 @@ class Model
 
         $connectorPath = INSTALL_DIR . DIRECTORY_SEPARATOR .
         "framework" . DIRECTORY_SEPARATOR .
-        "modules" . DIRECTORY_SEPARATOR .
-        "php" . DIRECTORY_SEPARATOR .
+        "Modules" . DIRECTORY_SEPARATOR .
+        "InsiderFramework" . DIRECTORY_SEPARATOR .
+        "Core" . DIRECTORY_SEPARATOR .
         "DatabaseConnectors" . DIRECTORY_SEPARATOR .
         ucfirst(strtolower($this->connector)) .
         DIRECTORY_SEPARATOR . strtolower($this->connector) . ".php";

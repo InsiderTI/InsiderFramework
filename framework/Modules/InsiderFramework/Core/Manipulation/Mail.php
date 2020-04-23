@@ -57,21 +57,7 @@ trait Mail
         string $content_type = "text/html",
         string $charset = ENCODE
     ): bool {
-        // Requerindo manualmente o PHPMailer
-        $version = \Modules\InsiderFramework\Core\Manipulation\Registry::getDependencyRequiredVersion('insider-framework', '2.1.1', 'phpmailer');
-        $phpmailerDir = INSTALL_DIR . DIRECTORY_SEPARATOR .
-                        "framework" . DIRECTORY_SEPARATOR .
-                        "modules" . DIRECTORY_SEPARATOR .
-                        "php" . DIRECTORY_SEPARATOR .
-                        "phpmailer" . DIRECTORY_SEPARATOR .
-                        $version;
-
-        // Se não encontrar o diretório do phpmailer
-        if (!is_dir($phpmailerDir)) {
-            \Modules\InsiderFramework\Core\Error\ErrorHandler::i10nErrorRegister("Error resizing image with invalid dimensions", "app/sys");
-        }
-
-        \Modules\InsiderFramework\Core\FileTree::requireOnceFile($phpmailerDir . DIRECTORY_SEPARATOR . "PHPMailerAutoload.php");
+        $version = \Modules\InsiderFramework\Core\Registry::getDependencyRequiredVersion('insider-framework', '2.1.1', 'phpmailer');
 
         // Criando novo objeto mailer
         $mail = new \PHPMailer();

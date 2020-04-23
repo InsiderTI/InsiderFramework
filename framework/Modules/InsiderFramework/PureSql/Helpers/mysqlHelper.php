@@ -23,7 +23,7 @@ class Mysql
      *
      * @return array Date and time strings
      */
-    public function parseTimeStampMysqlToArray(string $datetime, $format = 'pt-br'): array
+    public static function parseTimeStampMysqlToArray(string $datetime, $format = 'pt-br'): array
     {
         $timestamp_tmp =  explode("-", $datetime);
 

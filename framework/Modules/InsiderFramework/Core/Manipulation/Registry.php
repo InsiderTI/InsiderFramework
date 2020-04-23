@@ -134,6 +134,10 @@ trait Registry
 
         if ($section !== null) {
             switch (strtolower($section)) {
+                case 'module':
+                    $filespath[] = $registryDir . DIRECTORY_SEPARATOR .
+                                   'modules.json';
+                    break;
                 case 'guild':
                     $filespath[] = $registryDir . DIRECTORY_SEPARATOR .
                                    'guilds.json';
@@ -149,11 +153,6 @@ trait Registry
                                    "components.json";
                     break;
 
-                case 'module':
-                    $filespath[] = $registryDir . DIRECTORY_SEPARATOR .
-                                   "modules.json";
-                    break;
-
                 default:
                     \Modules\InsiderFramework\Core\Error\ErrorHandler::i10nErrorRegister(
                         "Registry Error: Unknown item section %" . $section . "%",
@@ -163,6 +162,9 @@ trait Registry
             }
         } else {
             $filespath['guilds'] = $registryDir . DIRECTORY_SEPARATOR .
+                                   "modules.json";
+
+            $filespath['guilds'] = $registryDir . DIRECTORY_SEPARATOR .
                                    "guilds.json";
 
             $filespath['apps'] = $registryDir . DIRECTORY_SEPARATOR .
@@ -170,30 +172,27 @@ trait Registry
 
             $filespath['components'] = $registryDir . DIRECTORY_SEPARATOR .
                                        "components.json";
-
-            $filespath['modules'] = $registryDir . DIRECTORY_SEPARATOR .
-                                    "modules.json";
         }
 
         foreach ($filespath as $sectionFP => $filepath) {
             $regcomponentfile = \Modules\InsiderFramework\Core\Json::getJSONDataFile($filepath);
 
             if (is_array($regcomponentfile)) {
-                foreach ($regcomponentfile as $module => $moduleData) {
+                foreach ($regcomponentfile as $package => $packageData) {
                     if ($itemsearch !== null) {
-                        if (strtolower($module) === strtolower($itemsearch)) {
+                        if (strtolower($package) === strtolower($itemsearch)) {
                             if ($info !== null) {
-                                if (isset($moduleData[$info])) {
-                                    return $moduleData[$info];
+                                if (isset($packageData[$info])) {
+                                    return $packageData[$info];
                                 } else {
                                     \Modules\InsiderFramework\Core\Error\ErrorHandler::i10nErrorRegister(
                                         "Registry Error: The info %" . $info .
-                                        "% does not exist in the module record %" . $module . "%",
+                                        "% does not exist in the package record %" . $package . "%",
                                         "app/sys"
                                     );
                                 }
                             } else {
-                                return $moduleData;
+                                return $packageData;
                             }
                         }
                     } else {

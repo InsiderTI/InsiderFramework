@@ -42,7 +42,7 @@ class SgsComponentsBag
             );
         }
 
-        $registryData = \Modules\InsiderFramework\Core\Manipulation\Registry::getComponentRegistryData(
+        $registryData = \Modules\InsiderFramework\Core\Registry::getComponentRegistryData(
             $defaultState['class']
         );
 

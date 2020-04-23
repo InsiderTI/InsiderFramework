@@ -1,5 +1,5 @@
 {
-  "module": "insider-framework",
+  "package": "insider-framework",
   "version": "0.2.1",
   "authors": "Marcello Costa <marcello@insiderframework.com>",
   "installed-size": 0,

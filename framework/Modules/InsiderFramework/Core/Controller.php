@@ -71,60 +71,6 @@ class Controller
             'viewsBag',
             'sagacious'
         );
-        $loadedHelpers = KernelSpace::getVariable(
-            'loadedHelpers',
-            'insiderFrameworkSystem'
-        );
-        if ($loadedHelpers === null) {
-            $loadedHelpers = [];
-        }
-
-        // If directory of helpers exists in this pack
-        if (
-            is_dir(
-                INSTALL_DIR . DIRECTORY_SEPARATOR .
-                "apps" . DIRECTORY_SEPARATOR .
-                $app . DIRECTORY_SEPARATOR .
-                "helpers"
-            )
-        ) {
-            // Searching php files on directory of helpers
-            $helperFiles = glob(
-                INSTALL_DIR . DIRECTORY_SEPARATOR .
-                "apps" . DIRECTORY_SEPARATOR .
-                $app . DIRECTORY_SEPARATOR .
-                "helpers" . DIRECTORY_SEPARATOR .
-                "*.{php}",
-                GLOB_BRACE
-            );
-
-            // For each directory/file inside the helpers directory
-            foreach ($helperFiles as $hF) {
-                $resumedPath = str_replace(INSTALL_DIR, "", $hF);
-                if (!in_array($resumedPath, $loadedHelpers)) {
-                    // Requesting the helper file
-                    FileTree::requireOnceFile($hF);
-                    $loadedHelpers[] = $resumedPath;
-                }
-            }
-            unset($resumedPath);
-        }
-
-        // Updating loaded helpers
-        KernelSpace::setVariable(
-            array(
-                'loadedHelpers' => $loadedHelpers
-            ),
-            'insiderFrameworkSystem'
-        );
-
-        // Calling the construct method of helper (if exists)
-        if (method_exists($this, 'customConstruct')) {
-            call_user_func_array(
-                array($this, 'customConstruct'),
-                array(serialize($this))
-            );
-        }
     }
 
     /**

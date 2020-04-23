@@ -1,8 +1,8 @@
 {
     "Invalid time specified to cache of the view %viewFilename%": "Tempo especificado de cache é inválido para a view %viewFilename%",
     "Cache file not found %renderPathFile% on requesting the view %viewFilename%": "Arquivo de cache não encontrado %renderPathFile% na requisição da view %viewFilename",
-    "An error occured on trying to read the JSON file that controls cache": "Ocorreu um erro ao tentar ler o arquivo JSON que controla o cache",
-    "An error occured on trying to write the cache file of views": "Ocorreu um erro ao gravar o arquivo de cache de views",
+    "An error occurred on trying to read the JSON file that controls cache": "Ocorreu um erro ao tentar ler o arquivo JSON que controla o cache",
+    "An error occurred on trying to write the cache file of views": "Ocorreu um erro ao gravar o arquivo de cache de views",
     "Invalid response type for API: %responseType%": "Resposta inválida para a API: %responseType%",
     "Unrecognized type when converting to XML": "Tipo não reconhecido ao converter em XML",
     "No valid type specified for API response": "Nenhum tipo válido foi especificado para a resposta da API"

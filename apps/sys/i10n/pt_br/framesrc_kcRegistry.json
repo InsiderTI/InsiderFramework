@@ -1,5 +1,5 @@
 {
-  "Registry Error: The info %infoContent% does not exist in the module record %moduleName%": "Registry Erro: A info %infoContent% não existe no registro do module %moduleName%",
+  "Registry Error: The info %infoContent% does not exist in the package record %packageName%": "Registry Erro: A info %infoContent% não existe no registro do package %packageName%",
   "Registry Error: Incorrect call to getItemInfo() function: INFO_VALUE = %info%": "Registry Erro: Valor incorreto na chamada da função getItemInfo(): INFO_VALUE = %info%",
   "Registry Error: File '%filePath%' not found": "Registry Erro: Arquivo '%filePath%' não encontrado",
   "Registry Error: The info %info% does not exist in app registry %app%": "Registry Erro: A info %info% no registro do app %app%",
@@ -8,5 +8,5 @@
   "Registry Error: The registry appears corrupted. The file %filepath% does not contain information": "Registry Erro: O registro parece corrompido. O arquivo %filePath% não contém informações",
   "Registry Error: The registry appears corrupted. The file %filepath% does not contain information about app %app%": "Registry Erro: O registro parece corrompido. O arquivo %filePath% não contém informações sobre o app %app%",
   "Registry Error: Unknown item section %section%": "Tipo de item desconhecido %section%",
-  "Multiple versions of modules are not yet supported": "Ainda não há suporte para múltiplas versões de módulos"
+  "Multiple versions of packages are not yet supported": "Ainda não há suporte para múltiplas versões de pacotes"
 }

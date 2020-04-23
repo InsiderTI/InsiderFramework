@@ -21,7 +21,7 @@ if [ ! -f "$FILE" ] && [ ! -f "$FILE2" ]; then
     chmod 770 -R /var/www/insiderframework/framework
 
     # Installing php modules
-    cd /var/www/insiderframework/framework/modules/php && composer install
+    cd /var/www/insiderframework/framework/Modules && composer install
     
     rm $FILE;
     rm /var/www/insiderframework/web/index.php;

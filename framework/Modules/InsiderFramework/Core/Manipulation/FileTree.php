@@ -881,7 +881,7 @@ trait FileTree
      * @package Modules\InsiderFramework\Core\Manipulation\FileTree
      *
      * @param string $url  File origin URL
-     * @param string $path Directory destination for the file
+     * @param string $path Destination directory for the file
      *
      * @return bool Processing result
      */

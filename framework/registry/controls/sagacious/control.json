@@ -1,9 +1,9 @@
 {
-  "module": "sagacious",
+  "package": "sagacious",
   "version": "0.2.1",
   "authors": "Insider TI <contact@insiderframework.com>",
   "installed-size": 0,
-  "section": "components",
+  "section": "guild",
   "provides": {},
   "depends": {},
   "recommends": {},
