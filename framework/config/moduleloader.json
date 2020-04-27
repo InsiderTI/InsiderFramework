@@ -1,5 +1,0 @@
-{
-    "insiderframework-sagacious": "InsiderFramework/Sagacious/loader.php",
-    "php-openssl-cryptor": "PhpOpensslCryptor/Cryptor.php",
-    "composer": "vendor/autoload.php"
-}

@@ -1,0 +1,77 @@
+{
+    "actions": {
+        "install": {
+            "aliases": [
+                "update"
+            ],
+            "description": [
+                "-a install --file exampleFilePackage.pkg",
+                "        Update package (from file)",
+                "",
+                "-a install --remote exampleRemotePackage",
+                "        Update package (from mirror)",
+                "",
+                "-a update --remote sagacious",
+                "        Action 'update' is an alias to install",
+                "",
+                "# Note that how to update the framework is the same",
+                "as updating a package. This is because the",
+                "framework is considered a package by itself",
+                ""
+            ],
+            "class": "Modules\\InsiderFramework\\Console\\Application",
+            "function": "installOrUpdate"
+        },
+        "remove": {
+            "aliases": [
+                "uninstall"
+            ],
+            "description": [
+                "-a uninstall --package sagacious -s guild",
+                "        Uninstall package (from mirror)",
+                "",
+                "-a remove --package sagacious -s guild",
+                "        Action 'remove' is an alias to uninstall",
+                ""
+            ],
+            "class": "Modules\\InsiderFramework\\Console\\Application",
+            "function": "remove"
+        },
+        "create": {
+            "aliases": [],
+            "description": [
+                "-a create -s app --appname newStart",
+                "        Create a new app:",
+                ""
+            ],
+            "class": "Modules\\InsiderFramework\\Console\\Application",
+            "function": "create"
+        },
+        "generate": {
+            "aliases": [],
+            "description": [
+                "-a generate [",
+                "                --package newStart ",
+                "                --destinationDirectory mydir ",
+                "                --version 1.0.0 ",
+                "                --authors \"Author Name <author@email.com>, Author Name2 <author2@email.com>\"",
+                "                --description Package description --section SectionName",
+                "   ]",
+                "        Generate a directory tree for a new package (parameters between '[' can be specified to skip interactive questions):",
+                ""
+            ],
+            "class": "Modules\\InsiderFramework\\Console\\Application",
+            "function": "generate"
+        },
+        "test": {
+            "aliases": [],
+            "description": [
+                "-a test --class sys/basic",
+                "        Run tests of a class",
+                ""
+            ],
+            "class": "Modules\\InsiderFramework\\Console\\Application",
+            "function": "remove"
+        }
+    }
+}

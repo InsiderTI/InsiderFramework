@@ -1,0 +1,6 @@
+{template src='Start::auxtemplate'}
+{block id='auxcontent' settings='keep-content;'}
+    <h5>View inside view Test</h5>
+    <br/>
+    <h5>ViewBagExample: {viewsbag key='test'}</h5>
+{/block}

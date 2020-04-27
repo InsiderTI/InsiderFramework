@@ -1,8 +1,0 @@
-{template src='sys::errorgeneric'}
-{block id='error'}
-<div id="all" unselectable='on' onselectstart='return false;' onmousedown='return false;'>
-    <br><br><br>
-    <h1 style='font-weight:bold;text-shadow: 4px -4rpx grey;'>Error !</h1>
-    <h2><?php echo $viewsBag['msgError']; ?></h2>
-</div>
-{/block}
