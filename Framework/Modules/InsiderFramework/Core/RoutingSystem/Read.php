@@ -40,8 +40,8 @@ class Read
         $appRegistry = \Modules\InsiderFramework\Core\Json::getJSONDataFile(
             INSTALL_DIR . DIRECTORY_SEPARATOR .
             "Framework" . DIRECTORY_SEPARATOR .
-            "registry" . DIRECTORY_SEPARATOR .
-            "sections" . DIRECTORY_SEPARATOR .
+            "Registry" . DIRECTORY_SEPARATOR .
+            "Sections" . DIRECTORY_SEPARATOR .
             "apps.json"
         );
 
@@ -53,7 +53,7 @@ class Read
             // Se o arquivo de rotas não existir, cria
             $routesFile = INSTALL_DIR . DIRECTORY_SEPARATOR .
                           "Framework" . DIRECTORY_SEPARATOR .
-                          "cache" . DIRECTORY_SEPARATOR .
+                          "Cache" . DIRECTORY_SEPARATOR .
                           "routes.json";
 
             if (!file_exists($routesFile)) {
@@ -115,8 +115,8 @@ class Read
         } else {
             $filePath = INSTALL_DIR . DIRECTORY_SEPARATOR .
                         "Framework" . DIRECTORY_SEPARATOR .
-                        "registry" . DIRECTORY_SEPARATOR .
-                        "sections" . DIRECTORY_SEPARATOR .
+                        "Registry" . DIRECTORY_SEPARATOR .
+                        "Sections" . DIRECTORY_SEPARATOR .
                         "apps.json";
 
             \Modules\InsiderFramework\Core\Error\ErrorHandler::i10nErrorRegister("File %" . $filePath . "% not found", "app/sys");

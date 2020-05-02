@@ -322,7 +322,7 @@ class ErrorHandler
 
         $coreEnvFile = INSTALL_DIR . DIRECTORY_SEPARATOR .
                        'Framework' . DIRECTORY_SEPARATOR .
-                       'config' . DIRECTORY_SEPARATOR .
+                       'Config' . DIRECTORY_SEPARATOR .
                        'core.json';
 
         if (!file_exists($coreEnvFile)) {

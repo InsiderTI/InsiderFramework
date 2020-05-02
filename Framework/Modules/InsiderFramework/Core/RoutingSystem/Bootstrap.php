@@ -24,7 +24,7 @@ class Bootstrap
     {
         $routingConfig = \Modules\InsiderFramework\Core\Json::getJSONDataFile(
             INSTALL_DIR . DIRECTORY_SEPARATOR . 'Framework' . DIRECTORY_SEPARATOR .
-            'config' . DIRECTORY_SEPARATOR . 'routingsystem.json'
+            'Config' . DIRECTORY_SEPARATOR . 'routingsystem.json'
         );
         
         if (!is_array($routingConfig) || !isset($routingConfig['settings']) || !isset($routingConfig['actions'])) {

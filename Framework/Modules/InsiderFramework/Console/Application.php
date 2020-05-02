@@ -172,7 +172,7 @@ class Application
         }
 
         // Verifying if the package version is later than the installed version
-        $controlFile = $tmpDir . DIRECTORY_SEPARATOR . "registry" . DIRECTORY_SEPARATOR . "control.json";
+        $controlFile = $tmpDir . DIRECTORY_SEPARATOR . "Registry" . DIRECTORY_SEPARATOR . "control.json";
         if (!file_exists($controlFile) || !is_readable($controlFile)) {
             \Modules\InsiderFramework\Console\Application::stopInstallUpdate($tmpDir, "File not found or not readable: " . $controlFile);
         }
@@ -308,15 +308,18 @@ class Application
         }
       
         // Copying registry files
-        $newpackageDirectory = INSTALL_DIR . DIRECTORY_SEPARATOR . "Framework" .
-                               DIRECTORY_SEPARATOR . "registry" . DIRECTORY_SEPARATOR .
-                               "controls" . DIRECTORY_SEPARATOR . $newPackage;
+        $newpackageDirectory = INSTALL_DIR . DIRECTORY_SEPARATOR .
+                               "Framework" . DIRECTORY_SEPARATOR .
+                               "Registry" . DIRECTORY_SEPARATOR .
+                               "Controls" . DIRECTORY_SEPARATOR .
+                               $newPackage;
 
         if (!is_dir($newpackageDirectory)) {
             Modules\InsiderFramework\Core\FileTree::createDirectory($newpackageDirectory, 777);
         }
         Modules\InsiderFramework\Core\FileTree::copyDirectory(
-            $tmpDir . DIRECTORY_SEPARATOR . "registry",
+            $tmpDir . DIRECTORY_SEPARATOR .
+            "Registry",
             $newpackageDirectory
         );
         
@@ -329,16 +332,26 @@ class Application
         \Modules\InsiderFramework\Core\Registry::registerItem($newPackageSection, $newPackage, $newPackageVersion, $directory);
 
         // Running the pre-install script
-        $preInstallFile = $tmpDir . DIRECTORY_SEPARATOR . "registry" . DIRECTORY_SEPARATOR . "preinst.php";
+        $preInstallFile = $tmpDir . DIRECTORY_SEPARATOR .
+                          "Registry" . DIRECTORY_SEPARATOR .
+                          "preinst.php";
+
         if (file_exists($preInstallFile)) {
             Modules\InsiderFramework\Core\FileTree::requireOnceFile($preInstallFile);
         }
         
         // Copying the files to the root
-        Modules\InsiderFramework\Core\FileTree::copyDirectory($tmpDir . DIRECTORY_SEPARATOR . "data", INSTALL_DIR);
+        Modules\InsiderFramework\Core\FileTree::copyDirectory(
+            $tmpDir . DIRECTORY_SEPARATOR .
+            "Data",
+            INSTALL_DIR
+        );
 
         // Running the pos-install script
-        $posInstallFile = $tmpDir . DIRECTORY_SEPARATOR . "registry" . DIRECTORY_SEPARATOR . "posinst.php";
+        $posInstallFile = $tmpDir . DIRECTORY_SEPARATOR .
+                          "Registry" . DIRECTORY_SEPARATOR .
+                          "posinst.php";
+
         if (file_exists($posInstallFile)) {
             Modules\InsiderFramework\Core\FileTree::requireOnceFile($posInstallFile);
         }

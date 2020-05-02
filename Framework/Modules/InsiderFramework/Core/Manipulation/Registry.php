@@ -27,8 +27,8 @@ trait Registry
         $regcomponentfile = \Modules\InsiderFramework\Core\Json::getJSONDataFile(
             INSTALL_DIR . DIRECTORY_SEPARATOR .
             "Framework" . DIRECTORY_SEPARATOR .
-            "registry" . DIRECTORY_SEPARATOR .
-            "sections" . DIRECTORY_SEPARATOR .
+            "Registry" . DIRECTORY_SEPARATOR .
+            "Sections" . DIRECTORY_SEPARATOR .
             "sagaciousComponents.json"
         );
 
@@ -131,30 +131,30 @@ trait Registry
         }
 
         $filespath = [];
-        $registryDir = INSTALL_DIR . DIRECTORY_SEPARATOR . 'Framework' . DIRECTORY_SEPARATOR . 'registry';
+        $registryDir = INSTALL_DIR . DIRECTORY_SEPARATOR . 'Framework' . DIRECTORY_SEPARATOR . 'Registry';
 
         if ($section !== null) {
             switch (strtolower($section)) {
                 case 'module':
                     $filespath[] = $registryDir . DIRECTORY_SEPARATOR .
-                                   "sections" . DIRECTORY_SEPARATOR .
+                                   "Sections" . DIRECTORY_SEPARATOR .
                                    "modules.json";
                     break;
                 case 'guild':
                     $filespath[] = $registryDir . DIRECTORY_SEPARATOR .
-                                   "sections" . DIRECTORY_SEPARATOR .
+                                   "Sections" . DIRECTORY_SEPARATOR .
                                    "guilds.json";
                     break;
 
                 case 'app':
                     $filespath[] = $registryDir . DIRECTORY_SEPARATOR .
-                                   "sections" . DIRECTORY_SEPARATOR .
+                                   "Sections" . DIRECTORY_SEPARATOR .
                                    "apps.json";
                     break;
 
                 case 'sagaciouscomponent':
                     $filespath[] = $registryDir . DIRECTORY_SEPARATOR .
-                                   "sections" . DIRECTORY_SEPARATOR .
+                                   "Sections" . DIRECTORY_SEPARATOR .
                                    "sagaciousComponents.json";
                     break;
 
@@ -167,19 +167,19 @@ trait Registry
             }
         } else {
             $filespath['modules'] = $registryDir . DIRECTORY_SEPARATOR .
-                                   "sections" . DIRECTORY_SEPARATOR .
+                                   "Sections" . DIRECTORY_SEPARATOR .
                                    "modules.json";
 
             $filespath['guilds'] = $registryDir . DIRECTORY_SEPARATOR .
-                                   "sections" . DIRECTORY_SEPARATOR .
+                                   "Sections" . DIRECTORY_SEPARATOR .
                                    "guilds.json";
 
             $filespath['Apps'] = $registryDir . DIRECTORY_SEPARATOR .
-                                 "sections" . DIRECTORY_SEPARATOR .
+                                 "Sections" . DIRECTORY_SEPARATOR .
                                  "apps.json";
 
             $filespath['sagaciouscomponents'] = $registryDir . DIRECTORY_SEPARATOR .
-                                       "sections" . DIRECTORY_SEPARATOR .
+                                       "Sections" . DIRECTORY_SEPARATOR .
                                        "sagaciouscomponents.json";
         }
 
@@ -249,8 +249,8 @@ trait Registry
     {
         $filepath = INSTALL_DIR . DIRECTORY_SEPARATOR .
                     "Framework" . DIRECTORY_SEPARATOR .
-                    "registry" . DIRECTORY_SEPARATOR .
-                    "controls" . DIRECTORY_SEPARATOR .
+                    "Registry" . DIRECTORY_SEPARATOR .
+                    "Controls" . DIRECTORY_SEPARATOR .
                     $obj . DIRECTORY_SEPARATOR .
                     $objVersion . DIRECTORY_SEPARATOR .
                     "control.json";
@@ -322,8 +322,8 @@ trait Registry
         $data = \Modules\InsiderFramework\Core\Json::getJSONDataFile(
             INSTALL_DIR . DIRECTORY_SEPARATOR .
             "Framework" . DIRECTORY_SEPARATOR .
-            "registry" . DIRECTORY_SEPARATOR .
-            "local" . DIRECTORY_SEPARATOR . 
+            "Registry" . DIRECTORY_SEPARATOR .
+            "Local" . DIRECTORY_SEPARATOR . 
             $relativePath,
             true
         );
@@ -354,22 +354,22 @@ trait Registry
         $item = strtolower($item);
         $registryDirectory = INSTALL_DIR . DIRECTORY_SEPARATOR .
                              "Framework" . DIRECTORY_SEPARATOR .
-                             "registry";
+                             "Registry";
 
         switch ($section) {
             case 'guild':
                 $filePath = $registryDirectory . DIRECTORY_SEPARATOR .
-                            "sections" . DIRECTORY_SEPARATOR .
+                            "Sections" . DIRECTORY_SEPARATOR .
                             "guilds.json";
 
             case 'modules':
                 $filePath = $registryDirectory . DIRECTORY_SEPARATOR .
-                            "sections" . DIRECTORY_SEPARATOR .
+                            "Sections" . DIRECTORY_SEPARATOR .
                             "modules.json";
                 break;
             case 'app':
                 $filePath = $registryDirectory . DIRECTORY_SEPARATOR . 
-                            "sections" . DIRECTORY_SEPARATOR .
+                            "Sections" . DIRECTORY_SEPARATOR .
                             "apps.json";
                 break;
             default:

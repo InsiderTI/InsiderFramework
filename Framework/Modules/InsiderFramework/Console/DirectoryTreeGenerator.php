@@ -155,11 +155,17 @@ class DirectoryTreeGenerator
         }
         
         // Creating control and data directories
-        \Modules\InsiderFramework\Core\FileTree::createDirectory($destinationDirectory . DIRECTORY_SEPARATOR . "registry", 777);
+        \Modules\InsiderFramework\Core\FileTree::createDirectory(
+            $destinationDirectory . DIRECTORY_SEPARATOR .
+            "Registry", 
+            777
+        );
         \Modules\InsiderFramework\Core\FileTree::createDirectory($destinationDirectory . DIRECTORY_SEPARATOR . "data", 777);
         
         // Creating default files
-        $controlDir = $destinationDirectory . DIRECTORY_SEPARATOR . "registry" . DIRECTORY_SEPARATOR;
+        $controlDir = $destinationDirectory . DIRECTORY_SEPARATOR .
+                      "Registry" . DIRECTORY_SEPARATOR;
+
         \Modules\InsiderFramework\Core\FileTree::fileWriteContent($controlDir . "CHANGELOG", "", true);
         \Modules\InsiderFramework\Core\FileTree::fileWriteContent($controlDir . "LICENSE", "", true);
         \Modules\InsiderFramework\Core\FileTree::fileWriteContent($controlDir . "postinst.php", "", true);
