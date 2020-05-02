@@ -7,9 +7,5 @@
   "provides": {},
   "depends": {},
   "recommends": {},
-  "postinst-cmd": "",
-  "postrm-cmd": "",
-  "preinst-cmd": "",
-  "prerm-cmd": "",
   "description": "Sagacious is a template manager integrated with the Insider Framework"
 }

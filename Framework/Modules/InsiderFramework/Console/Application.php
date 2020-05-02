@@ -43,44 +43,7 @@ class Application
         $climate->arguments->parse();
         $action = $climate->arguments->get('action');
 
-        switch (strtolower($action)) {
-            case 'update':
-            case 'install':
-                \Modules\InsiderFramework\Console\Application::installOrUpdate($climate);
-                break;
-            case 'remove':
-            case 'delete':
-                \Modules\InsiderFramework\Console\Application::remove($climate);
-                break;
-
-            case 'generate':
-                $package = $climate->arguments->get('package');
-                $destinationDirectory = $climate->arguments->get('destinationDirectory');
-                $version = $climate->arguments->get('version');
-                $authors = $climate->arguments->get('authors');
-                $description = $climate->arguments->get('description');
-                $section = $climate->arguments->get('section');
-                \Modules\InsiderFramework\Console\DirectoryTreeGenerator::generate($climate, $package, $destinationDirectory, $version, $authors, $description, $section);
-            break;
-
-            case 'build':
-                \Modules\InsiderFramework\Console\Build::buildPackage($climate, $argumentsAndDependencies);
-                break;
-
-            case 'test':
-            case 'create':
-                $climate->to('error')->red("----------------------------------------");
-                $climate->to('error')->red("Console function $action not implemented yet!");
-                $climate->to('error')->red("----------------------------------------");
-                break;
-
-            default:
-                $climate->to('error')->red("----------------------------------------");
-                $climate->to('error')->red('Action ' . $action . " not recognized");
-                $climate->to('error')->red("----------------------------------------");
-                die();
-                break;
-        }
+        
     }
 
     /**

@@ -7,9 +7,5 @@
   "provides": {},
   "depends": {},
   "recommends": {},
-  "postinst-cmd": "",
-  "postrm-cmd": "",
-  "preinst-cmd": "",
-  "prerm-cmd": "",
   "description": "The classic email sending library for PHP"
 }

@@ -157,10 +157,10 @@ class DirectoryTreeGenerator
         // Creating control and data directories
         \Modules\InsiderFramework\Core\FileTree::createDirectory(
             $destinationDirectory . DIRECTORY_SEPARATOR .
-            "Registry", 
+            "Registry",
             777
         );
-        \Modules\InsiderFramework\Core\FileTree::createDirectory($destinationDirectory . DIRECTORY_SEPARATOR . "data", 777);
+        \Modules\InsiderFramework\Core\FileTree::createDirectory($destinationDirectory . DIRECTORY_SEPARATOR . "Data", 777);
         
         // Creating default files
         $controlDir = $destinationDirectory . DIRECTORY_SEPARATOR .
@@ -168,12 +168,12 @@ class DirectoryTreeGenerator
 
         \Modules\InsiderFramework\Core\FileTree::fileWriteContent($controlDir . "CHANGELOG", "", true);
         \Modules\InsiderFramework\Core\FileTree::fileWriteContent($controlDir . "LICENSE", "", true);
-        \Modules\InsiderFramework\Core\FileTree::fileWriteContent($controlDir . "postinst.php", "", true);
-        \Modules\InsiderFramework\Core\FileTree::fileWriteContent($controlDir . "postrm.php", "", true);
-        \Modules\InsiderFramework\Core\FileTree::fileWriteContent($controlDir . "preinst.php", "", true);
-        \Modules\InsiderFramework\Core\FileTree::fileWriteContent($controlDir . "prerm.php", "", true);
+        \Modules\InsiderFramework\Core\FileTree::fileWriteContent($controlDir . "Postinst.php", "", true);
+        \Modules\InsiderFramework\Core\FileTree::fileWriteContent($controlDir . "Postrm.php", "", true);
+        \Modules\InsiderFramework\Core\FileTree::fileWriteContent($controlDir . "Preinst.php", "", true);
+        \Modules\InsiderFramework\Core\FileTree::fileWriteContent($controlDir . "Prerm.php", "", true);
         
         // Creating control.json file
-        \Modules\InsiderFramework\Core\FileTree::fileWriteContent($controlDir . "control.json", json_encode($controlData), true);
+        \Modules\InsiderFramework\Core\FileTree::fileWriteContent($controlDir . "Control.json", json_encode($controlData), true);
     }
 }
