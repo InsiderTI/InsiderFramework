@@ -1,13 +1,13 @@
 <?php
 
-namespace Modules\InsiderFramework\Core\Validation;
+namespace Modules\InsiderFramework\Core\Registry\Validation;
 
 /**
  * Validation methods for registry
  *
  * @author Marcello Costa
  *
- * @package Modules\InsiderFramework\Core\Validation\Registry
+ * @package Modules\InsiderFramework\Core\Registry\Validation\Registry
  */
 trait Registry
 {
@@ -16,7 +16,7 @@ trait Registry
      *
      * @author Marcello Costa
      *
-     * @package Modules\InsiderFramework\Core\Validation\Registry
+     * @package Modules\InsiderFramework\Core\Registry\Validation\Registry
      *
      * @param string $version Version to be validated
      *

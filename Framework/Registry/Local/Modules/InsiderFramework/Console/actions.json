@@ -19,7 +19,7 @@
                 "framework is considered a package by itself",
                 ""
             ],
-            "class": "Modules\\InsiderFramework\\Console\\Application",
+            "class": "Modules\\InsiderFramework\\Core\\PackageSystem\\Console\\InstallUpdateRemove",
             "function": "installOrUpdate"
         },
         "remove": {
@@ -27,14 +27,13 @@
                 "uninstall"
             ],
             "description": [
-                "-a uninstall --package sagacious -s guild",
-                "        Uninstall package (from mirror)",
+                "-a remove --package sagacious",
                 "",
-                "-a remove --package sagacious -s guild",
+                "-a uninstall --package sagacious",
                 "        Action 'remove' is an alias to uninstall",
                 ""
             ],
-            "class": "Modules\\InsiderFramework\\Console\\Application",
+            "class": "Modules\\InsiderFramework\\Core\\PackageSystem\\Console\\InstallUpdateRemove",
             "function": "remove"
         },
         "create": {
@@ -60,8 +59,18 @@
                 "        Generate a directory tree for a new package (parameters between '[' can be specified to skip interactive questions):",
                 ""
             ],
-            "class": "Modules\\InsiderFramework\\Console\\Application",
+            "class": "\\Modules\\InsiderFramework\\Core\\PackageSystem\\Console\\DirectoryTreeGenerator",
             "function": "generate"
+        },
+        "build": {
+            "aliases": [],
+            "description": [
+                "-a build  --directory mydir --output mypackage.pkg",
+                "        Build a package file from a directory tree of a new package",
+                ""
+            ],
+            "class": "Modules\\InsiderFramework\\Core\\PackageSystem\\Console\\Build",
+            "function": "buildPackage"
         },
         "test": {
             "aliases": [],
@@ -70,8 +79,8 @@
                 "        Run tests of a class",
                 ""
             ],
-            "class": "Modules\\InsiderFramework\\Console\\Application",
-            "function": "remove"
+            "class": "Modules\\InsiderFramework\\Console\\Test",
+            "function": "run"
         }
     }
 }

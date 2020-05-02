@@ -383,7 +383,7 @@ class ConfigLoader
         // If the debug bar is enabled, add the debug styles in the default css
         if (DEBUG_BAR === true) {
             global $injectedCss;
-            $filename = "web" . DIRECTORY_SEPARATOR . "Apps" . DIRECTORY_SEPARATOR . "sys" . DIRECTORY_SEPARATOR .
+            $filename = "Web" . DIRECTORY_SEPARATOR . "Apps" . DIRECTORY_SEPARATOR . "sys" . DIRECTORY_SEPARATOR .
                         "assets" . DIRECTORY_SEPARATOR . "css" . DIRECTORY_SEPARATOR . "debug.css";
             $cssDebugBar = file_get_contents($filename);
             $injectedCss = $injectedCss . "<style>" . $cssDebugBar . "</style>";

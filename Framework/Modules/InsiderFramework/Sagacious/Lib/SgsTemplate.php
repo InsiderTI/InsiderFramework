@@ -1012,7 +1012,7 @@ class SgsTemplate
 
             // Minificando o arquivo em tempo de execução (se não existir ou for diferente)
             // Arquivo não existe
-            if (!(file_exists(INSTALL_DIR . DIRECTORY_SEPARATOR . "web" . DIRECTORY_SEPARATOR . $csspath))) {
+            if (!(file_exists(INSTALL_DIR . DIRECTORY_SEPARATOR . "Web" . DIRECTORY_SEPARATOR . $csspath))) {
                 \Modules\InsiderFramework\Core\Error\ErrorHandler::i10nErrorRegister(
                     'CSS file not found: %' . $csspath . '%',
                     "app/sys"
@@ -1021,25 +1021,25 @@ class SgsTemplate
 
             // Se o arquivo minificado não existir
             $minnamecssfile = str_replace(".css", ".min.css", $csspath);
-            if (!(file_exists(INSTALL_DIR . DIRECTORY_SEPARATOR . "web" . DIRECTORY_SEPARATOR . $minnamecssfile))) {
+            if (!(file_exists(INSTALL_DIR . DIRECTORY_SEPARATOR . "Web" . DIRECTORY_SEPARATOR . $minnamecssfile))) {
                 // Cria o arquivo minificado
                 $minifiedcsscontent = $sgsPage->cssMinify(
                     \Modules\InsiderFramework\Core\FileTree::fileReadContent(
-                        INSTALL_DIR . DIRECTORY_SEPARATOR . "web" . DIRECTORY_SEPARATOR . $csspath
+                        INSTALL_DIR . DIRECTORY_SEPARATOR . "Web" . DIRECTORY_SEPARATOR . $csspath
                     )
                 );
 
                 \Modules\InsiderFramework\Core\FileTree::fileWriteContent(
-                    INSTALL_DIR . DIRECTORY_SEPARATOR . "web" . DIRECTORY_SEPARATOR . $minnamecssfile,
+                    INSTALL_DIR . DIRECTORY_SEPARATOR . "Web" . DIRECTORY_SEPARATOR . $minnamecssfile,
                     $minifiedcsscontent
                 );
             } else {
                 // Recuperando o hash de ambos os arquivos
                 $hashfile = md5_file(
-                    INSTALL_DIR . DIRECTORY_SEPARATOR . "web" . DIRECTORY_SEPARATOR . $csspath
+                    INSTALL_DIR . DIRECTORY_SEPARATOR . "Web" . DIRECTORY_SEPARATOR . $csspath
                 );
                 $hashfilemin = md5_file(
-                    INSTALL_DIR . DIRECTORY_SEPARATOR . "web" . DIRECTORY_SEPARATOR . $minnamecssfile
+                    INSTALL_DIR . DIRECTORY_SEPARATOR . "Web" . DIRECTORY_SEPARATOR . $minnamecssfile
                 );
 
                 // Se o hash for diferente
@@ -1047,17 +1047,17 @@ class SgsTemplate
                     // Reconstrói o arquivo
                     // Objeto KC_Ftree utilizado na função
                     \Modules\InsiderFramework\Core\FileTree::deleteFile(
-                        INSTALL_DIR . DIRECTORY_SEPARATOR . "web" . DIRECTORY_SEPARATOR . $minnamecssfile
+                        INSTALL_DIR . DIRECTORY_SEPARATOR . "Web" . DIRECTORY_SEPARATOR . $minnamecssfile
                     );
 
                     $minifiedcsscontent = $sgsPage->cssMinify(
                         \Modules\InsiderFramework\Core\FileTree::fileReadContent(
-                            INSTALL_DIR . DIRECTORY_SEPARATOR . "web" . DIRECTORY_SEPARATOR . $csspath
+                            INSTALL_DIR . DIRECTORY_SEPARATOR . "Web" . DIRECTORY_SEPARATOR . $csspath
                         )
                     );
 
                     \Modules\InsiderFramework\Core\FileTree::fileWriteContent(
-                        INSTALL_DIR . DIRECTORY_SEPARATOR . "web" . DIRECTORY_SEPARATOR . $minnamecssfile,
+                        INSTALL_DIR . DIRECTORY_SEPARATOR . "Web" . DIRECTORY_SEPARATOR . $minnamecssfile,
                         $minifiedcsscontent
                     );
                 }
@@ -1115,7 +1115,7 @@ class SgsTemplate
 
             // Minificando o arquivo em tempo de execução (se não existir ou for diferente)
             // Arquivo não existe
-            if (!(file_exists(INSTALL_DIR . DIRECTORY_SEPARATOR . "web" . DIRECTORY_SEPARATOR . $jspath))) {
+            if (!(file_exists(INSTALL_DIR . DIRECTORY_SEPARATOR . "Web" . DIRECTORY_SEPARATOR . $jspath))) {
                 \Modules\InsiderFramework\Core\Error\ErrorHandler::i10nErrorRegister(
                     'JS File not found: %' . $jspath . '%',
                     "app/sys"
@@ -1124,37 +1124,37 @@ class SgsTemplate
 
             // Se o arquivo minificado não existir
             $minnamejsfile = str_replace(".js", ".min.js", $jspath);
-            if (!(file_exists(INSTALL_DIR . DIRECTORY_SEPARATOR . "web" . DIRECTORY_SEPARATOR . $minnamejsfile))) {
+            if (!(file_exists(INSTALL_DIR . DIRECTORY_SEPARATOR . "Web" . DIRECTORY_SEPARATOR . $minnamejsfile))) {
                 // Cria o arquivo minificado
                 $minifiedjscontent = $sgsPage->jsMinify(
                     \Modules\InsiderFramework\Core\FileTree::fileReadContent(
-                        INSTALL_DIR . DIRECTORY_SEPARATOR . "web" . DIRECTORY_SEPARATOR . $jspath
+                        INSTALL_DIR . DIRECTORY_SEPARATOR . "Web" . DIRECTORY_SEPARATOR . $jspath
                     )
                 );
                 \Modules\InsiderFramework\Core\FileTree::fileWriteContent(
-                    INSTALL_DIR . DIRECTORY_SEPARATOR . "web" . DIRECTORY_SEPARATOR . $minnamejsfile,
+                    INSTALL_DIR . DIRECTORY_SEPARATOR . "Web" . DIRECTORY_SEPARATOR . $minnamejsfile,
                     $minifiedjscontent
                 );
             } else {
                 // Recuperando o hash de ambos os arquivos
-                $hashfile = md5_file(INSTALL_DIR . DIRECTORY_SEPARATOR . "web" . DIRECTORY_SEPARATOR . $jspath);
+                $hashfile = md5_file(INSTALL_DIR . DIRECTORY_SEPARATOR . "Web" . DIRECTORY_SEPARATOR . $jspath);
                 $hashfilemin = md5_file(
-                    INSTALL_DIR . DIRECTORY_SEPARATOR . "web" . DIRECTORY_SEPARATOR . $minnamejsfile
+                    INSTALL_DIR . DIRECTORY_SEPARATOR . "Web" . DIRECTORY_SEPARATOR . $minnamejsfile
                 );
 
                 // Se o hash for diferente
                 if ($hashfile !== $hashfilemin) {
                     // Reconstrói o arquivo
                     \Modules\InsiderFramework\Core\FileTree::deleteFile(
-                        INSTALL_DIR . DIRECTORY_SEPARATOR . "web" . DIRECTORY_SEPARATOR . $minnamejsfile
+                        INSTALL_DIR . DIRECTORY_SEPARATOR . "Web" . DIRECTORY_SEPARATOR . $minnamejsfile
                     );
                     $minifiedjscontent = $sgsPage->jsMinify(
                         \Modules\InsiderFramework\Core\FileTree::fileReadContent(
-                            INSTALL_DIR . DIRECTORY_SEPARATOR . "web" . DIRECTORY_SEPARATOR . $jspath
+                            INSTALL_DIR . DIRECTORY_SEPARATOR . "Web" . DIRECTORY_SEPARATOR . $jspath
                         )
                     );
                     \Modules\InsiderFramework\Core\FileTree::fileWriteContent(
-                        INSTALL_DIR . DIRECTORY_SEPARATOR . "web" . DIRECTORY_SEPARATOR . $minnamejsfile,
+                        INSTALL_DIR . DIRECTORY_SEPARATOR . "Web" . DIRECTORY_SEPARATOR . $minnamejsfile,
                         $minifiedjscontent
                     );
                 }
