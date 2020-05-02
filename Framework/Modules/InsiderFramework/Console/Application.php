@@ -43,7 +43,11 @@ class Application
         $climate->arguments->parse();
         $action = $climate->arguments->get('action');
 
-        
+        $actionsAndParameters = \Modules\InsiderFramework\Console\Application::getActionsAndParameters();
+
+        if (!in_array(strtolower($action), $actionsAndParameters['validActions'])){
+            \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister('Action not found');
+        }
     }
 
     /**

@@ -452,6 +452,20 @@ class ErrorHandler
             }
         }
 
+        if ($consoleRequest){
+            $climate = \Modules\InsiderFramework\Core\KernelSpace::getVariable('climate', 'insiderFrameworkSystem');
+            $climate->br();
+            $climate->to('error')->red($error->getSubject())->br();
+            $climate->to('error')->red("Type: " . $error->getType())->br();
+            $climate->to('error')->red("Message: " . $error->getMessageOrText())->br();
+            $climate->to('error')->red("File: " . $error->getFile())->br();
+            $climate->to('error')->red("Line: " . $error->getLine())->br();
+            $climate->to('error')->red("Fatal: " . $error->getFatal())->br();
+            if ($error->getFatal()){
+                die();
+            }
+        }
+
         // Handling the error path (to display the relative path)
         $path = __DIR__;
         $path = explode(DIRECTORY_SEPARATOR, $path);
