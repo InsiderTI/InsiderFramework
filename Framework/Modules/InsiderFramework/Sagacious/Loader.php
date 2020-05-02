@@ -4,7 +4,7 @@
  * File that loads sagacious settings and classes
  */
 
-require_once 'config_sagacious.php';
+require_once 'ConfigSagacious.php';
 
 \Modules\InsiderFramework\Core\KernelSpace::setVariable(
     array(

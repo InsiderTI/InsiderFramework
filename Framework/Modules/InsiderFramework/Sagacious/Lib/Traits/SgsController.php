@@ -335,7 +335,7 @@ trait SgsController
         }
 
         $viewsCacheControlFile = $cacheDirectory . DIRECTORY_SEPARATOR .
-                                "views_cache_control.json";
+                                "ViewsCacheControl.json";
 
         $cacheData = null;
         if (!file_exists($viewsCacheControlFile)) {
@@ -471,7 +471,7 @@ trait SgsController
                 INSTALL_DIR . DIRECTORY_SEPARATOR .
                 "Framework" . DIRECTORY_SEPARATOR .
                 "Cache" . DIRECTORY_SEPARATOR .
-                "views_cache_control.json"
+                "ViewsCacheControl.json"
             );
 
             // If still equals to null, an error occurs on JSON read

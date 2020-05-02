@@ -1,5 +1,5 @@
 {
-    "render-engine": "InsiderFramework/Sagacious/loader.php",
+    "render-engine": "InsiderFramework/Sagacious/Loader.php",
     "php-openssl-cryptor": "PhpOpensslCryptor/Cryptor.php",
     "composer": "vendor/autoload.php"
 }
