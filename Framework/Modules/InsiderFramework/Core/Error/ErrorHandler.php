@@ -157,7 +157,7 @@ class ErrorHandler
                 // Creates a new log in case of the file already exists
                 $logfilepath = INSTALL_DIR . DIRECTORY_SEPARATOR .
                                "Framework" . DIRECTORY_SEPARATOR .
-                               "cache" . DIRECTORY_SEPARATOR .
+                               "Cache" . DIRECTORY_SEPARATOR .
                                "logs" . DIRECTORY_SEPARATOR .
                                "logfile-" . $id;
 
@@ -165,7 +165,7 @@ class ErrorHandler
                     $id = uniqid();
                     $logfilepath = INSTALL_DIR . DIRECTORY_SEPARATOR .
                                    "Framework" . DIRECTORY_SEPARATOR .
-                                   "cache" . DIRECTORY_SEPARATOR .
+                                   "Cache" . DIRECTORY_SEPARATOR .
                                    "logs" . DIRECTORY_SEPARATOR .
                                    "logfile-" . $id;
                 }

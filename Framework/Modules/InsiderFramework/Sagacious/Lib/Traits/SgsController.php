@@ -108,8 +108,8 @@ trait SgsController
                 );
 
                 $renderfilepath = "Framework" . DIRECTORY_SEPARATOR .
-                                "cache" . DIRECTORY_SEPARATOR .
-                                $cacheFileName . ".php";
+                                  "Cache" . DIRECTORY_SEPARATOR .
+                                  $cacheFileName . ".php";
 
                 // If cache is invalid of if the file don't exists anymore
                 // (was erased by another method)
@@ -140,12 +140,9 @@ trait SgsController
             }
 
             // Searching the creation date of the file
-            $renderfilepath = "Framework" .
-                DIRECTORY_SEPARATOR .
-                "cache" .
-                DIRECTORY_SEPARATOR .
-                $cacheFileName .
-                ".php";
+            $renderfilepath = "Framework" . DIRECTORY_SEPARATOR .
+                              "Cache" . DIRECTORY_SEPARATOR .
+                              $cacheFileName . ".php";
 
             // Calculating
             $status = filemtime($renderfilepath);
@@ -167,8 +164,8 @@ trait SgsController
                     );
 
                     $renderfilepath = "Framework" . DIRECTORY_SEPARATOR .
-                                    "cache" . DIRECTORY_SEPARATOR .
-                                    $cacheFileName . ".php";
+                                      "Cache" . DIRECTORY_SEPARATOR .
+                                      $cacheFileName . ".php";
 
                     // If the cache was no longer valid or if the file do not exists anymore
                     // (was erased by another method)
@@ -195,8 +192,8 @@ trait SgsController
 
         // Rendering the file on buffer and returning the result to variable
         $renderfilepath = "Framework" . DIRECTORY_SEPARATOR .
-                        "cache" . DIRECTORY_SEPARATOR .
-                        $cacheFileName . ".php";
+                          "Cache" . DIRECTORY_SEPARATOR .
+                          $cacheFileName . ".php";
 
         // Setting the right include path
         set_include_path(get_include_path() . PATH_SEPARATOR . INSTALL_DIR);
@@ -282,14 +279,14 @@ trait SgsController
                 INSTALL_DIR .
                 DIRECTORY_SEPARATOR .
                 "Framework" . DIRECTORY_SEPARATOR .
-                "cache" . DIRECTORY_SEPARATOR .
+                "Cache" . DIRECTORY_SEPARATOR .
                 $fileName . ".php"
             )
         ) {
             FileTree::deleteFile(
                 INSTALL_DIR . DIRECTORY_SEPARATOR .
                 "Framework" . DIRECTORY_SEPARATOR .
-                "cache" . DIRECTORY_SEPARATOR .
+                "Cache" . DIRECTORY_SEPARATOR .
                 $fileName . ".php"
             );
         }
@@ -302,7 +299,7 @@ trait SgsController
         FileTree::fileWriteContent(
             INSTALL_DIR . DIRECTORY_SEPARATOR .
             "Framework" . DIRECTORY_SEPARATOR .
-            "cache" . DIRECTORY_SEPARATOR .
+            "Cache" . DIRECTORY_SEPARATOR .
             $fileName . ".php",
             $codev['renderCode']
         );
@@ -331,7 +328,7 @@ trait SgsController
     ): array {
         $cacheDirectory = INSTALL_DIR . DIRECTORY_SEPARATOR .
                         "Framework" . DIRECTORY_SEPARATOR .
-                        "cache";
+                        "Cache";
 
         if (!is_dir($cacheDirectory)) {
             FileTree::createDirectory($$cacheDirectory, 777);
@@ -473,7 +470,7 @@ trait SgsController
             $cacheData = Json::getJSONDataFile(
                 INSTALL_DIR . DIRECTORY_SEPARATOR .
                 "Framework" . DIRECTORY_SEPARATOR .
-                "cache" . DIRECTORY_SEPARATOR .
+                "Cache" . DIRECTORY_SEPARATOR .
                 "views_cache_control.json"
             );
 

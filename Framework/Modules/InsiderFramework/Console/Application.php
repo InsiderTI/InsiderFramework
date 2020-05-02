@@ -150,12 +150,17 @@ class Application
         }
 
         // Trying to extract the pkg file to temporary directory
-        $tmpDir = INSTALL_DIR . DIRECTORY_SEPARATOR . "Framework" . DIRECTORY_SEPARATOR .
-                  "cache" . DIRECTORY_SEPARATOR . "tmpUpdateDir_" . uniqid();
+        $tmpDir = INSTALL_DIR . DIRECTORY_SEPARATOR .
+                  "Framework" . DIRECTORY_SEPARATOR .
+                  "Cache" . DIRECTORY_SEPARATOR .
+                  "tmpUpdateDir_" .
+                  uniqid();
 
         while (is_dir($tmpDir) || is_file($tmpDir)) {
-            $tmpDir = INSTALL_DIR . DIRECTORY_SEPARATOR . "Framework" . DIRECTORY_SEPARATOR . "cache" .
-            DIRECTORY_SEPARATOR . "tmpUpdateDir_" . uniqid();
+            $tmpDir = INSTALL_DIR . DIRECTORY_SEPARATOR .
+                      "Framework" . DIRECTORY_SEPARATOR .
+                      "Cache" . DIRECTORY_SEPARATOR .
+                      "tmpUpdateDir_" . uniqid();
         }
 
         // Creating the temporary directory
@@ -172,7 +177,10 @@ class Application
         }
 
         // Verifying if the package version is later than the installed version
-        $controlFile = $tmpDir . DIRECTORY_SEPARATOR . "Registry" . DIRECTORY_SEPARATOR . "control.json";
+        $controlFile = $tmpDir . DIRECTORY_SEPARATOR .
+                       "Registry" . DIRECTORY_SEPARATOR .
+                       "control.json";
+
         if (!file_exists($controlFile) || !is_readable($controlFile)) {
             \Modules\InsiderFramework\Console\Application::stopInstallUpdate($tmpDir, "File not found or not readable: " . $controlFile);
         }

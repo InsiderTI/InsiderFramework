@@ -1,5 +1,5 @@
 <?php
-                        \Modules\InsiderFramework\Sagacious\Lib\SgsView::InitializeViewCode('["5ea651554009f","5ea65155400ad"]');
+                        \Modules\InsiderFramework\Sagacious\Lib\SgsView::InitializeViewCode('["5eadb23f0443a","5eadb23f04448"]');
                     ?>
 <!DOCTYPE HTML>
 <html>
