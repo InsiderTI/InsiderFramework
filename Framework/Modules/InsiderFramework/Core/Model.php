@@ -11,7 +11,7 @@ namespace Modules\InsiderFramework\Core;
  */
 class Model
 {
-    use Modules\InsiderFramework\PureSql\Core;
+    use \Modules\InsiderFramework\PureSql\Core;
     
     /**
      * Variables for database connection

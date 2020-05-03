@@ -46,17 +46,6 @@ class ConfigLoader
         }
 
         // Loading global variables from config to kernelspace
-        global $injectedCss;
-        global $loadAVG;
-        global $databases;
-        global $appLoaded;
-        
-        \Modules\InsiderFramework\Core\KernelSpace::setVariable(array('appLoaded' => $appLoaded), 'insiderFrameworkSystem');
-        \Modules\InsiderFramework\Core\KernelSpace::setVariable(array('databases' => $databases), 'insiderFrameworkSystem');
-        \Modules\InsiderFramework\Core\KernelSpace::setVariable(array('injectedCss' => $injectedCss), 'insiderFrameworkSystem');
-        \Modules\InsiderFramework\Core\KernelSpace::setVariable(array('loadAVG' => $loadAVG), 'insiderFrameworkSystem');
-        unset($injectedCss, $loadAVG, $databases, $appLoaded, $guildsLoaded);
-
         \Modules\InsiderFramework\Core\Loaders\ConfigLoader::
         registryJsonConfigurationToConstraintsAndVariablesInKernelSpace($coreData);
 
@@ -446,8 +435,13 @@ class ConfigLoader
         if (!isset($coreData['DATABASES'])) {
             \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError("The following information was not found in the configuration: 'DATABASES'");
         }
-        global $databases;
         $databases = $coreData['DATABASES'];
+        \Modules\InsiderFramework\Core\KernelSpace::setVariable(
+            array(
+                'databases' => $databases
+            ),
+            'insiderFrameworkSystem'
+        );
 
         if (isset($coreData['DB_APP'])) {
             /**
@@ -460,7 +454,6 @@ class ConfigLoader
         unset($coreData);
 
         // Loading framework registry
-        global $appLoaded;
         $appLoaded = \Modules\InsiderFramework\Core\Json::getJSONDataFile(
             INSTALL_DIR . DIRECTORY_SEPARATOR . 
             "Framework" . DIRECTORY_SEPARATOR . 
