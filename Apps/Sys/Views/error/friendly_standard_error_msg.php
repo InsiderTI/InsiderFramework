@@ -16,7 +16,7 @@
         <div id="all" style='text-align: center;' unselectable='on' onselectstart='return false;' onmousedown='return false;'>
             <h2>Esta página está enfretando alguns problemas.</h2><br/>
             <h3>Volte mais tarde por favor.</h3>
-            <img style='width: 15em;' src='<?php echo REQUESTED_URL . "/apps/sys/assets/img/error_frame_cartoon.png"; ?>' />
+            <img style='width: 15em;' src='<?php echo REQUESTED_URL . "/Apps/Sys/assets/img/error_frame_cartoon.png"; ?>' />
         </div>
     </body>
 </html>

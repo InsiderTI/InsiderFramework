@@ -19,7 +19,7 @@
                 No momento, estamos enfrentando um excesso de tráfego.<br/>
                 Por favor, tente novamente em alguns minutos.
             </h2>
-            <img src='/apps/sys/assets/img/error_queue.png' />
+            <img src='/Apps/Sys/assets/img/error_queue.png' />
         </div>
     </body>
 </html>
