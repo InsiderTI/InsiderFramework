@@ -29,11 +29,11 @@ trait Registry
             "Framework" . DIRECTORY_SEPARATOR .
             "Registry" . DIRECTORY_SEPARATOR .
             "Sections" . DIRECTORY_SEPARATOR .
-            "SagaciousComponents.json"
+            "sagaciousComponents.json"
         );
 
         if ($regcomponentfile === false) {
-            \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister('Cannot load SagaciousComponents.json data');
+            \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister('Cannot load sagaciousComponents.json data');
         }
 
         if (is_array($regcomponentfile)) {
@@ -167,7 +167,7 @@ trait Registry
                 case 'sagaciouscomponent':
                     $filespath[] = $registryDir . DIRECTORY_SEPARATOR .
                                    "Sections" . DIRECTORY_SEPARATOR .
-                                   "SagaciousComponents.json";
+                                   "sagaciousComponents.json";
                     break;
 
                 default:
@@ -192,7 +192,7 @@ trait Registry
 
             $filespath['sagaciouscomponents'] = $registryDir . DIRECTORY_SEPARATOR .
                                        "Sections" . DIRECTORY_SEPARATOR .
-                                       "SagaciousComponents.json";
+                                       "sagaciousComponents.json";
         }
 
         $section = "";

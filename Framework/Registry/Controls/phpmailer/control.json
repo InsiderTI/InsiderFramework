@@ -2,7 +2,6 @@
   "package": "phpmailer",
   "version": "5.2.13",
   "authors": "https://github.com/PHPMailer/PHPMailer",
-  "installed-size": 1152585,
   "section": "module",
   "provides": {},
   "depends": {},

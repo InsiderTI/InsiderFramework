@@ -11,6 +11,6 @@ namespace Modules\InsiderFramework\Core;
  */
 class Registry
 {
-    use \Modules\InsiderFramework\Core\Manipulation\Registry;
-    use \Modules\InsiderFramework\Core\Validation\Registry;
+    use \Modules\InsiderFramework\Core\Registry\Manipulation\Registry;
+    use \Modules\InsiderFramework\Core\Registry\Validation\Registry;
 }

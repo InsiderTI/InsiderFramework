@@ -180,7 +180,7 @@ class InstallUpdateRemove {
                                "Controls" . DIRECTORY_SEPARATOR . strtolower($newPackage);
 
         // Running the pre-install script
-        $preInstallFile = $tmpDir . DIRECTORY_SEPARATOR . "Registry" . DIRECTORY_SEPARATOR . "preinst.php";
+        $preInstallFile = $tmpDir . DIRECTORY_SEPARATOR . "Registry" . DIRECTORY_SEPARATOR . "Preinst.php";
         if (file_exists($preInstallFile)) {
             \Modules\InsiderFramework\Core\FileTree::requireOnceFile($preInstallFile);
         }
@@ -189,7 +189,7 @@ class InstallUpdateRemove {
         \Modules\InsiderFramework\Core\FileTree::copyDirectory($tmpDir . DIRECTORY_SEPARATOR . "Data", INSTALL_DIR);
 
         // Running the pos-install script
-        $posInstallFile = $tmpDir . DIRECTORY_SEPARATOR . "Registry" . DIRECTORY_SEPARATOR . "posinst.php";
+        $posInstallFile = $tmpDir . DIRECTORY_SEPARATOR . "Registry" . DIRECTORY_SEPARATOR . "Posinst.php";
         if (file_exists($posInstallFile)) {
             \Modules\InsiderFramework\Core\FileTree::requireOnceFile($posInstallFile);
         }

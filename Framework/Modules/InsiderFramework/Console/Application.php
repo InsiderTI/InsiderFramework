@@ -157,57 +157,12 @@ class Application
             \Modules\InsiderFramework\Console\Application::stopInstallUpdate($tmpDir, "File not found or not readable: " . $controlFile);
         }
 
-        // Trying to read the JSON file
-        $jsonData = \Modules\InsiderFramework\Core\Json::getJSONDataFile($controlFile);
-        if ($jsonData === false) {
-            \Modules\InsiderFramework\Console\Application::stopInstallUpdate($tmpDir, "Cannot read control file: " . $controlFile);
-        }
-
-        $missingInfoError = [];
-        if (!isset($jsonData['package']) || trim($jsonData['package']) === "") {
-            $missingInfoError[] = "Information missing at control file: package";
-        }
-        if (!isset($jsonData['version']) || trim($jsonData['version']) === "") {
-            $missingInfoError[] = "Information missing at control file: version";
-        }
-        if ((!isset($jsonData['installed-size']) || trim($jsonData['installed-size']) === "")) {
-            $missingInfoError[] = "Information missing at control file: installed-size";
-        }
-        if (!isset($jsonData['maintainer']) || trim($jsonData['maintainer']) === "") {
-            $missingInfoError[] = "Information missing at control file: maintainer";
-        }
-        if (!isset($jsonData['provides'])) {
-            $missingInfoError[] = "Information missing at control file: provides";
-        }
-        if (!isset($jsonData['depends'])) {
-            $missingInfoError[] = "Information missing at control file: depends";
-        }
-        if (!isset($jsonData['recommends'])) {
-            $missingInfoError[] = "Information missing at control file: recommends";
-        }
-        if (!isset($jsonData['postinst-cmd'])) {
-            $missingInfoError[] = "Information missing at control file: postinst-cmd";
-        }
-        if (!isset($jsonData['postrm-cmd'])) {
-            $missingInfoError[] = "Information missing at control file: postrm-cmd";
-        }
-        if (!isset($jsonData['preinst-cmd'])) {
-            $missingInfoError[] = "Information missing at control file: preinst-cmd";
-        }
-        if (!isset($jsonData['prerm-cmd'])) {
-            $missingInfoError[] = "Information missing at control file: prerm-cmd";
-        }
-        if (!isset($jsonData['description']) || trim($jsonData['description']) === "") {
-            $missingInfoError[] = "Information missing at control file: description";
-        }
         
-        if (count($missingInfoError) > 0) {
-            \Modules\InsiderFramework\Console\Application::stopInstallUpdate($tmpDir, implode("|", $missingInfoError));
-        }
-
-        $newPackage = $jsonData['package'];
-        $newPackageVersion = $jsonData['version'];
-        $newPackageSection = $jsonData['section'];
+        $packageControlData = new \Modules\InsiderFramework\Core\Registry\Definition\PackageControlData($controlFile);
+        
+        $newPackage = $packageControlData->getPackage();
+        $newPackageVersion = $packageControlData->getVersion();
+        $newPackageSection = $packageControlData->getSection();
 
         // Checking if package is installed
         $installedItemInfo = json_decode($pkgController->getInstalledItemInfo(
@@ -314,7 +269,7 @@ class Application
         // Running the pre-install script
         $preInstallFile = $tmpDir . DIRECTORY_SEPARATOR .
                           "Registry" . DIRECTORY_SEPARATOR .
-                          "preinst.php";
+                          "Preinst.php";
 
         if (file_exists($preInstallFile)) {
             Modules\InsiderFramework\Core\FileTree::requireOnceFile($preInstallFile);
@@ -330,7 +285,7 @@ class Application
         // Running the pos-install script
         $posInstallFile = $tmpDir . DIRECTORY_SEPARATOR .
                           "Registry" . DIRECTORY_SEPARATOR .
-                          "posinst.php";
+                          "Posinst.php";
 
         if (file_exists($posInstallFile)) {
             Modules\InsiderFramework\Core\FileTree::requireOnceFile($posInstallFile);
