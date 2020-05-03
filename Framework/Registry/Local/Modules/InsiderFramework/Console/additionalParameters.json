@@ -4,13 +4,17 @@
             "longPrefix": "file",
             "description": "File path"
         },
-        "remote": {
-            "longPrefix": "remote",
-            "description": "Remote path"
-        },
         "package": {
             "longPrefix": "package",
             "description": "Package name"
+        },
+        "output": {
+            "longPrefix": "output",
+            "description": "Output package file name"
+        },
+        "sourceDirectory": {
+            "longPrefix": "sourceDirectory",
+            "description": "Source directory"
         },
         "destinationDirectory": {
             "longPrefix": "destinationDirectory",
@@ -44,11 +48,6 @@
             "prefix": "t",
             "longPrefix": "target",
             "description": "Target item"
-        },
-        "remotepath": {
-            "prefix": "rp",
-            "longPrefix": "remotepath",
-            "description": "Remote path of item on repository"
         }
     }
 }

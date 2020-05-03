@@ -65,11 +65,11 @@
         "build": {
             "aliases": [],
             "description": [
-                "-a build  --directory mydir --output mypackage.pkg",
+                "-a build  --sourceDirectory mydir --output mypackage.pkg",
                 "        Build a package file from a directory tree of a new package",
                 ""
             ],
-            "class": "Modules\\InsiderFramework\\Core\\PackageSystem\\Console\\Build",
+            "class": "\\Modules\\InsiderFramework\\Core\\PackageSystem\\Console\\Build",
             "function": "buildPackage"
         },
         "test": {

@@ -45,9 +45,14 @@ class Application
 
         $actionsAndParameters = \Modules\InsiderFramework\Console\Application::getActionsAndParameters();
 
-        if (!in_array(strtolower($action), $actionsAndParameters['validActions'])){
-            \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister('Action not found');
+        if (!isset($actionsAndParameters['validActions'][strtolower($action)])){
+            \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister("Action '$action' not found");
         }
+
+        $function = $actionsAndParameters['validActions'][strtolower($action)]['function'];
+        $class = $actionsAndParameters['validActions'][strtolower($action)]['class'];
+
+        call_user_func("$class::$function", $climate);
     }
 
     /**

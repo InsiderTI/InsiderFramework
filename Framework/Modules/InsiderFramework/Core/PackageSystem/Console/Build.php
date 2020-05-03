@@ -45,10 +45,13 @@ class Build
         }
         
         // Checking if it's an valid build directory
-        \Modules\InsiderFramework\Core\PackageSystem\Validate::validatePackageDirectoryTree($sourceDirectory);
+        $validationErrors = \Modules\InsiderFramework\Core\PackageSystem\Console\Validate::validatePackageDirectoryTree($sourceDirectory);
+        if (!empty($validationErrors)) {
+            \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister(implode(', ', $validationErrors));
+        }
 
         // Getting version from controle file
-        $packageControlData = $packageControlData = new \Modules\InsiderFramework\Core\Registry\Definition\PackageControlData(
+        $packageControlData = new \Modules\InsiderFramework\Core\Registry\Definition\PackageControlData(
             $sourceDirectory . DIRECTORY_SEPARATOR .
             "Registry" . DIRECTORY_SEPARATOR .
             "Control.json"
@@ -88,7 +91,11 @@ class Build
         // Adding version + extension
         $packageFile .= "-" . $packageControlData->getVersion();
   
-        $compressedPathFile = \Modules\InsiderFramework\Core\Filetree::compressDirectoryOrFile($sourceDirectory, $packageFile, "zip");
+        $compressedPathFile = \Modules\InsiderFramework\Core\Filetree::compressDirectoryOrFile(
+            $sourceDirectory,
+            $packageFile,
+            "zip"
+        );
         $finalPackageFileName = substr($packageFile, 0, strlen($compressedPathFile) - 4) . ".pkg";
         \Modules\InsiderFramework\Core\Filetree::renameFile($compressedPathFile, $finalPackageFileName, true);
 

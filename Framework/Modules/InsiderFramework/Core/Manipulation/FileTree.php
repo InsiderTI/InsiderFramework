@@ -939,4 +939,128 @@ trait FileTree
         }
         return implode(DIRECTORY_SEPARATOR, $absolutes);
     }
+
+    /**
+    * Compress an directory or file
+    *
+    * @author Marcello Costa
+    *
+    * @package Modules\InsiderFramework\Core\Manipulation\FileTree
+    *
+    * @param string $target         Directory or file to be compressed
+    * @param string $format         Compress format. Available formats are:
+    *                               zip, gz, bz2
+    * @param string $outputFileName Output of result compressed file
+    *
+    * @return string Path of compressed file
+    */
+    public static function compressDirectoryOrFile(string $target, $format = "zip", $outputFileName = null){
+        if (!is_dir($target) && !is_file($target)){
+            \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister('Cannot read file or directory to compress: '.$target);
+        }
+
+        if (trim($outputFileName."") === ""){
+            $outputFileName = strtolower($target).".zip";
+        }
+
+        switch(strtolower($format)){
+            case "zip":
+                $zip = new \ZipArchive();
+                $zip->open(
+                    $outputFileName,
+                    \ZipArchive::CREATE
+                );
+                if (is_dir($target)){
+                    $options = array(
+                        'add_path' => DIRECTORY_SEPARATOR,
+                        'remove_all_path' => TRUE
+                    );
+                    $zipArchive->addGlob('*.*', GLOB_BRACE, $options);
+                } else {
+                    $zipArchive->addFile($target);
+                }
+                
+                $zipArchive->close();
+            break;
+            case "gz":
+            case "bz2":
+                $phar = new \PharData($outputFileName);
+                if (is_dir($target)){
+                    $phar->buildFromDirectory($target);
+                } else {
+                    $phar->addFile($target);
+                }
+                if (strtolower($format) === "bz2"){
+                    $phar->compress(\Phar::BZ2);
+                } else {
+                    $phar->compress(\Phar::GZ);
+                }
+            break;
+        }
+
+        return $outputFileName;
+    }
+
+    /**
+    * Decompress an file
+    *
+    * @author Marcello Costa
+    *
+    * @package Modules\InsiderFramework\Core\Manipulation\FileTree
+    *
+    * @param string $compressedFile Compressed file
+    * @param string $destination    Destination of decompress
+    * @param string $format         Format of file. Available formats are:
+    *                               zip, gz, bz2
+    *
+    * @return void
+    */
+    public static function decompressDirectoryOrFile(string $compressedFile, $destination, $format = "auto"){
+        if (!is_file($compressedFile)){
+            \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister(
+                'Cannot read file or directory to compress: '.$target
+            );
+        }
+
+        if (trim(strtolower($format)) === "auto"){
+            $extension = strtolower(pathinfo($compressedFile)['extension']);
+        }
+
+        switch(strtolower($format)){
+            case "zip":
+                $zip = new \ZipArchive;
+            
+                if ($zip->open($compressedFile) === TRUE) {
+                    $zip->extractTo($destination);
+                    $zip->close();
+                } else {
+                    \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister('Cannot decompress file '.$compressedFile);
+                }
+            break;
+            case "bz2":
+            case "gz":
+                $phar = new \PharData($outputFileName);
+                $phar->extractTo($destination, null, true);
+            break;
+            default:
+                \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister('Unknown format to decompress '.$format.' with file '.$compressedFile);
+            break;
+        }
+    }
+
+    /**
+    * Generate md5 tree of files
+    *
+    * @author Marcello Costa
+    *
+    * @package Modules\InsiderFramework\Core\Manipulation\FileTree
+    *
+    * @param string $path Path to be mapped
+    *
+    * @return array Array of MD5
+    */
+    public static function generateMd5DirTree($path){
+        var_dump($path);
+        die("FILE: " . __FILE__ . "<br/>LINE: " . __LINE__);
+    }
 }
