@@ -1059,8 +1059,14 @@ trait FileTree
     *
     * @return array Array of MD5
     */
-    public static function generateMd5DirTree($path){
-        var_dump($path);
-        die("FILE: " . __FILE__ . "<br/>LINE: " . __LINE__);
+    public static function generateMd5DirTree($path): array {
+        $dirTree = \Modules\InsiderFramework\Core\Manipulation\FileTree::dirTree($path);
+        $md5tree = [];
+        foreach($dirTree as $dT){
+            if (is_file($dT)){
+                $md5tree[$dT] = md5_file($dT);
+            }
+        }
+        return $md5tree;
     }
 }
