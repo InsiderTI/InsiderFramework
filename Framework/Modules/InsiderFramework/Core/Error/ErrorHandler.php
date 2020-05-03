@@ -3,7 +3,7 @@
 namespace Modules\InsiderFramework\Core\Error;
 
 /**
- * KeyClass that contains functions for handling errors
+ * Class that contains functions for handling errors
  *
  * @package Modules\InsiderFramework\Core\Error\ErrorHandler
  *

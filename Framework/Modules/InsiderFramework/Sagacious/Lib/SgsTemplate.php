@@ -989,7 +989,6 @@ class SgsTemplate
             // ser utilizada em alguns casos
             $csspath = $matchescssfiles[0]['src'];
 
-            // KeyClass Code
             $sgsPage = new SgsPage();
 
             // Removendo barra no início do nome do arquivo (caso exista)

@@ -1,6 +1,5 @@
 <?php
 
-// Namespace das KeyClass
 namespace Modules\InsiderFramework\Core\Manipulation;
 
 /**

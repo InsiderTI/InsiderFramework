@@ -951,16 +951,17 @@ trait FileTree
     * @param string $format         Compress format. Available formats are:
     *                               zip, gz, bz2
     * @param string $outputFileName Output of result compressed file
+    * @param bool   $ignoreRootPath Compress the directory without including the root directory
     *
     * @return string Path of compressed file
     */
-    public static function compressDirectoryOrFile(string $target, $format = "zip", $outputFileName = null){
+    public static function compressDirectoryOrFile(string $target, $format = "zip", $outputFileName = null, $ignoreRootPath = false){
         if (!is_dir($target) && !is_file($target)){
             \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister('Cannot read file or directory to compress: '.$target);
         }
 
         if (trim($outputFileName."") === ""){
-            $outputFileName = strtolower($target).".zip";
+            $outputFileName = strtolower($target).$format;
         }
 
         switch(strtolower($format)){
@@ -970,26 +971,17 @@ trait FileTree
                     $outputFileName,
                     \ZipArchive::CREATE
                 );
-                if (is_dir($target)){
-                    $options = array(
-                        'add_path' => DIRECTORY_SEPARATOR,
-                        'remove_all_path' => TRUE
-                    );
-                    $zipArchive->addGlob('*.*', GLOB_BRACE, $options);
-                } else {
-                    $zipArchive->addFile($target);
-                }
-                
-                $zipArchive->close();
+
+                Filetree::addTreeToCompressedArchive($zip, $target, $ignoreRootPath);
+
+                $zip->close();
             break;
             case "gz":
             case "bz2":
                 $phar = new \PharData($outputFileName);
-                if (is_dir($target)){
-                    $phar->buildFromDirectory($target);
-                } else {
-                    $phar->addFile($target);
-                }
+
+                Filetree::addTreeToCompressedArchive($phar, $target, $ignoreRootPath);
+
                 if (strtolower($format) === "bz2"){
                     $phar->compress(\Phar::BZ2);
                 } else {
@@ -999,6 +991,77 @@ trait FileTree
         }
 
         return $outputFileName;
+    }
+
+    /**
+    * Adds directories and files to an compressed archive (zip, bz2 or gz)
+    *
+    * @author Marcello Costa
+    *
+    * @package Modules\InsiderFramework\Core\Manipulation\FileTree
+    *
+    * @param object $compressedArchive Compressed archive variable
+    * @param string $target            Directory or file to be added
+    * @param bool   $ignoreRootPath    Compress the directory without including the root directory
+    *
+    * @return void
+    */
+    public static function addTreeToCompressedArchive(&$compressedArchive, string $target, bool $ignoreRootPath = true): void {
+        if (is_dir($target)){
+            $dirTree = \Modules\InsiderFramework\Core\Manipulation\FileTree::dirTree($target);
+            $md5tree = [];
+
+            $rootPath = "";
+
+            if ($ignoreRootPath){
+                foreach($dirTree as $dirTreeItem){
+                    $itemToAdd = $rootPath . DIRECTORY_SEPARATOR . $dirTreeItem;
+
+                    $dirTreeItemExploded = explode(
+                        DIRECTORY_SEPARATOR, 
+                        $dirTreeItem
+                    );
+
+                    if (is_array($dirTreeItemExploded) && count($dirTreeItemExploded) > 1){
+                        $rootPath = $dirTreeItemExploded[0];
+                        $dirTreeItem = array_slice($dirTreeItemExploded, 1);
+                    }
+
+                    if (is_array($dirTreeItem)){
+                        $dirTreeItem = implode(DIRECTORY_SEPARATOR, $dirTreeItem);
+                    }
+
+                    $itemToAdd = $dirTreeItem;
+
+                    if (is_dir($rootPath . DIRECTORY_SEPARATOR . $dirTreeItem))
+                    {
+                        $compressedArchive->addEmptyDir($itemToAdd);
+                    } else {
+                        $compressedArchive->addFile(
+                            $rootPath . DIRECTORY_SEPARATOR . $dirTreeItem,
+                            $itemToAdd
+                        );
+                    }
+                }
+            }
+            else {
+                foreach($dirTree as $dirTreeItem){
+                    $itemToAdd = $dirTreeItem;
+
+                    if (is_dir($itemToAdd))
+                    {
+                        $compressedArchive->addEmptyDir($itemToAdd);
+                    } else {
+                        $compressedArchive->addFile(
+                            $itemToAdd,
+                            $itemToAdd
+                        );
+                    }
+                }
+            }
+        } else {
+            $compressedArchive->addFile($target);
+        }
     }
 
     /**

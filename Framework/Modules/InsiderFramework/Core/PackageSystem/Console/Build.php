@@ -89,17 +89,16 @@ class Build
         }
 
         // Adding version + extension
-        $packageFile .= "-" . $packageControlData->getVersion();
+        $packageFile .= "-" . $packageControlData->getVersion() . ".pkg";
   
         $compressedPathFile = \Modules\InsiderFramework\Core\Filetree::compressDirectoryOrFile(
             $sourceDirectory,
+            "zip",
             $packageFile,
-            "zip"
+            true
         );
-        $finalPackageFileName = substr($packageFile, 0, strlen($compressedPathFile) - 4) . ".pkg";
-        \Modules\InsiderFramework\Core\Filetree::renameFile($compressedPathFile, $finalPackageFileName, true);
 
-        $climate->br()->write("Package file builded: " . $finalPackageFileName)->br();
+        $climate->br()->blue("Package file builded: " . $compressedPathFile)->br();
         
         return true;
     }

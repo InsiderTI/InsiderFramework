@@ -24,7 +24,7 @@ class Validate
     */
     public static function getDataFromPackageControlFile(string $controlFilePath): array
     {
-        $jsonData = \KeyClass\JSON::getJSONDataFile($controlFilePath);
+        $jsonData = \Modules\InsiderFramework\Core\Json::getJSONDataFile($controlFilePath);
         if ($jsonData === false) {
             return [];
         }
@@ -41,9 +41,9 @@ class Validate
     *
     * @param string $packageDirectory Directory to be validated
     *
-    * @return bool Return of validation
+    * @return array Return of validation (filled with errors)
     */
-    public static function validatePackageDirectoryTree(string $packageDirectory): bool
+    public static function validatePackageDirectoryTree(string $packageDirectory): array
     {
         $directoriesValidate = array(
             0 => "Registry",

@@ -151,7 +151,7 @@ class Application
         // Verifying if the package version is later than the installed version
         $controlFile = $tmpDir . DIRECTORY_SEPARATOR .
                        "Registry" . DIRECTORY_SEPARATOR .
-                       "control.json";
+                       "Control.json";
 
         if (!file_exists($controlFile) || !is_readable($controlFile)) {
             \Modules\InsiderFramework\Console\Application::stopInstallUpdate($tmpDir, "File not found or not readable: " . $controlFile);

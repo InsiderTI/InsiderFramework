@@ -1,11 +1,11 @@
 <?php
 
-namespace Modules\InsiderFramework\Console;
+namespace Modules\InsiderFramework\Core\PackageSystem\Console;
 
 /**
  * Class of object used in Console
  *
- * @package Modules\InsiderFramework\Console\DirectoryTreeGenerator
+ * @package Modules\InsiderFramework\Core\PackageSystem\Console\DirectoryTreeGenerator
  *
  * @author Marcello Costa
  */
@@ -16,27 +16,22 @@ class DirectoryTreeGenerator
      *
      * @author Marcello Costa
      *
-     * @package Modules\InsiderFramework\Console\DirectoryTreeGenerator
+     * @package Modules\InsiderFramework\Core\PackageSystem\Console\DirectoryTreeGenerator
      *
-     * @param object $climate              Climate object
-     * @param string $package              New package
-     * @param string $destinationDirectory Destination directory
-     * @param string $version              Package version
-     * @param string $authors              Package authors
-     * @param string description           Description
-     * @param string section               Section
+     * @param object $climate Climate object
      *
      * @return void
     */
     public static function generate(
-        &$climate,
-        string $package,
-        string $destinationDirectory,
-        string $version,
-        string $authors,
-        string $description,
-        string $section
+        $climate
     ): void {
+        $package = $climate->arguments->get('package');
+        $destinationDirectory = $climate->arguments->get('destinationDirectory');
+        $version = $climate->arguments->get('version');
+        $authors = $climate->arguments->get('authors');
+        $description = $climate->arguments->get('description');
+        $section = $climate->arguments->get('section');
+
         // Data of control file
         $controlData = [];
         
@@ -130,7 +125,7 @@ class DirectoryTreeGenerator
         $controlData["depends"] = [];
         $controlData["recommends"] = [];
 
-        \Modules\InsiderFramework\Console\DirectoryTreeGenerator::writePackageDirTree($destinationDirectory, $controlData);
+        \Modules\InsiderFramework\Core\PackageSystem\Console\DirectoryTreeGenerator::writePackageDirTree($destinationDirectory, $controlData);
 
         $climate->out("\nPackage directory tree created. After making all changes, run build command\n");
     }
@@ -140,7 +135,7 @@ class DirectoryTreeGenerator
      *
      * @author Marcello Costa
      *
-     * @package Modules\InsiderFramework\Console\DirectoryTreeGenerator
+     * @package Modules\InsiderFramework\Core\PackageSystem\Console\DirectoryTreeGenerator
      *
      * @param string $destinationDirectory Destination of directory tree
      * @param array  $controlData    Data of control file

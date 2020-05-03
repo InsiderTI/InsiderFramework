@@ -42,27 +42,27 @@ class PackageControlData
     {
         return $this->authors;
     }
-    public function setProvides(string $provides): void
+    public function setProvides(array $provides): void
     {
         $this->provides = $provides;
     }
-    public function getProvides(): string
+    public function getProvides(): array
     {
         return $this->provides;
     }
-    public function setDepends(string $depends): void
+    public function setDepends(array $depends): void
     {
         $this->depends = $depends;
     }
-    public function getDepends(): string
+    public function getDepends(): array
     {
         return $this->depends;
     }
-    public function setRecommends(string $recommends): void
+    public function setRecommends(array $recommends): void
     {
         $this->recommends = $recommends;
     }
-    public function getRecommends(): string
+    public function getRecommends(): array
     {
         return $this->recommends;
     }

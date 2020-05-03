@@ -54,7 +54,8 @@
                 "                --destinationDirectory mydir ",
                 "                --version 1.0.0 ",
                 "                --authors \"Author Name <author@email.com>, Author Name2 <author2@email.com>\"",
-                "                --description Package description --section SectionName",
+                "                --description Package description",
+                "                --section SectionName",
                 "   ]",
                 "        Generate a directory tree for a new package (parameters between '[' can be specified to skip interactive questions):",
                 ""
