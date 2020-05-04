@@ -1,37 +1,29 @@
 <?php
 
-// Namespace de conectores
-namespace Modules\DatabaseConnectors;
+namespace Modules\InsiderFramework\Core\DatabaseConnectors\Mysql;
 
 /**
  * DBMS MySQL Connector
  *
  * @author Marcello Costa <marcello88costa@yahoo.com.br>
  *
- * @package Modules\DatabaseConnectors
+ * @package Modules\InsiderFramework\Core\DatabaseConnectors\Mysql\Connector
  */
-class MysqlConnector
+class Connector
 {
   /**
    * Função de construção do objeto
    *
    * @author Marcello Costa
    *
-   * @package DatabaseConnectors\MysqlConnector
+   * @package Modules\InsiderFramework\Core\DatabaseConnectors\Mysql\Connector
    *
-   * @param Modules\InsiderFramework\Core\Model $model Model linked to connection
+   * @param object $model Model linked to connection
    *
    * @return bool Return of operation
    */
     public static function connect($model): bool
     {
-        $typeOfModel = strtolower(strtok((new \ReflectionObject($model))->getNamespaceName(), "\\"));
-
-      // Checks if the $model it's not a model
-        if ($typeOfModel !== "models") {
-            \Modules\InsiderFramework\Core\Error\ErrorHandler::ErrorRegister('');
-        }
-
         if (property_exists($model, "dbms") && strtolower(trim($model->dbms)) !== "mysql") {
             \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError("Incorrect DBMS option for connector");
         }

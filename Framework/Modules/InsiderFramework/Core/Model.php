@@ -157,38 +157,11 @@ class Model
             );
         }
 
-        $connectorPath = INSTALL_DIR . DIRECTORY_SEPARATOR .
-        "Framework" . DIRECTORY_SEPARATOR .
-        "Modules" . DIRECTORY_SEPARATOR .
-        "InsiderFramework" . DIRECTORY_SEPARATOR .
-        "Core" . DIRECTORY_SEPARATOR .
-        "DatabaseConnectors" . DIRECTORY_SEPARATOR .
-        ucfirst(strtolower($this->connector)) .
-        DIRECTORY_SEPARATOR . ucfirst(strtolower($this->connector)) . ".php";
-
-        if (!file_exists($connectorPath)) {
-            \Modules\InsiderFramework\Core\Error\ErrorHandler::i10nErrorRegister(
-                "Database file connector not found: " .
-                "%" . ucfirst(strtolower($this->connector)) . DIRECTORY_SEPARATOR . strtolower($this->connector) . "%",
-                "app/sys"
-            );
-        }
-
-        \Modules\InsiderFramework\Core\FileTree::requireOnceFile($connectorPath);
-
-        $databaseClass = "Modules\DatabaseConnectors\\" . ucfirst(strtolower(trim($this->connector)));
+        $databaseClass = "\\Modules\\InsiderFramework\\Core\\DatabaseConnectors\\".
+                         ucfirst(strtolower(trim($this->connector))) ."\\Connector";
 
         try {
-            if (!class_exists($databaseClass . "Connector")) {
-                \Modules\InsiderFramework\Core\Error\ErrorHandler::i10nErrorRegister(
-                    "Database connector not detected: %" . $databaseClass . "Connector%",
-                    "app/sys"
-                );
-            }
-
-            $databaseClass = "\\" . $databaseClass . "Connector";
             $connector = new $databaseClass();
-
             return $connector->connect($this);
         } catch (\PDOException $e) {
             \Modules\InsiderFramework\Core\Error\ErrorHandler::i10nErrorRegister(
