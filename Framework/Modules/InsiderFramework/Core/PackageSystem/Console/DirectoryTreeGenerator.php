@@ -43,10 +43,10 @@ class DirectoryTreeGenerator
                 $climate->br()->to('error')->write("Package must have a name")->br();
                 die();
             }
-            $controlData['package'] = $package;
         } else {
             $climate->br()->write("Package name: $package")->br();
         }
+        $controlData['package'] = $package;
 
         if ($destinationDirectory . "" === "") {
             $input = $climate->input("Destination directory:");

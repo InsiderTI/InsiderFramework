@@ -29,8 +29,6 @@ class MainController extends \Modules\InsiderFramework\Core\Controller
      */
     public function home(): void
     {
-        $model = new \Apps\Start\Models\ExampleModel();
-        $model->getUsers();
         SgsViewsBag::set('test', 123);
 
         // Renderview

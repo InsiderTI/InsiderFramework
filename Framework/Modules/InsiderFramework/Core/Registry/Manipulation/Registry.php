@@ -271,6 +271,7 @@ trait Registry
                                   "Controls" . DIRECTORY_SEPARATOR .
                                   $packageName . DIRECTORY_SEPARATOR .
                                   "Md5sum.json";
+
             if (!file_exists($md5ControlFile)){
                 \Modules\InsiderFramework\Core\Error\ErrorHandler::i10nErrorRegister(
                     "Registry Error: Md5 file '%" . $md5ControlFile . "%' not found or unable to read",

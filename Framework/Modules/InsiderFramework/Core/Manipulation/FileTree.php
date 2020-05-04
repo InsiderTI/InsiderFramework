@@ -1125,9 +1125,12 @@ trait FileTree
     public static function generateMd5DirTree($path): array {
         $dirTree = \Modules\InsiderFramework\Core\Manipulation\FileTree::dirTree($path);
         $md5tree = [];
-        foreach($dirTree as $dT){
-            if (is_file($dT)){
-                $md5tree[$dT] = md5_file($dT);
+        foreach($dirTree as $realpath){
+            $filepath = explode(DIRECTORY_SEPARATOR, $realpath);
+            $filepath = implode(DIRECTORY_SEPARATOR, array_slice($filepath, 1));
+
+            if (is_file($realpath)){
+                $md5tree[$filepath] = md5_file($realpath);
             }
         }
         return $md5tree;

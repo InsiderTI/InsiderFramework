@@ -243,29 +243,38 @@ class InstallUpdateRemove {
         }
 
         // Running the pre-uninstall script
-        $preUninstallFile = INSTALL_DIR.DIRECTORY_SEPARATOR."Framework".DIRECTORY_SEPARATOR."Registry".DIRECTORY_SEPARATOR."prerm.php";
+        $preUninstallFile = INSTALL_DIR.DIRECTORY_SEPARATOR."Framework".DIRECTORY_SEPARATOR."Registry".DIRECTORY_SEPARATOR."Prerm.php";
         if (file_exists($preUninstallFile)) {
             \Modules\InsiderFramework\Core\FileTree::requireOnceFile($preUninstallFile);
         }
 
         $directories = [];
+        $dataDirPattern = "Data" . DIRECTORY_SEPARATOR;
+        $registryDirPattern = "Registry" . DIRECTORY_SEPARATOR;
         foreach($localVersion['md5sum'] as $file => $md5){
-            $pathExploded = explode(DIRECTORY_SEPARATOR, $file);
-            array_shift($pathExploded);
-
-            $filepath = INSTALL_DIR . DIRECTORY_SEPARATOR . 
-                    implode(DIRECTORY_SEPARATOR, $pathExploded);
-
-            $dirpath = dirname($filepath);
-            if (!in_array($dirpath, $directories)){
-                $directories[]=$dirpath;
+            if (strpos($file, $dataDirPattern) !== false){
+                $correctPath = str_replace($dataDirPattern, "", $file);
+            } else {
+                $correctPath = str_replace($registryDirPattern, 
+                "Framework" . DIRECTORY_SEPARATOR . 
+                "Registry" . DIRECTORY_SEPARATOR .
+                "Controls" . DIRECTORY_SEPARATOR . 
+                $localVersion['package'] . DIRECTORY_SEPARATOR,
+                $file);
             }
 
             \Modules\InsiderFramework\Core\FileTree::deleteFile(
-                $filepath
+                $correctPath
             );
+
+            $dirpath = dirname($correctPath);
+            if (!in_array($dirpath, $directories)){
+                $directories[]=$dirpath;
+            }
         }
 
+        var_dump('HERE');
+        die("FILE: " . __FILE__ . "<br/>LINE: " . __LINE__);
         $notEmptyDirectories = [];
         foreach($directories as $dir){
             $empty = \Modules\InsiderFramework\Core\Validation\FileTree::isDirEmpty($dir);
@@ -279,7 +288,7 @@ class InstallUpdateRemove {
         }
 
         // Running the pos-uninstall script
-        $posUninstallFile = INSTALL_DIR.DIRECTORY_SEPARATOR."Framework".DIRECTORY_SEPARATOR."Registry".DIRECTORY_SEPARATOR."posrm.php";
+        $posUninstallFile = INSTALL_DIR.DIRECTORY_SEPARATOR."Framework".DIRECTORY_SEPARATOR."Registry".DIRECTORY_SEPARATOR."Posrm.php";
         if (file_exists($posUninstallFile)) {
             \Modules\InsiderFramework\Core\FileTree::requireOnceFile($posUninstallFile);
         }
