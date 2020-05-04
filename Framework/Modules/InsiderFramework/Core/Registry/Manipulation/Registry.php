@@ -521,8 +521,38 @@ trait Registry
         }
         
         // Verificando se o item está registrado no arquivo
-        var_dump($jsonData);
-        die("FILE: " . __FILE__ . "<br/>LINE: " . __LINE__);
+        switch (strtolower($section)) {
+            case 'guild':
+                $filePath = $registryDirectory . DIRECTORY_SEPARATOR .
+                            "Sections" . DIRECTORY_SEPARATOR .
+                            "Guilds.json";
+
+            case 'modules':
+                $filePath = $registryDirectory . DIRECTORY_SEPARATOR .
+                            "Sections" . DIRECTORY_SEPARATOR .
+                            "Modules.json";
+                break;
+            case 'app':
+                $filePath = $registryDirectory . DIRECTORY_SEPARATOR . 
+                            "Sections" . DIRECTORY_SEPARATOR .
+                            "Apps.json";
+                break;
+            default:
+                \Modules\InsiderFramework\Core\Error\ErrorHandler::ErrorRegister('Invalid Section: '.$section);
+                break;
+        }
+
+        switch (strtolower($section)) {
+            case 'app':
+            case 'guild':
+                \Modules\InsiderFramework\Core\Error\ErrorHandler::ErrorRegister('Remove not implemented for section: '.$section);
+            break;
+            case 'modules':
+                break;
+            default:
+                \Modules\InsiderFramework\Core\Error\ErrorHandler::ErrorRegister('Invalid Section: '.$section);
+                break;
+        }
         
         // Atualizando/criando registro
         $jsonData[$item] = $dataArray;

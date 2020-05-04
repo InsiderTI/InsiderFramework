@@ -273,8 +273,6 @@ class InstallUpdateRemove {
             }
         }
 
-        var_dump('HERE');
-        die("FILE: " . __FILE__ . "<br/>LINE: " . __LINE__);
         $notEmptyDirectories = [];
         foreach($directories as $dir){
             $empty = \Modules\InsiderFramework\Core\Validation\FileTree::isDirEmpty($dir);
@@ -294,7 +292,10 @@ class InstallUpdateRemove {
         }
 
         // Remove package from registry of modules
-        
+        \Modules\InsiderFramework\Core\Registry\Manipulation\Registry::unregisterItem(
+            $localVersion['package'],
+            $localVersion['section']
+        );
     }
 
     /**
