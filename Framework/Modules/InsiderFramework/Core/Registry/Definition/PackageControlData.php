@@ -12,6 +12,7 @@ namespace Modules\InsiderFramework\Core\Registry\Definition;
 class PackageControlData
 {
     private $package;
+    private $section;
     private $version;
     private $authors;
     private $provides;
@@ -25,6 +26,14 @@ class PackageControlData
     public function getPackage(): string
     {
         return $this->package;
+    }
+    public function setSection(string $section): void
+    {
+        $this->section = $section;
+    }
+    public function getSection(): string
+    {
+        return $this->section;
     }
     public function setVersion(string $version): void
     {
@@ -103,6 +112,11 @@ class PackageControlData
             $missingInfoError[] = "Information missing at control file: package";
         }
         $this->setPackage($jsonData['package']);
+
+        if (!isset($jsonData['section']) || trim($jsonData['section']) === "") {
+            $missingInfoError[] = "Information missing at control file: section";
+        }
+        $this->setSection($jsonData['section']);
 
         if (!isset($jsonData['version']) || trim($jsonData['version']) === "") {
             $missingInfoError[] = "Information missing at control file: version";

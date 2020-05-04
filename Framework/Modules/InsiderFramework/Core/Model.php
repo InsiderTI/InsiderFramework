@@ -164,7 +164,7 @@ class Model
         "Core" . DIRECTORY_SEPARATOR .
         "DatabaseConnectors" . DIRECTORY_SEPARATOR .
         ucfirst(strtolower($this->connector)) .
-        DIRECTORY_SEPARATOR . strtolower($this->connector) . ".php";
+        DIRECTORY_SEPARATOR . ucfirst(strtolower($this->connector)) . ".php";
 
         if (!file_exists($connectorPath)) {
             \Modules\InsiderFramework\Core\Error\ErrorHandler::i10nErrorRegister(

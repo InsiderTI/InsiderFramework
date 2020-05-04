@@ -42,7 +42,7 @@ class Read
             "Framework" . DIRECTORY_SEPARATOR .
             "Registry" . DIRECTORY_SEPARATOR .
             "Sections" . DIRECTORY_SEPARATOR .
-            "apps.json"
+            "Apps.json"
         );
 
         // Se existem app registrados
@@ -117,7 +117,7 @@ class Read
                         "Framework" . DIRECTORY_SEPARATOR .
                         "Registry" . DIRECTORY_SEPARATOR .
                         "Sections" . DIRECTORY_SEPARATOR .
-                        "apps.json";
+                        "Apps.json";
 
             \Modules\InsiderFramework\Core\Error\ErrorHandler::i10nErrorRegister("File %" . $filePath . "% not found", "app/sys");
         }

@@ -459,7 +459,7 @@ class ConfigLoader
             "Framework" . DIRECTORY_SEPARATOR . 
             "Registry" . DIRECTORY_SEPARATOR .
             "Sections" . DIRECTORY_SEPARATOR .
-            "apps.json"
+            "Apps.json"
         );
         if ($appLoaded == false) {
             \Modules\InsiderFramework\Core\Error\ErrorHandler::ErrorRegister(
@@ -467,7 +467,7 @@ class ConfigLoader
                 "Framework" . DIRECTORY_SEPARATOR .
                 "Registry" . DIRECTORY_SEPARATOR .
                 "Sections" . DIRECTORY_SEPARATOR .
-                "apps.json" .
+                "Apps.json" .
                 ' not found'
             );
         }
@@ -501,7 +501,7 @@ class ConfigLoader
                           "Framework" . DIRECTORY_SEPARATOR .
                           "Registry" . DIRECTORY_SEPARATOR .
                           "Sections" . DIRECTORY_SEPARATOR .
-                          "guilds.json";
+                          "Guilds.json";
                         
         $guildsLoaded = \Modules\InsiderFramework\Core\Json::getJSONDataFile(
             $guildsJsonPath

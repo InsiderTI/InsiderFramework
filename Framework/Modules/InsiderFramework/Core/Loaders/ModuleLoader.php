@@ -12,7 +12,7 @@ namespace Modules\InsiderFramework\Core\Loaders;
 class ModuleLoader
 {
     /**
-    * Load modules listed in Json config file (moduleloader.json)
+    * Load modules listed in Json config file (ModuleLoader.json)
     *
     * @author Marcello Costa
     *
@@ -25,7 +25,7 @@ class ModuleLoader
         $jsonpath = "Modules" . DIRECTORY_SEPARATOR .
                               "InsiderFramework" . DIRECTORY_SEPARATOR .
                               "Core" . DIRECTORY_SEPARATOR .
-                              "moduleloader.json";
+                              "ModuleLoader.json";
 
         $dataActions = \Modules\InsiderFramework\Core\Registry::getLocalConfigurationFile(
             $jsonpath

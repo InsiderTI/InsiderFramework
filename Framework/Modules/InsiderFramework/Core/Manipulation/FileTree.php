@@ -1078,7 +1078,7 @@ trait FileTree
     *
     * @return void
     */
-    public static function decompressDirectoryOrFile(string $compressedFile, $destination, $format = "auto"){
+    public static function decompressFile(string $compressedFile, $destination, $format = "auto"){
         if (!is_file($compressedFile)){
             \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister(
                 'Cannot read file or directory to compress: '.$target

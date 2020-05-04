@@ -370,12 +370,12 @@ class Application
 
         $dataActions = \Modules\InsiderFramework\Core\Registry::getLocalConfigurationFile(
             $consoleRegistryDir . DIRECTORY_SEPARATOR .
-            "actions.json"
+            "Actions.json"
         );
 
         $dataAdditionalParameters = \Modules\InsiderFramework\Core\Registry::getLocalConfigurationFile(
             $consoleRegistryDir . DIRECTORY_SEPARATOR .
-            "additionalParameters.json"
+            "AdditionalParameters.json"
         );
 
         if (
