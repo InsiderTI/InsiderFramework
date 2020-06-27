@@ -1,17 +1,42 @@
 {template src='Start::default'}
-{block id='scripts'}{/block}
+{block id='style'}
+<style>
+    * {
+        color: #333;
+    }
+    .grey{
+        color: #777;
+    }
+    .blue{
+        color: #2C89A0;
+    }
+    #moreinfo{
+        font-size: 12px;
+    }
+    #logo{
+        width: 96px;
+        margin-bottom: 10px;
+    }
+    #auxcontent{
+        font-size: 13px;
+        background-color: #c;
+        font-style: italic;
+        color: #555;
+    }
+</style>
+{/block}
 {block id='mcontent' settings='keep-content;'}
     <br/><br/>
     <span style="font-size: 14px;">
         <div style="width: 100%;">
             <div>
                 <img id='logo' src='android-chrome-192x192.png' /><br/>
-                <span class="grey">Welcome to</span> <h1>Insider Framework</h1>
+                <h1>Welcome to your site</h1>
             </div>
             <br/><br/>
 
             <br/>
-            <span class="grey">The site is under construction</span>
+            <span class="grey">This place is being built with the <b class='blue'>Insider Framework</b></span>
 	    <br/><br/>
             <span id='moreinfo'>
                 Access 
@@ -23,17 +48,4 @@
 
     {component id='viewaux'}
 {/block}
-{block id='style'}
-<style>
-    .grey{
-        color: #777;
-    }
-    #moreinfo{
-        font-size: 12px;
-    }
-    #logo{
-        width: 96px;
-        margin-bottom: 10px;
-    }
-</style>
-{/block}
+{block id='scripts'}{/block}

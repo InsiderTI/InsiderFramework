@@ -1,55 +1,55 @@
-version: '3'
+version: "3"
 
 services:
-    insider_framework-site:
-        image: insiderti/insiderframework-site:1.0.0
-        expose:
-            - "80"
-        ports:
-            - "8082:80"
-        build:
-            dockerfile: ./insider_framework.dockerfile
-            context: .
-        stdin_open: true
-        tty: true
-        networks:
-            - web
-        volumes:
-            - "../:/var/www/insiderframework"
-        restart: always
-       
-        labels:
-        - "traefik.enable=true"
-        - "traefik.docker.network=web"
-      
-        # Port: 443 to 80
-        #- "traefik.app.frontend.rule=Host:www.whoami.local"
-        #- "traefik.app.backend=whoami"
-        #- "traefik.port=80"
-        #- "traefik.frontend.entryPoints=https"
-      
-        # Port: 80 to 80
-        - "traefik.app.frontend.rule=Host:www.insiderframework.com,insiderframework.com,www.insiderframework.com.br,insiderframework.com.br"
-        - "traefik.app.backend=insiderframework"
-        - "traefik.port=80"
-        - "traefik.frontend.entryPoints=http"
-      
-        # Some tips for circuit breaker, middlewares and stuff. Enable as you want :)
-        #- "traefik.http.middlewares.latency-check.circuitbreaker.expression=LatencyAtQuantileMS(50.0) > 5000"
-        #- "traefik.backend.circuitbreaker.expression=ResponseCodeRatio(500, 600, 0, 600) > 0.1"
-        #- "traefik.backend.circuitbreaker.expression=NetworkErrorRatio() > 0.1"
-        #- "traefik.http.middlewares.limit.buffering.maxRequestBodyBytes=2097152"
-        #- "traefik.http.middlewares.limit.buffering.retryExpression=IsNetworkError() && Attempts() < 4"
-        #- "traefik.http.middlewares.test-compress.compress=true"
-        #- "traefik.http.middlewares.test-ratelimit.ratelimit.average=100"
-        #- "traefik.http.middlewares.test-ratelimit.ratelimit.burst=50"
-        #- "traefik.http.middlewares.test-ratelimit.ratelimit.sourcecriterion.ipstrategy.excludedips=127.0.0.1/32"
-        # - "traefik.http.middlewares.test-redirectscheme.redirectscheme.permanent=https"
-        # - "traefik.http.middlewares.test-redirectscheme.redirectscheme.scheme=https"
-        # - "traefik.http.middlewares.limit.buffering.maxResponseBodyBytes=2097152"
-        # - "traefik.weight=1"
+  insider_framework:
+    image: insiderti/insiderframework:0.2.1
+    expose:
+      - "80"
+    ports:
+      - "8082:80"
+    build:
+      dockerfile: ./insider_framework.dockerfile
+      context: .
+    stdin_open: true
+    tty: true
+    networks:
+      - docker_insider_network
+    volumes:
+      - "../:/var/www/insiderframework"
+    restart: always
 
-networks: 
-  web:
-    external: 
-      name: web
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=web"
+
+      # Port: 443 to 80
+      #- "traefik.app.frontend.rule=Host:www.whoami.local"
+      #- "traefik.app.backend=whoami"
+      #- "traefik.port=80"
+      #- "traefik.frontend.entryPoints=https"
+
+      # Port: 80 to 80
+      - "traefik.app.frontend.rule=Host:www.insiderframework.com,insiderframework.com,www.insiderframework.com.br,insiderframework.com.br"
+      - "traefik.app.backend=insiderframework"
+      - "traefik.port=80"
+      - "traefik.frontend.entryPoints=http"
+
+    # Some tips for circuit breaker, middlewares and stuff. Enable as you want :)
+    #- "traefik.http.middlewares.latency-check.circuitbreaker.expression=LatencyAtQuantileMS(50.0) > 5000"
+    #- "traefik.backend.circuitbreaker.expression=ResponseCodeRatio(500, 600, 0, 600) > 0.1"
+    #- "traefik.backend.circuitbreaker.expression=NetworkErrorRatio() > 0.1"
+    #- "traefik.http.middlewares.limit.buffering.maxRequestBodyBytes=2097152"
+    #- "traefik.http.middlewares.limit.buffering.retryExpression=IsNetworkError() && Attempts() < 4"
+    #- "traefik.http.middlewares.test-compress.compress=true"
+    #- "traefik.http.middlewares.test-ratelimit.ratelimit.average=100"
+    #- "traefik.http.middlewares.test-ratelimit.ratelimit.burst=50"
+    #- "traefik.http.middlewares.test-ratelimit.ratelimit.sourcecriterion.ipstrategy.excludedips=127.0.0.1/32"
+    # - "traefik.http.middlewares.test-redirectscheme.redirectscheme.permanent=https"
+    # - "traefik.http.middlewares.test-redirectscheme.redirectscheme.scheme=https"
+    # - "traefik.http.middlewares.limit.buffering.maxResponseBodyBytes=2097152"
+    # - "traefik.weight=1"
+
+networks:
+  docker_insider_network:
+    external:
+      name: docker_insider_network
