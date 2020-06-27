@@ -1,10 +1,11 @@
 <p align="center">
-  <img src="https://github.com/InsiderTI/InsiderFramework/blob/0.2.1-rc2/web/android-chrome-192x192.png?raw=true">
+  <img src="https://github.com/InsiderTI/InsiderFramework/blob/0.2.1-rc3/web/android-chrome-192x192.png?raw=true">
 </p>
 
 The Insider Framework is a web framework, initially written in the PHP language, which is intended to be an implementation model that can be used in other programming languages. In addition, it also aims to provide a communication layer between these different languages.
 
 ## Running in docker
+
 You can run it in a container with these steps:
 
 1- git clone https://github.com/InsiderTI/InsiderFramework.git
