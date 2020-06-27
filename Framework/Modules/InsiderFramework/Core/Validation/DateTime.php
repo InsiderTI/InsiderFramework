@@ -6,7 +6,7 @@ namespace Modules\InsiderFramework\Core\Validation;
  * Validation methods for date
  *
  * @author Marcello Costa
- * 
+ *
  * @package Modules\InsiderFramework\Core\Validation\DateTime
  */
 trait DateTime
@@ -15,7 +15,7 @@ trait DateTime
      * Verifica se um campo é uma data válida
      *
      * @author Marcello Costa
-     * 
+     *
      * @package Modules\InsiderFramework\Core\Validation\DateTime
      *
      * @param array  $array Array onde está sendo buscado

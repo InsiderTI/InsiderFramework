@@ -18,9 +18,10 @@
  * the Software.
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO
- * THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS
- * OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
- * OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+ * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT
+ * OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 namespace ioncube\phpOpensslCryptor;
@@ -32,9 +33,9 @@ class Cryptor
     private $iv_num_bytes;
     private $format;
 
-    const FORMAT_RAW = 0;
-    const FORMAT_B64 = 1;
-    const FORMAT_HEX = 2;
+    private const FORMAT_RAW = 0;
+    private const FORMAT_B64 = 1;
+    private const FORMAT_HEX = 2;
 
     /**
      * Construct a Cryptor, using aes256 encryption, sha256 key hashing and base64 encoding.
@@ -95,7 +96,7 @@ class Cryptor
         // and format the result if required.
         if ($fmt == Cryptor::FORMAT_B64) {
             $res = base64_encode($res);
-        } else if ($fmt == Cryptor::FORMAT_HEX) {
+        } elseif ($fmt == Cryptor::FORMAT_HEX) {
             $res = unpack('H*', $res)[1];
         }
 
@@ -120,7 +121,7 @@ class Cryptor
         // Restore the encrypted data if encoded
         if ($fmt == Cryptor::FORMAT_B64) {
             $raw = base64_decode($in);
-        } else if ($fmt == Cryptor::FORMAT_HEX) {
+        } elseif ($fmt == Cryptor::FORMAT_HEX) {
             $raw = pack('H*', $in);
         }
 

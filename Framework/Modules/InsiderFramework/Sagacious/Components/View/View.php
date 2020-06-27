@@ -47,7 +47,9 @@ class View extends SgsComponent
              count($viewFilenameMatches) === 0
              )
         ) {
-            \Modules\InsiderFramework\Core\Error\ErrorHandler::ErrorRegister('Invalid doublecolonviewpath property on View component');
+            \Modules\InsiderFramework\Core\Error\ErrorHandler::ErrorRegister(
+                'Invalid doublecolonviewpath property on View component'
+            );
         }
         $app = $viewFilenameMatches[0]['app'];
         $viewPath = $viewFilenameMatches[0]['viewPath'];

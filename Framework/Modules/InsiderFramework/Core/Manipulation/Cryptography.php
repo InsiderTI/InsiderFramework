@@ -38,7 +38,9 @@ trait Cryptography
                 return md5($encrypted);
             }
         } else {
-            \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError('String for encryption has not been specified');
+            \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError(
+                'String for encryption has not been specified'
+            );
         }
     }
 

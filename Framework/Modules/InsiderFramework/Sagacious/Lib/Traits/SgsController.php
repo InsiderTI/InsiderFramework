@@ -312,8 +312,8 @@ trait SgsController
      * Adds an file to the cache control
      *
      * @author Marcello Costa
-     * 
-     * @package Modules\InsiderFramework\Core\Controller     
+     *
+     * @package Modules\InsiderFramework\Core\Controller
      *
      * @param array  $viewConverted Data of the view(s) and template(s)
      * @param string $route         Route that originally requested the file
@@ -459,7 +459,7 @@ trait SgsController
     *
     * @param string $originalFileName View file that originated the cache
     * @param array  $cacheData        JSON cache file previously read
-    * 
+    *
     * @return array Returns the data about the cache file
     */
     private function getCacheStatus(string $originalFileName, array &$cacheData = null): array

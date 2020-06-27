@@ -4,9 +4,9 @@ namespace Modules\InsiderFramework\Core\RoutingSystem;
 
 /**
  * Classe de leitura do módulo de roteamento
- * 
+ *
  * @author Marcello Costa
- * 
+ *
  * @package Modules\InsiderFramework\Core\RoutingSystem\Read
  */
 class Read
@@ -59,7 +59,9 @@ class Read
             if (!file_exists($routesFile)) {
                 \Modules\InsiderFramework\Core\Json::setJSONDataFile('[]', $routesFile);
                 if (!file_exists($routesFile)) {
-                    \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError("Cannot create cache file for routes");
+                    \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError(
+                        "Cannot create cache file for routes"
+                    );
                 }
             }
 
@@ -119,7 +121,10 @@ class Read
                         "Sections" . DIRECTORY_SEPARATOR .
                         "Apps.json";
 
-            \Modules\InsiderFramework\Core\Error\ErrorHandler::i10nErrorRegister("File %" . $filePath . "% not found", "app/sys");
+            \Modules\InsiderFramework\Core\Error\ErrorHandler::i10nErrorRegister(
+                "File %" . $filePath . "% not found",
+                "app/sys"
+            );
         }
     }
 
@@ -136,8 +141,8 @@ class Read
      */
     private function mapRoutes(string $controllerFilePath): void
     {
-        $completeClassName = str_replace("/","\\",substr($controllerFilePath, 0, -4));
-        $appName = explode("\\",$completeClassName)[1];
+        $completeClassName = str_replace("/", "\\", substr($controllerFilePath, 0, -4));
+        $appName = explode("\\", $completeClassName)[1];
 
         // Pegando o nome do controller
         $reflectionControllerObj = new \ReflectionClass($completeClassName);
@@ -223,7 +228,9 @@ class Read
 
                     if (!isset($aMD['responseformat'])) {
                         if (isset($classDefinitions[$reflectionControllerObj->name]['responseformat'])) {
-                            $aMD['responseformat'] = $classDefinitions[$reflectionControllerObj->name]['responseformat'];
+                            $aMD['responseformat'] = $classDefinitions
+                                                    [$reflectionControllerObj->name]
+                                                    ['responseformat'];
                         } else {
                             $aMD['responseformat'] = DEFAULT_RESPONSE_FORMAT;
                         }
@@ -267,7 +274,7 @@ class Read
                     $path = $aMD['route']['path'];
                     
                     $namespaceExploded = explode("\\", $completeClassName);
-                    $controller = str_replace('Controller', '', $namespaceExploded[count($namespaceExploded)-1]);
+                    $controller = str_replace('Controller', '', $namespaceExploded[count($namespaceExploded) - 1]);
 
                     $this->mapAction(
                         $appName,

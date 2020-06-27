@@ -17,7 +17,7 @@ trait Aggregation
      * @author Marcello Costa
      *
      * @package Modules\InsiderFramework\Core\Validation\Aggregation
-     * 
+     *
      * @param string $name  Name of the key
      * @param array  $array Target array of the search
      *

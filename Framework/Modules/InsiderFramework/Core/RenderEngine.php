@@ -12,7 +12,7 @@ namespace Modules\InsiderFramework\Core;
 */
 class RenderEngine
 {
-    function __construct()
+    public function __construct()
     {
         \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister('No render engine installed/detected');
     }

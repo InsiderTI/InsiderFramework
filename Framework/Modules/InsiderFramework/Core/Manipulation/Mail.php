@@ -56,8 +56,6 @@ trait Mail
         string $content_type = "text/html",
         string $charset = ENCODE
     ): bool {
-        $version = \Modules\InsiderFramework\Core\Registry::getDependencyRequiredVersion('insider-framework', '2.1.1', 'phpmailer');
-
         // Criando novo objeto mailer
         $mail = new \PHPMailer();
 

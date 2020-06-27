@@ -101,7 +101,10 @@ trait I10n
 
         // If file did not exists
         if (!file_exists($filePath)) {
-            \Modules\InsiderFramework\Core\Error\ErrorHandler::ErrorRegister("Cannot load file %" . $filePath . "%", "LOG");
+            \Modules\InsiderFramework\Core\Error\ErrorHandler::ErrorRegister(
+                "Cannot load file %" . $filePath . "%",
+                "LOG"
+            );
         }
 
         // Language of the translation
@@ -111,7 +114,10 @@ trait I10n
         $i10nData = \Modules\InsiderFramework\Core\Json::getJSONDataFile($filePath);
 
         if (!$i10nData) {
-            \Modules\InsiderFramework\Core\Error\ErrorHandler::ErrorRegister("Cannot load file contents %" . $filePath . "%", "LOG");
+            \Modules\InsiderFramework\Core\Error\ErrorHandler::ErrorRegister(
+                "Cannot load file contents %" . $filePath . "%",
+                "LOG"
+            );
         } else {
             // Placing the data inside the translation domain
             if (!isset($i10n[$domain])) {

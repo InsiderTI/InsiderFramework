@@ -30,7 +30,7 @@
         <?php
         if (DEBUG) {
             ?>
-            {* Estilos de debug do framework *}
+            {* Framework debugging CSS *}
             <link rel="stylesheet" href='<?php echo REQUESTED_URL; ?>/apps/sys/assets/css/debug.css' />
             <?php
         }
@@ -43,22 +43,6 @@
                 font-weight: bold;
                 font-size: 1.1em;
                 font-family: Verdana;
-            }
-            #descapp{
-                font-size: 20px;
-            }
-            
-            #sidebar{
-                border: 1px solid #000;
-                width: 100px;
-                height: 100%;
-                display: none;
-            }
-            #topbar{
-                border: 1px solid #000;
-                height: 100px;
-                width: 30px;
-                display: none;
             }
         </style>
         <meta charset="<?php echo ENCODE; ?>"/>

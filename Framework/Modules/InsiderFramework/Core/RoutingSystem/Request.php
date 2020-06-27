@@ -113,7 +113,9 @@ class Request
                 );
             }
         } else {
-            \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError("DefaultActions not defined on error " . $error);
+            \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError(
+                "DefaultActions not defined on error " . $error
+            );
         }
 
         $specificDomain = null;
@@ -198,7 +200,10 @@ class Request
 
         // Se as rotas não foram definidas globalmente
         if ($urlRoutes === null) {
-            \Modules\InsiderFramework\Core\Error\ErrorHandler::i10nErrorRegister("No routes were recorded globally", "app/sys");
+            \Modules\InsiderFramework\Core\Error\ErrorHandler::i10nErrorRegister(
+                "No routes were recorded globally",
+                "app/sys"
+            );
         }
 
         // Se o domínio completo não foi especificado

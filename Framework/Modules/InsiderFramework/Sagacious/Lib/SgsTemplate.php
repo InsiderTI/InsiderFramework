@@ -844,12 +844,13 @@ class SgsTemplate
     *
     * @return string Código da declaração convertida
     */
-    private function processViewsBagCode(array &$gM): string {
+    private function processViewsBagCode(array &$gM): string
+    {
         $viewsbagPattern = "/" . "{viewsbag key=['\\\"](?P<value>.*)['\\\"]( {0,})?}" . "/";
 
         preg_match_all($viewsbagPattern, strtolower($gM['allMatch']), $viewsBagMatches, PREG_SET_ORDER);
 
-        if (!isset($viewsBagMatches[0]['value'])){
+        if (!isset($viewsBagMatches[0]['value'])) {
             return $gM['allMatch'];
         }
 

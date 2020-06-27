@@ -23,7 +23,7 @@ trait Core
      *
      * @return void
      */
-    function makeFiltersSelect(array &$searchData, string &$filter): void
+    public function makeFiltersSelect(array &$searchData, string &$filter): void
     {
         if (is_array($searchData)) {
             $filter = implode(
@@ -143,11 +143,17 @@ trait Core
     private function updateBy(string $table, array $searchData, array $newData): int
     {
         if (trim($table) === "") {
-            \Modules\InsiderFramework\Core\Error\ErrorHandler::i10nErrorRegister('Table name cannot by empty on update', "app/sys");
+            \Modules\InsiderFramework\Core\Error\ErrorHandler::i10nErrorRegister(
+                'Table name cannot by empty on update',
+                "app/sys"
+            );
         }
 
         if (count($newData) === 0) {
-            \Modules\InsiderFramework\Core\Error\ErrorHandler::i10nErrorRegister('New data not specified on updateBy with table %' . $table . '%', "app/sys");
+            \Modules\InsiderFramework\Core\Error\ErrorHandler::i10nErrorRegister(
+                'New data not specified on updateBy with table %' . $table . '%',
+                "app/sys"
+            );
         }
 
         $updateColumns = implode(
@@ -163,7 +169,10 @@ trait Core
         $filter = "";
 
         if (count($searchData) === 0) {
-            \Modules\InsiderFramework\Core\Error\ErrorHandler::i10nErrorRegister('Search data not specified on updateBy with table %' . $table . '%', "app/sys");
+            \Modules\InsiderFramework\Core\Error\ErrorHandler::i10nErrorRegister(
+                'Search data not specified on updateBy with table %' . $table . '%',
+                "app/sys"
+            );
         }
 
         $this->makeFiltersSelect($searchData, $filter);
@@ -178,7 +187,12 @@ trait Core
         $result = $this->execute($query, $bindArray);
 
         if (!is_numeric($result)) {
-            \Modules\InsiderFramework\Core\Error\ErrorHandler::ErrorRegister('Error on execute update query %' . $query . '%: %' . \Modules\InsiderFramework\Core\Json::jsonEncodePrivateObject($result) . '%', __FILE__, __LINE__);
+            \Modules\InsiderFramework\Core\Error\ErrorHandler::ErrorRegister(
+                'Error on execute update query %' . $query . '%: ' .
+                '%' . \Modules\InsiderFramework\Core\Json::jsonEncodePrivateObject($result) . '%',
+                __FILE__,
+                __LINE__
+            );
         }
 
         return $result;
@@ -199,11 +213,17 @@ trait Core
     private function insert(string $table, array $newData): int
     {
         if (trim($table) === "") {
-            \Modules\InsiderFramework\Core\Error\ErrorHandler::i10nErrorRegister('Table name cannot by empty on insert', "app/sys");
+            \Modules\InsiderFramework\Core\Error\ErrorHandler::i10nErrorRegister(
+                'Table name cannot by empty on insert',
+                "app/sys"
+            );
         }
 
         if (count($newData) === 0) {
-            \Modules\InsiderFramework\Core\Error\ErrorHandler::i10nErrorRegister('New data not specified on insert with table %' . $table . '%', "app/sys");
+            \Modules\InsiderFramework\Core\Error\ErrorHandler::i10nErrorRegister(
+                'New data not specified on insert with table %' . $table . '%',
+                "app/sys"
+            );
         }
 
         $insertColumns = implode(
@@ -225,7 +245,12 @@ trait Core
         $result = $this->execute($query, $bindArray);
 
         if (!is_numeric($result)) {
-            \Modules\InsiderFramework\Core\Error\ErrorHandler::ErrorRegister('Error on execute insert query %' . $query . '%: %' . \Modules\InsiderFramework\Core\Json::jsonEncodePrivateObject($result) . '%', __FILE__, __LINE__);
+            \Modules\InsiderFramework\Core\Error\ErrorHandler::ErrorRegister(
+                'Error on execute insert query %' . $query . '%: ' .
+                '%' . \Modules\InsiderFramework\Core\Json::jsonEncodePrivateObject($result) . '%',
+                __FILE__,
+                __LINE__
+            );
         }
 
         return $result;

@@ -3,7 +3,7 @@
 namespace Apps\Sys\Controllers;
 
 /**
- * Classe responsável pela segunda camada de segurança
+ * Class responsible for the second layer of security
  *
  * @author Marcello Costa
  *
@@ -14,7 +14,7 @@ namespace Apps\Sys\Controllers;
 class SecurityController extends \Modules\InsiderFramework\Core\Controller
 {
     /**
-     * Função para renovar o login do usuário
+     * Function to renew user login
      *
      * @author Marcello Costa
      *
@@ -24,11 +24,9 @@ class SecurityController extends \Modules\InsiderFramework\Core\Controller
     */
     protected function renewAccess(): bool
     {
-        // Exemplo de código de renovação da sessão/cookie do usuário
-        // Se o cookie existe
+        // User session / cookie renewal code example
         $cookieName = 'sec_cookie';
         if (\Modules\InsiderFramework\Core\Validation\Cookie::checkCookie($cookieName)) {
-          // Renovando o cookie
             $cookieValue = \Modules\InsiderFramework\Core\Manipulation\Cookie::getCookie($cookieName);
             \Modules\InsiderFramework\Core\Manipulation\Cookie::setCookie($cookieName, $cookieValue);
 
@@ -39,14 +37,14 @@ class SecurityController extends \Modules\InsiderFramework\Core\Controller
     }
 
     /**
-     * Retorna as permissões atuais de forma customizada
-     * pelo desenvolvedor.
+     * Returns the current permissions in a customized way
+     * by the developer.
      *
      * @author Marcello Costa
      *
      * @package Apps\Sys\Controllers\SecurityController
      *
-     * @return mixed Qualquer retorno que o desenvolver desejar
+     * @return mixed Any feedback that you develop
     */
     public function getCustomAccessLevel()
     {
@@ -54,32 +52,32 @@ class SecurityController extends \Modules\InsiderFramework\Core\Controller
     }
 
     /**
-     * Função que verifica permissões da rota e toda uma ação com base
-     * no que foi configurado. Aqui o desenvolvedor pode tomar uma ação
-     * específica e até mesmo impedir o curso natural de processamento
-     * do framework se setar a variável $access como null
+     * Function that checks route permissions and an entire action based
+     * what has been configured. Here the developer can take action
+     * specific and even prevent the natural course of processing
+     * of the framework if you set the $ access variable to null
      *
      * @author Marcello Costa
      *
      * @package Apps\Sys\Controllers\SecurityController
      *
-     * @param RouteData  $routeObj      Objeto da rota
-     * @param mixed      $permissionNow Permissões atuais do usuário
-     * @param bool       $access        Variável de controle de acesso
+     * @param RouteData  $routeObj      Route object
+     * @param mixed      $permissionNow Current user permissions
+     * @param bool       $access        Access control variable
      *
-     * @return mixed Qualquer retorno que o desenvolver desejar
+     * @return mixed Any feedback that you develop
     */
     public function validateCustomAclPermission($routeObj, $permissionNow, &$access)
     {
-        // Aqui está implementado um código de exemplo de validação customizada.
-        // Como dito na descrição do método, se a variável $access for setada
-        // como null ($access = null;), o framework não fará nenhuma ação após
-        // o término do processamento deste método, ficando a cargo do desenvolver
-        // criar uma lógica de rotamento adicional personalizada
+        // Here is a sample code for custom validation.
+        // As stated in the method description, if the $access variable is set
+        // as null ($access = null;), the framework will take no action after
+        // the end of processing this method, being in charge of developing
+        // create additional custom routing logic
         $access = $permissionNow;
         
-        // Habilite esta linha para ativar a renovação automática da
-        // sessão/cookie do usuário em cada requisição
+        // Enable this line to enable automatic renewal of the
+        // user session / cookie on each request
         // renewAccess();
     }
 }

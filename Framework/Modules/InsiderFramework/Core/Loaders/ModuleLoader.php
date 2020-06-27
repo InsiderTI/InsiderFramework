@@ -72,9 +72,14 @@ class ModuleLoader
                 require_once($modulepath);
             }
 
-            \Modules\InsiderFramework\Core\Manipulation\KernelSpace::setVariable(array('modulesLoaded' => $moduleLoader), 'insiderFrameworkSystem');
-            unset($moduleLoader);
+            \Modules\InsiderFramework\Core\Manipulation\KernelSpace::setVariable(
+                array(
+                    'modulesLoaded' => $moduleLoader
+                ),
+                'insiderFrameworkSystem'
+            );
 
+            unset($moduleLoader);
             unset($modulepath);
             unset($module);
         } catch (\Exception $e) {

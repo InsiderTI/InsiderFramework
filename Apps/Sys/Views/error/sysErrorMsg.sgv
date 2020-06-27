@@ -1,6 +1,6 @@
 <?php
 
-// Vermelho Fatal Error
+// Fatal Error Red
 // Border
 $borderfatal = "#770000;";
 
@@ -15,7 +15,7 @@ $backgroundfatal = "
     background: linear-gradient(to bottom, #faeeef 0%,#f2c8cd 28%,#f0b8be 62%,#fbdde1 100%);
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#faeeef', endColorstr='#fbdde1',GradientType=0 );";
 
-// Amarelo Warning
+// Yellowe Warning
 // Border
 $borderwarning = "#4F2F00;";
 // Background
@@ -34,7 +34,6 @@ $cssInjected = \Modules\InsiderFramework\Core\KernelSpace::getVariable('injected
 $registeredErrors = \Modules\InsiderFramework\Core\KernelSpace::getVariable('registeredErrors', 'insiderFrameworkSystem');
 $debugbacktrace = \Modules\InsiderFramework\Core\KernelSpace::getVariable('debugbacktrace', 'insiderFrameworkSystem');
 
-// Recuperando post e get
 $POST = \Modules\InsiderFramework\Core\KernelSpace::getVariable('POST', 'insiderFrameworkSystem');
 $GET = \Modules\InsiderFramework\Core\KernelSpace::getVariable('GET', 'insiderFrameworkSystem');
 
@@ -46,14 +45,14 @@ if ($fatal === true) {
     $backgroundgradient = $backgroundwarning;
 }
 
-// Estilo CSS para erros visíveis para o admin
+// CSS for admin-visible errors
 $styleerroradmin = "<style>
             body{
                 font-family: 'Verdana';
                 font-size: 0.9em;
               }
 
-              #tudo{
+              #all{
                 width: 100%;
               }
 
@@ -97,13 +96,13 @@ if (isset(\Modules\InsiderFramework\Core\Request::getRequest('server')['REMOTE_A
 ?>
 
 <!DOCTYPE html>
-<html lang='pt-br'>
+<html lang='en'>
     <head>
         <meta http-equiv="content-type" content="application/xhtml+xml; charset=<?php echo ENCODE; ?>" />
         <?php echo $cssInjected . $styleerroradmin ?>
     </head>
     <body>
-        <div id='tudo'>
+        <div id='all'>
             <?php
                 $error = \Modules\InsiderFramework\Sagacious\Lib\SgsBags\SgsViewsBag::get('msgError');
             ?>

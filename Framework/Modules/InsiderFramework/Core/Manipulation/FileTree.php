@@ -4,7 +4,7 @@ namespace Modules\InsiderFramework\Core\Manipulation;
 
 /**
  * Methods responsible for handle files and directories
- * 
+ *
  * @author Marcello Costa
  *
  * @package Modules\InsiderFramework\Core\Manipulation\FileTree
@@ -22,7 +22,7 @@ trait FileTree
      * @param string    $path              Path of directory
      * @param int|float $delaytry          Time (in seconds) between the remove attempts
      * @param int       $maxToleranceLoops Maximum loop number waiting the $delaytry time
-     * 
+     *
      * @return bool Return true if the directory was sucessful removed
      */
     public static function deleteDirectory(string $path, $delaytry = 0.15, int $maxToleranceLoops = null): bool
@@ -60,7 +60,10 @@ trait FileTree
 
                     // If something went wrong
                     if ($result === false) {
-                        \Modules\InsiderFramework\Core\Error\ErrorHandler::i10nErrorRegister("Error trying to delete %" . $fullpath . "%", "app/sys");
+                        \Modules\InsiderFramework\Core\Error\ErrorHandler::i10nErrorRegister(
+                            "Error trying to delete %" . $fullpath . "%",
+                            "app/sys"
+                        );
                     }
                 } else {
                     // If the file have a lock
@@ -89,7 +92,10 @@ trait FileTree
 
                     // If something went wrong
                     if ($result === false) {
-                        \Modules\InsiderFramework\Core\Error\ErrorHandler::i10nErrorRegister("Error trying to delete %" . $fullpath . "%", "app/sys");
+                        \Modules\InsiderFramework\Core\Error\ErrorHandler::i10nErrorRegister(
+                            "Error trying to delete %" . $fullpath . "%",
+                            "app/sys"
+                        );
                     }
                 }
             }
@@ -103,7 +109,10 @@ trait FileTree
 
         // If something went wrong
         if ($result === false) {
-            \Modules\InsiderFramework\Core\Error\ErrorHandler::i10nErrorRegister("Error trying to delete %" . $path . "%", "app/sys");
+            \Modules\InsiderFramework\Core\Error\ErrorHandler::i10nErrorRegister(
+                "Error trying to delete %" . $path . "%",
+                "app/sys"
+            );
         }
 
         // Returning the success
@@ -166,7 +175,10 @@ trait FileTree
 
             // If something went wrong
             if ($result === false) {
-                \Modules\InsiderFramework\Core\Error\ErrorHandler::i10nErrorRegister("Error trying to delete %" . $path . "%", "app/sys");
+                \Modules\InsiderFramework\Core\Error\ErrorHandler::i10nErrorRegister(
+                    "Error trying to delete %" . $path . "%",
+                    "app/sys"
+                );
             }
 
             // Returning the success
@@ -457,7 +469,10 @@ trait FileTree
         }
 
         if ($filepath === null) {
-            \Modules\InsiderFramework\Core\Error\ErrorHandler::i10nErrorRegister("The file path not specified", "app/sys");
+            \Modules\InsiderFramework\Core\Error\ErrorHandler::i10nErrorRegister(
+                "The file path not specified",
+                "app/sys"
+            );
         }
 
         $countToleranceLoops = 0;
@@ -548,7 +563,10 @@ trait FileTree
         // If the result needs to be organized
         if ($sortitems === true) {
             // Calls the function which is responsable for organize the files inside the path
-            $dirarray = ($fileData = \Modules\InsiderFramework\Core\FileTree::fillArrayWithFileNodes(new \DirectoryIterator($dir)));
+            $dirarray = ($fileData = \Modules\InsiderFramework\Core\FileTree::fillArrayWithFileNodes(
+                new \DirectoryIterator($dir)
+            )
+            );
 
             // Returning the organized result
             return $dirarray;
@@ -563,7 +581,7 @@ trait FileTree
      *
      * @author 'Peter Bailey'
      * @see <http://stackoverflow.com/questions/952263/deep-recursive-array-of-directory-structure-in-php>
-     * 
+     *
      * @package Modules\InsiderFramework\Core\FileTree
      *
      * @param \DirectoryIterator $dir DirectoryIterator object containing path
@@ -774,7 +792,13 @@ trait FileTree
         }
 
         // Moving the fiel with the rename function
-        $result = \Modules\InsiderFramework\Core\FileTree::renameFile($origpath, $destpath, $overwrite, $delaytry, $maxToleranceLoops);
+        $result = \Modules\InsiderFramework\Core\FileTree::renameFile(
+            $origpath,
+            $destpath,
+            $overwrite,
+            $delaytry,
+            $maxToleranceLoops
+        );
 
         // Returning the result
         return $result;
@@ -862,7 +886,11 @@ trait FileTree
                 chmod($fullPath, $dirPermissions);
 
                 // Calling the function again
-                \Modules\InsiderFramework\Core\FileTree::changePermissionRecursively($fullPath, $dirPermissions, $filePermissions);
+                \Modules\InsiderFramework\Core\FileTree::changePermissionRecursively(
+                    $fullPath,
+                    $dirPermissions,
+                    $filePermissions
+                );
             } else {
                 // Changing the file permissions
                 chmod($fullPath, $filePermissions);
@@ -955,16 +983,23 @@ trait FileTree
     *
     * @return string Path of compressed file
     */
-    public static function compressDirectoryOrFile(string $target, $format = "zip", $outputFileName = null, $ignoreRootPath = false){
-        if (!is_dir($target) && !is_file($target)){
-            \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister('Cannot read file or directory to compress: '.$target);
+    public static function compressDirectoryOrFile(
+        string $target,
+        string $format = "zip",
+        string $outputFileName = null,
+        bool $ignoreRootPath = false
+    ) {
+        if (!is_dir($target) && !is_file($target)) {
+            \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister(
+                'Cannot read file or directory to compress: ' . $target
+            );
         }
 
-        if (trim($outputFileName."") === ""){
-            $outputFileName = strtolower($target).$format;
+        if (trim($outputFileName . "") === "") {
+            $outputFileName = strtolower($target) . $format;
         }
 
-        switch(strtolower($format)){
+        switch (strtolower($format)) {
             case "zip":
                 $zip = new \ZipArchive();
                 $zip->open(
@@ -975,19 +1010,19 @@ trait FileTree
                 Filetree::addTreeToCompressedArchive($zip, $target, $ignoreRootPath);
 
                 $zip->close();
-            break;
+                break;
             case "gz":
             case "bz2":
                 $phar = new \PharData($outputFileName);
 
                 Filetree::addTreeToCompressedArchive($phar, $target, $ignoreRootPath);
 
-                if (strtolower($format) === "bz2"){
+                if (strtolower($format) === "bz2") {
                     $phar->compress(\Phar::BZ2);
                 } else {
                     $phar->compress(\Phar::GZ);
                 }
-            break;
+                break;
         }
 
         return $outputFileName;
@@ -1006,35 +1041,38 @@ trait FileTree
     *
     * @return void
     */
-    public static function addTreeToCompressedArchive(&$compressedArchive, string $target, bool $ignoreRootPath = true): void {
-        if (is_dir($target)){
+    public static function addTreeToCompressedArchive(
+        &$compressedArchive,
+        string $target,
+        bool $ignoreRootPath = true
+    ): void {
+        if (is_dir($target)) {
             $dirTree = \Modules\InsiderFramework\Core\Manipulation\FileTree::dirTree($target);
             $md5tree = [];
 
             $rootPath = "";
 
-            if ($ignoreRootPath){
-                foreach($dirTree as $dirTreeItem){
+            if ($ignoreRootPath) {
+                foreach ($dirTree as $dirTreeItem) {
                     $itemToAdd = $rootPath . DIRECTORY_SEPARATOR . $dirTreeItem;
 
                     $dirTreeItemExploded = explode(
-                        DIRECTORY_SEPARATOR, 
+                        DIRECTORY_SEPARATOR,
                         $dirTreeItem
                     );
 
-                    if (is_array($dirTreeItemExploded) && count($dirTreeItemExploded) > 1){
+                    if (is_array($dirTreeItemExploded) && count($dirTreeItemExploded) > 1) {
                         $rootPath = $dirTreeItemExploded[0];
                         $dirTreeItem = array_slice($dirTreeItemExploded, 1);
                     }
 
-                    if (is_array($dirTreeItem)){
+                    if (is_array($dirTreeItem)) {
                         $dirTreeItem = implode(DIRECTORY_SEPARATOR, $dirTreeItem);
                     }
 
                     $itemToAdd = $dirTreeItem;
 
-                    if (is_dir($rootPath . DIRECTORY_SEPARATOR . $dirTreeItem))
-                    {
+                    if (is_dir($rootPath . DIRECTORY_SEPARATOR . $dirTreeItem)) {
                         $compressedArchive->addEmptyDir($itemToAdd);
                     } else {
                         $compressedArchive->addFile(
@@ -1043,13 +1081,11 @@ trait FileTree
                         );
                     }
                 }
-            }
-            else {
-                foreach($dirTree as $dirTreeItem){
+            } else {
+                foreach ($dirTree as $dirTreeItem) {
                     $itemToAdd = $dirTreeItem;
 
-                    if (is_dir($itemToAdd))
-                    {
+                    if (is_dir($itemToAdd)) {
                         $compressedArchive->addEmptyDir($itemToAdd);
                     } else {
                         $compressedArchive->addFile(
@@ -1078,36 +1114,41 @@ trait FileTree
     *
     * @return void
     */
-    public static function decompressFile(string $compressedFile, $destination, $format = "auto"){
-        if (!is_file($compressedFile)){
+    public static function decompressFile(string $compressedFile, $destination, $format = "auto")
+    {
+        if (!is_file($compressedFile)) {
             \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister(
-                'Cannot read file or directory to compress: '.$target
+                'Cannot read file or directory to compress: ' . $target
             );
         }
 
-        if (trim(strtolower($format)) === "auto"){
+        if (trim(strtolower($format)) === "auto") {
             $extension = strtolower(pathinfo($compressedFile)['extension']);
         }
 
-        switch(strtolower($format)){
+        switch (strtolower($format)) {
             case "zip":
-                $zip = new \ZipArchive;
+                $zip = new \ZipArchive();
             
-                if ($zip->open($compressedFile) === TRUE) {
+                if ($zip->open($compressedFile) === true) {
                     $zip->extractTo($destination);
                     $zip->close();
                 } else {
-                    \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister('Cannot decompress file '.$compressedFile);
+                    \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister(
+                        'Cannot decompress file ' . $compressedFile
+                    );
                 }
-            break;
+                break;
             case "bz2":
             case "gz":
                 $phar = new \PharData($outputFileName);
                 $phar->extractTo($destination, null, true);
-            break;
+                break;
             default:
-                \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister('Unknown format to decompress '.$format.' with file '.$compressedFile);
-            break;
+                \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister(
+                    'Unknown format to decompress ' . $format . ' with file ' . $compressedFile
+                );
+                break;
         }
     }
 
@@ -1122,14 +1163,15 @@ trait FileTree
     *
     * @return array Array of MD5
     */
-    public static function generateMd5DirTree($path): array {
+    public static function generateMd5DirTree($path): array
+    {
         $dirTree = \Modules\InsiderFramework\Core\Manipulation\FileTree::dirTree($path);
         $md5tree = [];
-        foreach($dirTree as $realpath){
+        foreach ($dirTree as $realpath) {
             $filepath = explode(DIRECTORY_SEPARATOR, $realpath);
             $filepath = implode(DIRECTORY_SEPARATOR, array_slice($filepath, 1));
 
-            if (is_file($realpath)){
+            if (is_file($realpath)) {
                 $md5tree[$filepath] = md5_file($realpath);
             }
         }

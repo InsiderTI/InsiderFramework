@@ -47,7 +47,9 @@ trait Cookie
 
             $ipuser = getenv("REMOTE_ADDR");
 
-            $cookievalue = \Modules\InsiderFramework\Core\Manipulation\Cryptography::encryptString($cookievalue . $ipuser);
+            $cookievalue = \Modules\InsiderFramework\Core\Manipulation\Cryptography::encryptString(
+                $cookievalue . $ipuser
+            );
         }
 
         if ($path == null) {

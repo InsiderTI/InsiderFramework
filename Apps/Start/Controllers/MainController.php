@@ -30,8 +30,6 @@ class MainController extends \Modules\InsiderFramework\Core\Controller
     public function home(): void
     {
         SgsViewsBag::set('test', 123);
-
-        // Renderview
         $this->renderView('Start::home.sgv');
     }
 }

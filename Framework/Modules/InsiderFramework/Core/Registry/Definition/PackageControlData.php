@@ -98,13 +98,17 @@ class PackageControlData
     public function __construct(string $controlFilePath)
     {
         if (!file_exists($controlFilePath) || !is_readable($controlFilePath)) {
-            \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister('Cannot read control file ' . $controlFilePath);
+            \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister(
+                'Cannot read control file ' . $controlFilePath
+            );
         }
 
         // Trying to read the JSON file
         $jsonData = \Modules\InsiderFramework\Core\Json::getJSONDataFile($controlFilePath);
         if ($jsonData === false) {
-            \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister("Invalid control file: " . $controlFilePath);
+            \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister(
+                "Invalid control file: " . $controlFilePath
+            );
         }
     
         $missingInfoError = [];
@@ -149,7 +153,9 @@ class PackageControlData
         $this->setDescription($jsonData['description']);
         
         if (count($missingInfoError) > 0) {
-            \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister('Errors initializing PackageControlData: ' . implode(", ", $missingInfoError));
+            \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister(
+                'Errors initializing PackageControlData: ' . implode(", ", $missingInfoError)
+            );
         }
     }
 }

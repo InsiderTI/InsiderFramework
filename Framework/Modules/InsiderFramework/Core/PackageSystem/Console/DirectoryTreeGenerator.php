@@ -76,7 +76,9 @@ class DirectoryTreeGenerator
 
         // Error
         if (!$validation) {
-            $climate->br()->to('error')->write("Invalid version. Must be Semantic Versioning (MAJOR.MINOR.PATCH-OPTIONAL)")->br();
+            $climate->br()->to('error')->write(
+                "Invalid version. Must be Semantic Versioning (MAJOR.MINOR.PATCH-OPTIONAL)"
+            )->br();
             die();
         }
 
@@ -114,7 +116,9 @@ class DirectoryTreeGenerator
             $controlData['section'] = strtolower($section);
         } else {
             if (!in_array(ucwords($section), $sectionOptions)) {
-                $climate->br()->to('error')->write("Cannot recognize section $section. Valid sections are: " . implode(", ", $sectionOptions))->br();
+                $climate->br()->to('error')->write(
+                    "Cannot recognize section $section. Valid sections are: " . implode(", ", $sectionOptions)
+                )->br();
                 die();
             }
             $controlData['section'] = strtolower($section);
@@ -125,7 +129,10 @@ class DirectoryTreeGenerator
         $controlData["depends"] = [];
         $controlData["recommends"] = [];
 
-        \Modules\InsiderFramework\Core\PackageSystem\Console\DirectoryTreeGenerator::writePackageDirTree($destinationDirectory, $controlData);
+        \Modules\InsiderFramework\Core\PackageSystem\Console\DirectoryTreeGenerator::writePackageDirTree(
+            $destinationDirectory,
+            $controlData
+        );
 
         $climate->out("\nPackage directory tree created. After making all changes, run build command\n");
     }
@@ -146,7 +153,9 @@ class DirectoryTreeGenerator
     {
         // Creating package directory
         if (!\Modules\InsiderFramework\Core\FileTree::createDirectory($destinationDirectory, 777)) {
-            \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister('Unable to create ' . $destinationDirectory);
+            \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister(
+                'Unable to create ' . $destinationDirectory
+            );
         }
         
         // Creating control and data directories
@@ -155,7 +164,10 @@ class DirectoryTreeGenerator
             "Registry",
             777
         );
-        \Modules\InsiderFramework\Core\FileTree::createDirectory($destinationDirectory . DIRECTORY_SEPARATOR . "Data", 777);
+        \Modules\InsiderFramework\Core\FileTree::createDirectory(
+            $destinationDirectory . DIRECTORY_SEPARATOR . "Data",
+            777
+        );
         
         // Creating default files
         $controlDir = $destinationDirectory . DIRECTORY_SEPARATOR .
@@ -169,6 +181,10 @@ class DirectoryTreeGenerator
         \Modules\InsiderFramework\Core\FileTree::fileWriteContent($controlDir . "Prerm.php", "", true);
         
         // Creating control.json file
-        \Modules\InsiderFramework\Core\FileTree::fileWriteContent($controlDir . "Control.json", json_encode($controlData), true);
+        \Modules\InsiderFramework\Core\FileTree::fileWriteContent(
+            $controlDir . "Control.json",
+            json_encode($controlData),
+            true
+        );
     }
 }

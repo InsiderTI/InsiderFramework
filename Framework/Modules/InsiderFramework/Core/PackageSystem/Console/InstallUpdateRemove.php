@@ -2,7 +2,8 @@
 
 namespace Modules\InsiderFramework\Core\PackageSystem\Console;
 
-class InstallUpdateRemove {
+class InstallUpdateRemove
+{
 
     /**
     * Install or Update a package
@@ -15,14 +16,15 @@ class InstallUpdateRemove {
     *
     * @return void
     */
-    public static function installOrUpdate($climate){
+    public static function installOrUpdate($climate)
+    {
         $remote = $climate->arguments->get('remote');
         $file = $climate->arguments->get('file');
 
         if (
             ($remote === "" || $remote === null) &&
             ($file === "" || $file === null)
-           ){
+        ) {
             $climate->br();
             $climate->to('error')->red("Syntax error: target (remote or file) must be specified")->br();
             $climate->to('error')->write("Type <light_blue>console.php --help</light_blue> for help")->br();
@@ -32,7 +34,7 @@ class InstallUpdateRemove {
         $pkgController = new \Apps\Sys\Controllers\PkgController();
         $authorization = \Modules\InsiderFramework\Core\Registry::getLocalAuthorization(REQUESTED_URL);
 
-        if ($remote."" !== ""){
+        if ($remote . "" !== "") {
             $target = $remote;
             $completePkgPath = $pkgController->downloadPackage($target);
         } else {
@@ -117,7 +119,9 @@ class InstallUpdateRemove {
 
             $newPackageVersionParts = \Modules\InsiderFramework\Core\Registry::getVersionParts($newPackageVersion);
             if ($newPackageVersionParts === false) {
-                \Modules\InsiderFramework\Core\PackageSystem\Console\InstallUpdateRemove::stopInstallUpdate("Wrong version of new package " . $newPackage . ": " . $newPackageVersion);
+                \Modules\InsiderFramework\Core\PackageSystem\Console\InstallUpdateRemove::stopInstallUpdate(
+                    "Wrong version of new package " . $newPackage . ": " . $newPackageVersion
+                );
             }
 
             $installedVersionString = $pkgController->getVersionFromInfo($installedVersionParts);
@@ -142,7 +146,10 @@ class InstallUpdateRemove {
                             break;
 
                         case 'n':
-                            \Modules\InsiderFramework\Core\PackageSystem\Console\InstallUpdateRemove::stopInstallUpdate($tmpDir, "Aborting install");
+                            \Modules\InsiderFramework\Core\PackageSystem\Console\InstallUpdateRemove::stopInstallUpdate(
+                                $tmpDir,
+                                "Aborting install"
+                            );
                             break;
                     }
                     break;
@@ -161,7 +168,10 @@ class InstallUpdateRemove {
                             break;
 
                         case 'n':
-                            \Modules\InsiderFramework\Core\PackageSystem\Console\InstallUpdateRemove::stopInstallUpdate($tmpDir, "");
+                            \Modules\InsiderFramework\Core\PackageSystem\Console\InstallUpdateRemove::stopInstallUpdate(
+                                $tmpDir,
+                                ""
+                            );
                             break;
                     }
                     break;
@@ -225,7 +235,8 @@ class InstallUpdateRemove {
     *
     * @return void
     */
-    public static function remove($climate): void {
+    public static function remove($climate): void
+    {
         $package = $climate->arguments->get('package');
         if ($package === "") {
             $climate->br();
@@ -243,7 +254,11 @@ class InstallUpdateRemove {
         }
 
         // Running the pre-uninstall script
-        $preUninstallFile = INSTALL_DIR.DIRECTORY_SEPARATOR."Framework".DIRECTORY_SEPARATOR."Registry".DIRECTORY_SEPARATOR."Prerm.php";
+        $preUninstallFile = INSTALL_DIR . DIRECTORY_SEPARATOR .
+                            "Framework" . DIRECTORY_SEPARATOR .
+                            "Registry" . DIRECTORY_SEPARATOR .
+                            "Prerm.php";
+
         if (file_exists($preUninstallFile)) {
             \Modules\InsiderFramework\Core\FileTree::requireOnceFile($preUninstallFile);
         }
@@ -251,16 +266,18 @@ class InstallUpdateRemove {
         $directories = [];
         $dataDirPattern = "Data" . DIRECTORY_SEPARATOR;
         $registryDirPattern = "Registry" . DIRECTORY_SEPARATOR;
-        foreach($localVersion['md5sum'] as $file => $md5){
-            if (strpos($file, $dataDirPattern) !== false){
+        foreach ($localVersion['md5sum'] as $file => $md5) {
+            if (strpos($file, $dataDirPattern) !== false) {
                 $correctPath = str_replace($dataDirPattern, "", $file);
             } else {
-                $correctPath = str_replace($registryDirPattern, 
-                "Framework" . DIRECTORY_SEPARATOR . 
-                "Registry" . DIRECTORY_SEPARATOR .
-                "Controls" . DIRECTORY_SEPARATOR . 
-                $localVersion['package'] . DIRECTORY_SEPARATOR,
-                $file);
+                $correctPath = str_replace(
+                    $registryDirPattern,
+                    "Framework" . DIRECTORY_SEPARATOR .
+                    "Registry" . DIRECTORY_SEPARATOR .
+                    "Controls" . DIRECTORY_SEPARATOR .
+                    $localVersion['package'] . DIRECTORY_SEPARATOR,
+                    $file
+                );
             }
 
             \Modules\InsiderFramework\Core\FileTree::deleteFile(
@@ -268,25 +285,29 @@ class InstallUpdateRemove {
             );
 
             $dirpath = dirname($correctPath);
-            if (!in_array($dirpath, $directories)){
-                $directories[]=$dirpath;
+            if (!in_array($dirpath, $directories)) {
+                $directories[] = $dirpath;
             }
         }
 
         $notEmptyDirectories = [];
-        foreach($directories as $dir){
+        foreach ($directories as $dir) {
             $empty = \Modules\InsiderFramework\Core\Validation\FileTree::isDirEmpty($dir);
-            if ($empty){
+            if ($empty) {
                 \Modules\InsiderFramework\Core\FileTree::deleteDirectory(
                     $dir
-                );  
+                );
             } else {
                 $notEmptyDirectories = $dir;
             }
         }
 
         // Running the pos-uninstall script
-        $posUninstallFile = INSTALL_DIR.DIRECTORY_SEPARATOR."Framework".DIRECTORY_SEPARATOR."Registry".DIRECTORY_SEPARATOR."Posrm.php";
+        $posUninstallFile = INSTALL_DIR . DIRECTORY_SEPARATOR .
+                            "Framework" . DIRECTORY_SEPARATOR .
+                            "Registry" . DIRECTORY_SEPARATOR .
+                            "Posrm.php";
+
         if (file_exists($posUninstallFile)) {
             \Modules\InsiderFramework\Core\FileTree::requireOnceFile($posUninstallFile);
         }

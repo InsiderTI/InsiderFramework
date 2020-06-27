@@ -24,7 +24,10 @@ class Permission
     public static function getNativeAccessLevel()
     {
         $server = \Modules\InsiderFramework\Core\KernelSpace::getVariable('SERVER', 'insiderFrameworkSystem');
-        $consoleRequest = \Modules\InsiderFramework\Core\KernelSpace::getVariable('consoleRequest', 'insiderFrameworkSystem');
+        $consoleRequest = \Modules\InsiderFramework\Core\KernelSpace::getVariable(
+            'consoleRequest',
+            'insiderFrameworkSystem'
+        );
 
         // Model para manipulação do banco
         $securitymodel = new \Modules\InsiderFramework\Core\Model();
@@ -62,7 +65,9 @@ class Permission
             if (!(empty($useridr))) {
                 // Se existir mais de um user com o mesmo cookie
                 if (!(isset($useridr['USERID']))) {
-                    \Modules\InsiderFramework\Core\Error\ErrorHandler::ErrorRegister('Error ! There are two users with the same access cookie!');
+                    \Modules\InsiderFramework\Core\Error\ErrorHandler::ErrorRegister(
+                        'Error ! There are two users with the same access cookie!'
+                    );
                 }
 
                 // Array de retorno de informações
@@ -90,7 +95,10 @@ class Permission
                 // Se o segundo nível de acesso existir
                 if (isset($sec_result)) {
                     // Unindo os dois arrays
-                    $arrayr = \Modules\InsiderFramework\Core\Manipulation::arrayMergeRecursiveDistinct($arrayr, $sec_result);
+                    $arrayr = \Modules\InsiderFramework\Core\Manipulation::arrayMergeRecursiveDistinct(
+                        $arrayr,
+                        $sec_result
+                    );
                 }
 
                 // Habilite esta linha para ativar a renovação automática da
@@ -170,7 +178,12 @@ class Permission
         // Armazenando permissão atual do grupo
         if ($permissionNow === null) {
             $permissionNow = "UNPRIVILEGEDUSER";
-            \Modules\InsiderFramework\Core\KernelSpace::setVariable(array('permissionNow' => $permissionNow), 'insiderFrameworkSystem');
+            \Modules\InsiderFramework\Core\KernelSpace::setVariable(
+                array(
+                    'permissionNow' => $permissionNow
+                ),
+                'insiderFrameworkSystem'
+            );
         }
         if ($permissionNow !== "UNPRIVILEGEDUSER") {
             if (!is_array($permissionNow)) {
@@ -243,7 +256,9 @@ class Permission
                             break;
 
                         default:
-                            \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError("Permissions error on the route " . $route);
+                            \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError(
+                                "Permissions error on the route " . $route
+                            );
                             break;
                     }
                 } else {
@@ -288,7 +303,9 @@ class Permission
                         break;
 
                     default:
-                        \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError("Permissions error on the route " . $route);
+                        \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError(
+                            "Permissions error on the route " . $route
+                        );
                         break;
                 }
             } else {

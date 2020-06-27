@@ -3,7 +3,7 @@
 namespace Apps\Sys\Controllers;
 
 /**
- * Classe com as funções globais do app sys que podem ser chamadas
+ * Class with global sys functions that can be called
  * via request
  *
  * @author Marcello Costa
@@ -15,7 +15,7 @@ namespace Apps\Sys\Controllers;
 class SysController extends \Modules\InsiderFramework\Core\Controller
 {
     /**
-     * Default action fake para satisfazer as exigências do arquivo routes
+     * Default action fake to satisfy routes file requirements
      *
      * @author Marcello Costa
      *
@@ -30,7 +30,7 @@ class SysController extends \Modules\InsiderFramework\Core\Controller
     }
 
     /**
-     * Função que grava informações de um cookie atráves de um requisiçao via URL
+     * Function that records information about a cookie through a request via URL
      *
      * @author Marcello Costa
      *
@@ -49,25 +49,37 @@ class SysController extends \Modules\InsiderFramework\Core\Controller
     */
     public function setDataCookie(string $cookiename, string $value, bool $overwrite): void
     {
-        // Se for para sobreescrever
         if ($overwrite == true) {
-            \Modules\InsiderFramework\Core\Manipulation\Cookie::setCookie($cookiename, $value, null, null, null, 0, false);
-        }
-
-        // Se não for para sobreescrever
-        else {
+            \Modules\InsiderFramework\Core\Manipulation\Cookie::setCookie(
+                $cookiename,
+                $value,
+                null,
+                null,
+                null,
+                0,
+                false
+            );
+        } else {
             // Checando o cookie
             $cookie_exist = \Modules\InsiderFramework\Core\Manipulation\Cookie::getCookie($cookiename);
 
             // Se o cookie não existir
             if ($cookie_exist === null) {
-                \Modules\InsiderFramework\Core\Manipulation\Cookie::setCookie($cookiename, $value, null, null, null, 0, false);
+                \Modules\InsiderFramework\Core\Manipulation\Cookie::setCookie(
+                    $cookiename,
+                    $value,
+                    null,
+                    null,
+                    null,
+                    0,
+                    false
+                );
             }
         }
     }
 
     /**
-     * Função que recupera informações de um cookie atráves de um requisiçao via URL
+     * Function that retrieves information from a cookie through a request via URL
      *
      * @author Marcello Costa
      *
@@ -85,7 +97,6 @@ class SysController extends \Modules\InsiderFramework\Core\Controller
     {
         $datacookie = \Modules\InsiderFramework\Core\Manipulation\Cookie::getCookie($cookiename);
 
-        // Se for um dado no formato json, tratar a string
         if ($returnjson) {
             $datacookie = str_replace("\\", "", $datacookie);
         }

@@ -36,7 +36,9 @@ class Bootstrap
             !isset($routingConfig['settings']['routeCaseSensitive']) ||
             !is_bool($routingConfig['settings']['routeCaseSensitive'])
         ) {
-            \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError('Error reading settings from RoutingSystemConfig');
+            \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError(
+                'Error reading settings from RoutingSystemConfig'
+            );
         }
         
         \Modules\InsiderFramework\Core\KernelSpace::setVariable(

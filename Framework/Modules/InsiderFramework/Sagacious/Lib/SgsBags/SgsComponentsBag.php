@@ -38,7 +38,8 @@ class SgsComponentsBag
 
         if (!isset($defaultState['class'])) {
             \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister(
-                'Class not found in "' . $componentId . '" SgsComponent in App "' . $componentApp . '". Check component state configuration.'
+                'Class not found in "' . $componentId . '" SgsComponent in App "'
+                . $componentApp . '". Check component state configuration.'
             );
         }
 

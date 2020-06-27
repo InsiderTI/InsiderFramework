@@ -45,7 +45,9 @@ class Build
         }
         
         // Checking if it's an valid build directory
-        $validationErrors = \Modules\InsiderFramework\Core\PackageSystem\Console\Validate::validatePackageDirectoryTree($sourceDirectory);
+        $validationErrors = \Modules\InsiderFramework\Core\PackageSystem\Console\Validate::validatePackageDirectoryTree(
+            $sourceDirectory
+        );
         if (!empty($validationErrors)) {
             \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister(implode(', ', $validationErrors));
         }

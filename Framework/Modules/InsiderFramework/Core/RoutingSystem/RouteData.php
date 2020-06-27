@@ -99,7 +99,9 @@ class RouteData
             }
 
             if (!$this->validateAllProperties()) {
-                \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError('Invalid ErrorMessage ' . json_encode($properties));
+                \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError(
+                    'Invalid ErrorMessage ' . json_encode($properties)
+                );
             }
         }
     }
@@ -582,7 +584,7 @@ class RouteData
      *
      * @package Modules\InsiderFramework\Core\RoutingSystem\RouteData
      *
-     * @param null   $routeMatched   Rota que coincidir (será um array 
+     * @param null   $routeMatched   Rota que coincidir (será um array
      *                               quando terminar o processamento)
      * @param string $routeRequested Rota requisitada
      * @param string $domain         Domínio da requisição
@@ -829,7 +831,12 @@ class RouteData
         ), 'RoutingSystem');
 
         // Instanciando controller
-        $completeNamespace = "\\Apps\\" . $this->getApp() . "\\Controllers\\" . ucwords($this->getController()."Controller");
+        $completeNamespace = "\\Apps\\" .
+                             $this->getApp() .
+                             "\\Controllers\\" .
+                             ucwords($this->getController() .
+                             "Controller");
+
         $C = new $completeNamespace();
 
         // Definindo o tipo de response atual

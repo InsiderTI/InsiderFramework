@@ -1,13 +1,13 @@
-@CHARSET "UTF-8";
+@charset "UTF-8";
 
-/* Classe que impede a seleção de um elemento */
-.noselect{
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -o-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -moz-user-select: -moz-none;
-    -ms-user-select: none;
-    user-select: none;
+/* Class that prevents the selection of an element */
+.noselect {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -o-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -moz-user-select: -moz-none;
+  -ms-user-select: none;
+  user-select: none;
 }

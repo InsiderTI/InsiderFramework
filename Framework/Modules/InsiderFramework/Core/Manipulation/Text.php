@@ -40,7 +40,7 @@ trait Text
      * @package Modules\InsiderFramework\Core\Manipulation\Text
      *
      * @param string $string String to be tested
-     * 
+     *
      * @return bool Return true if special characters exists
      */
     public static function checkSpecialChars(string $string): bool
@@ -61,7 +61,7 @@ trait Text
      *
      * @param string $string             String to be converted
      * @param bool   $convertwhitespaces Flag to convert or not white spaces
-     * 
+     *
      * @return String String converted
      */
     public static function specialCharsToAlphaNumeric(

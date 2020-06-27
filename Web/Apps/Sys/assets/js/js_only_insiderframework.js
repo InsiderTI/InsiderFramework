@@ -1,16 +1,10 @@
 document.addEventListener("DOMContentLoaded", function(event) {
-  // Variável de monitoramento de URL
   laststatehistory = null
 })
 
-// Monitorando a mudança de URL
 window.onpopstate = function(event) {
-  // Se o último estado da URL for diferente
   if (JSON.stringify(event.state) !== laststatehistory) {
-    // Grava o estado atual
     laststatehistory = JSON.stringify(event.state)
-
-    // Recarrega a página
     location.reload()
   }
 }
@@ -18,11 +12,11 @@ window.onpopstate = function(event) {
 /**
  *   @author Marcello Costa
  *
- *   Substitui todas as ocorrências de uma string em uma sentença
+ *   Replaces all occurrences of a string in a sentence
  *
- *   @param  {String}  find       O que deve ser encontrado
- *   @param  {String}  replace    O que entrará no lugar da string encontrada
- *   @param  {String}  str        String onde deverá ser feita a busca
+ *   @param  {String}  find       What should be found
+ *   @param  {String}  replace    What will replace the found string
+ *   @param  {String}  str        String where to search
  *
  *   @returns  {Void}
  */
@@ -33,11 +27,11 @@ function replaceAll(find, replace, str) {
 /**
  *   @author Marcello Costa
  *
- *   Verifica se uma variável é JSON
+ *   Checks whether a variable is JSON
  *
- *   @param  {*}  val    Variável a ser testada
+ *   @param  {*}  val    Variable to be tested
  *
- *   @returns  {Bool}  Resultado da função
+ *   @returns  {Bool}  Function result
  */
 function isJSON(val) {
   try {
@@ -51,42 +45,30 @@ function isJSON(val) {
 /**
  *   @author Marcello Costa
  *
- *   Retorna em um array o resultado devolvido da renderização de
- *   uma view (código + css + js). O array fica então da seguinte
- *   forma: array['css'], array['script'], array['code']
+ * Returns in an array the result returned from rendering
+ * a view (code + css + js). The array is then as follows
+ * form: array ['css'], array ['script'], array ['code']
  *
- *   @param  {String}  resultview    Resultado devolvido de uma requisição ajax à uma view
+ *   @param  {String}  resultview    Result returned from an ajax request to a view
  *
- *   @returns  {Array}  Resultado separado em um array
+ *   @returns  {Array}  Separate result in an array
  */
 function parseJSONView(resultview) {
-  // Se é um JSON
   if (isJSON(resultview)) {
-    // Efetua o parse do resultado
     resultjson = JSON.parse(resultview)
-
-    // Tratando CSS
     resultjson["css"] = replaceAll("\\n\\", "", resultjson["css"])
-
-    // Tratando SCRIPT
     resultjson["script"] = replaceAll("\\n\\", "", resultjson["script"])
-
-    // Retornando valores
     return resultjson
   }
-
-  // Se não é um JSON, não pode ser tratado por esta função
-  else {
-    return false
-  }
+  return false
 }
 
 /**
  *   @author Marcello Costa
  *
- *   Para o script durante um determinado tempo (em milisegundos)
+ *   Stops the script for a specified time (in milliseconds)
  *
- *   @param  {milliseconds}  Tempo que o script ficará parado
+ *   @param  {milliseconds}  Time the script will be stopped
  *
  *   @returns  {Void}
  */
@@ -102,9 +84,9 @@ function sleep(milliseconds) {
 /**
  *   @author Marcello Costa
  *
- *   Função para apagar um cookie do navegador (não funciona com cookies de sessão)
+ *   Function to delete a browser cookie (does not work with session cookies)
  *
- *   @param  {String}  cookiename    Nome do cookie
+ *   @param  {String}  cookiename    Cookie name
  *
  *   @returns  {Void}
  */
@@ -115,11 +97,11 @@ function deleteCookie(cookiename) {
 /**
  *   @author Marcello Costa
  *
- *   Cria/atualiza os dados de um cookie com javascript puro
+ *   Create / update cookie data with pure javascript
  *
- *   @param  {String}  name    Nome do cookie
- *   @param  {String}  value   Valor do cookie
- *   @param  {Int}     days    Validade do cookie (em dias)
+ *   @param  {String}  name    Cookie name
+ *   @param  {String}  value   Cookie value
+ *   @param  {Int}     days    Cookie validity (in days)
  *
  *   @returns  {Void}
  */
@@ -138,22 +120,24 @@ function updateDataCookieJS(name, value, days) {
 /**
  *   @author Marcello Costa
  *
- *   Recupera os dados de um cookie com javascript puro
+ *   Retrieves data from a cookie with pure javascript
  *
- *   @param  {String}  c_name    Nome do cookie
+ *   @param  {String}  cookieName    Cookie name
  *
  *   @returns  {Void}
  */
-function getDataCookieJS(c_name) {
+function getDataCookieJS(cookieName) {
   if (document.cookie.length > 0) {
-    c_start = document.cookie.indexOf(c_name + "=")
-    if (c_start != -1) {
-      c_start = c_start + c_name.length + 1
-      c_end = document.cookie.indexOf(";", c_start)
-      if (c_end == -1) {
-        c_end = document.cookie.length
+    cookieStartIndex = document.cookie.indexOf(cookieName + "=")
+    if (cookieStartIndex != -1) {
+      cookieStartIndex = cookieStartIndex + cookieName.length + 1
+      cookieEndIndex = document.cookie.indexOf(";", cookieStartIndex)
+      if (cookieEndIndex == -1) {
+        cookieEndIndex = document.cookie.length
       }
-      return unescape(document.cookie.substring(c_start, c_end))
+      return unescape(
+        document.cookie.substring(cookieStartIndex, cookieEndIndex)
+      )
     }
   }
   return ""
@@ -162,34 +146,33 @@ function getDataCookieJS(c_name) {
 /**
  *   @author Marcello Costa
  *
- *   Converte dados para serem enviados via URL
+ *   Convert data to be sent via URL
  *
- *   @param  {String}  data    Nome do cookie
- *   @param  {Bool}    json    Converter dados recebidos para JSON
+ *   @param  {String}  data    Cookie name
+ *   @param  {Bool}    json    Convert received data to JSON
  *
- *   @returns  {String}  String convertida para json
+ *   @returns  {String}  String converted to json
  */
 function convertDataToPost(data, json) {
-  // Convertendo ou não dados para JSON
   if (json === true) {
     newdatatmp = JSON.stringify(data)
   } else {
     newdatatmp = data
   }
 
-  // Substituindo barras "/" por "\/"
+  // Replacing forward slashes "/" with "\ /"
   newdata = replaceAll("/", "\\/", newdatatmp)
 
-  // Retornando dados tratados
+  // Returning treated data
   return newdata
 }
 
 /**
  *   @author Marcello Costa
  *
- *   Retorna os parâmetros GET da requisição atual
+ *   Returns the GET parameters of the current request
  *
- *   @returns  {Array}  Array associativo com as chaves e valores GET
+ *   @returns  {Array}  Associative array with GET keys and values
  */
 function getGetParams() {
   urlgets = window.location.search.replace("?", "").split("&")
@@ -210,9 +193,9 @@ function getGetParams() {
 /**
  *   @author Marcello Costa
  *
- *   Converte uma timestamp para o formato PT-BR
+ *   Converts a timestamp to PT-BR format
  *
- *   @param  {String}  timestamp    desc
+ *   @param  {String}  timestamp    Timestamp
  *
  *   @returns  {Void}
  */
@@ -233,12 +216,12 @@ function convertTimeStamp(timestamp) {
 /**
  *   @author Marcello Costa
  *
- *   Compara duas strings que são datas.
- *   Se a data inicial é maior que a final, retorna false.
+ *   Compare two strings that are dates.
+ *   If the start date is greater than the end date, it returns false.
  *
- *   @param  {String}  dataInicial    Data Inicial
- *   @param  {String}  dataFinal      Data Final
- *   @param  {String}  format         Formato das datas
+ *   @param  {String}  dataInicial    Initial date
+ *   @param  {String}  dataFinal      Final date
+ *   @param  {String}  format         Date format
  *
  *   @returns  {Bool}
  */
@@ -260,16 +243,16 @@ function firstDateIsGreater(dataInicial, dataFinal, format = "YYYY-MM-DD") {
   }
 }
 
-/* Strip de tags html (primeiro método) */
+/* Strip html tags (first method) */
 /**
  *   @author Martijn
  *   @see {http://stackoverflow.com/questions/5499078/fastest-method-to-escape-html-tags-as-html-entities}
  *
  *   Remove tags html de uma string
  *
- *   @param  {String}  str    String a ser tratada
+ *   @param  {String}  str    String to be processed
  *
- *   @returns  {String}  String tratada
+ *   @returns  {String}  Processed string
  */
 var tagsToReplace = {
   "&": "&amp;",
@@ -285,16 +268,16 @@ function safeTagsReplace(str) {
   return str.replace(/[&<>]/g, replaceTag)
 }
 
-/* Strip de tags html (segundo método) */
+/* Strip html tags (according to method) */
 /**
  *   @author VyvIT, Robert K
  *   @see {http://stackoverflow.com/questions/5796718/html-entity-decode}
  *
- *   Remove tags html de uma string. Para usar faça: decodeEntities('<img src=fake onerror="prompt(1)">');
+ *   Removes html tags from a string. To use make: decodeEntities('<img src=fake onerror="prompt(1)">');
  *
- *   @param {String} str String a ser tratada
+ *   @param {String} str String to be processed
  *
- *   @returns {String} String tratada
+ *   @returns {String} Processed string
  */
 function decodeEntities() {
   var doc = document.implementation.createHTMLDocument("")
@@ -319,4 +302,4 @@ function decodeEntities() {
   }
   return decodeHTMLEntities
 }
-/* Fim do Strip de tags html */
+/* End of the html tag strip */

@@ -34,7 +34,9 @@ class ConfigLoader
         foreach ($coreConfigFiles as $configFile) {
             $dataConfiguration = \Modules\InsiderFramework\Core\Loaders\ConfigLoader::getConfigData($configFile);
             if (count($dataConfiguration) === 0) {
-                \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError("Could not read '$configFile' file of config directory");
+                \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError(
+                    "Could not read '$configFile' file of config directory"
+                );
             }
             $coreData = array_merge($coreData, $dataConfiguration);
         }
@@ -70,7 +72,9 @@ class ConfigLoader
             !is_array($coreData['REPOSITORIES']) ||
             empty($coreData['REPOSITORIES'])
         ) {
-            \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError("The following information was not found in the configuration: 'REPOSITORIES'");
+            \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError(
+                "The following information was not found in the configuration: 'REPOSITORIES'"
+            );
         }
 
         $LOCAL_REPOSITORIES = [];
@@ -89,19 +93,25 @@ class ConfigLoader
             switch (strtoupper(trim($repo['TYPE']))) {
                 case 'REMOTE':
                     if (isset($REMOTE_REPOSITORIES[$repo['DOMAIN']])) {
-                        \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError("Duplicated entry for repository: " . $repo['DOMAIN']);
+                        \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError(
+                            "Duplicated entry for repository: " . $repo['DOMAIN']
+                        );
                     }
                     $REMOTE_REPOSITORIES[$repo['DOMAIN']] = $repo;
                     break;
 
                 case 'LOCAL':
                     if (isset($LOCAL_REPOSITORIES[$repo['DOMAIN']])) {
-                        \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError("Duplicated entry for repository: " . $repo['DOMAIN']);
+                        \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError(
+                            "Duplicated entry for repository: " . $repo['DOMAIN']
+                        );
                     }
                     $LOCAL_REPOSITORIES[$repo['DOMAIN']] = $repo;
                     break;
                 default:
-                    \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError("Unknown type for repository: " . $repo['TYPE']);
+                    \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError(
+                        "Unknown type for repository: " . $repo['TYPE']
+                    );
                     break;
             }
         }
@@ -202,7 +212,9 @@ class ConfigLoader
         }
 
         if (!isset($coreData['LINGUAS'])) {
-            \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError("The following information was not found in the configuration: 'LINGUAS'");
+            \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError(
+                "The following information was not found in the configuration: 'LINGUAS'"
+            );
         }
 
         /**
@@ -213,7 +225,9 @@ class ConfigLoader
         define('LINGUAS', $coreData['LINGUAS']);
 
         if (!isset($coreData['ENCODE'])) {
-            \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError("The following information was not found in the configuration: 'ENCODE'");
+            \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError(
+                "The following information was not found in the configuration: 'ENCODE'"
+            );
         }
 
         /**
@@ -224,7 +238,9 @@ class ConfigLoader
         define('ENCODE', $coreData['ENCODE']);
 
         if (!isset($coreData['ENCRYPT_KEY'])) {
-            \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError("The following information was not found in the configuration: 'ENCRYPT_KEY'");
+            \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError(
+                "The following information was not found in the configuration: 'ENCRYPT_KEY'"
+            );
         }
 
         /**
@@ -235,7 +251,9 @@ class ConfigLoader
         define('ENCRYPT_KEY', $coreData['ENCRYPT_KEY']);
 
         if (!isset($coreData['MAILBOX'])) {
-            \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError("The following information was not found in the configuration: 'MAILBOX'");
+            \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError(
+                "The following information was not found in the configuration: 'MAILBOX'"
+            );
         }
 
         /**
@@ -246,7 +264,9 @@ class ConfigLoader
         define('MAILBOX', $coreData['MAILBOX']);
 
         if (!isset($coreData['MAILBOX_PASS'])) {
-            \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError("The following information was not found in the configuration: 'MAILBOX_PASS'");
+            \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError(
+                "The following information was not found in the configuration: 'MAILBOX_PASS'"
+            );
         }
 
         /**
@@ -257,7 +277,9 @@ class ConfigLoader
         define('MAILBOX_PASS', $coreData['MAILBOX_PASS']);
 
         if (!isset($coreData['MAILBOX_SMTP'])) {
-            \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError("The following information was not found in the configuration: 'MAILBOX_SMTP'");
+            \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError(
+                "The following information was not found in the configuration: 'MAILBOX_SMTP'"
+            );
         }
 
         /**
@@ -320,7 +342,9 @@ class ConfigLoader
         define('DEFAULT_RESPONSE_FORMAT', $coreData['DEFAULT_RESPONSE_FORMAT']);
 
         if (!isset($coreData['ACL_METHOD'])) {
-            \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError("The following information was not found in the configuration: 'ACL_METHOD'");
+            \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError(
+                "The following information was not found in the configuration: 'ACL_METHOD'"
+            );
         }
 
         /**
@@ -346,7 +370,9 @@ class ConfigLoader
         // -------------------------- DEBUG -------------------------- //
 
         if (!isset($coreData['DEBUG'])) {
-            \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError("The following information was not found in the configuration: 'DEBUG'");
+            \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError(
+                "The following information was not found in the configuration: 'DEBUG'"
+            );
         }
 
         /**
@@ -358,7 +384,9 @@ class ConfigLoader
         define('DEBUG', $coreData['DEBUG']);
 
         if (!isset($coreData['DEBUG_BAR'])) {
-            \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError("The following information was not found in the configuration: 'DEBUG_BAR'");
+            \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError(
+                "The following information was not found in the configuration: 'DEBUG_BAR'"
+            );
         }
 
         /**
@@ -401,7 +429,7 @@ class ConfigLoader
             );
         }
         /**
-         * @var array $loadAVG Temporary global variable that defines the maximum 
+         * @var array $loadAVG Temporary global variable that defines the maximum
          * load margin of the cpu, how many minutes can this hold until an event
          * is triggered (by default, a message to the user).
          *
@@ -433,7 +461,9 @@ class ConfigLoader
 
         // ---------- DATABASE SETTINGS --------------- //
         if (!isset($coreData['DATABASES'])) {
-            \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError("The following information was not found in the configuration: 'DATABASES'");
+            \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError(
+                "The following information was not found in the configuration: 'DATABASES'"
+            );
         }
         $databases = $coreData['DATABASES'];
         \Modules\InsiderFramework\Core\KernelSpace::setVariable(
@@ -455,8 +485,8 @@ class ConfigLoader
 
         // Loading framework registry
         $appLoaded = \Modules\InsiderFramework\Core\Json::getJSONDataFile(
-            INSTALL_DIR . DIRECTORY_SEPARATOR . 
-            "Framework" . DIRECTORY_SEPARATOR . 
+            INSTALL_DIR . DIRECTORY_SEPARATOR .
+            "Framework" . DIRECTORY_SEPARATOR .
             "Registry" . DIRECTORY_SEPARATOR .
             "Sections" . DIRECTORY_SEPARATOR .
             "Apps.json"

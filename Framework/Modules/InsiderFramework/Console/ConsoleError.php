@@ -33,7 +33,8 @@ class ConsoleError
 
         if ($climate === null) {
             $messageErrJson = \Modules\InsiderFramework\Core\Json::jsonEncodePrivateObject($message);
-            die("\nCannot get climate variable from insiderFrameworkSystem kernelspace context. Error detail: " . json_encode($messageErrJson) . "\n\n");
+            die("\nCannot get climate variable from insiderFrameworkSystem kernelspace context. Error detail: "
+            . json_encode($messageErrJson) . "\n\n");
         }
         
         $fatalTextStatus = $message->getFatal() ? 'True' : 'False';

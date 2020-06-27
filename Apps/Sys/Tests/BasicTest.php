@@ -3,7 +3,7 @@
 namespace Controllers\sys;
 
 /**
-* Classe responsável por testes básico do app sys
+* Class responsible for basic testing of the sys app
 *
 * @author Marcello Costa
 *

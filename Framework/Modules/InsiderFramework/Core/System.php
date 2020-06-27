@@ -9,7 +9,7 @@ namespace Modules\InsiderFramework\Core;
  * Class for the system functions
  *
  * @author Marcello Costa
- * 
+ *
  * @package Modules\InsiderFramework\Core\System
  */
 class System
@@ -301,7 +301,12 @@ class System
                     );
                     break;
             }
-            \Modules\InsiderFramework\Core\KernelSpace::setVariable(array('loadAVG' => $loadAVG), 'insiderFrameworkSystem');
+            \Modules\InsiderFramework\Core\KernelSpace::setVariable(
+                array(
+                    'loadAVG' => $loadAVG
+                ),
+                'insiderFrameworkSystem'
+            );
 
             if ($load[$loadAVG["timefunc"]] > $loadAVG["max_use"]) {
                 if ($loadAVG['send_email'] == true) {
@@ -332,7 +337,12 @@ class System
                         );
                     }
                     $loadAVG['action'] = 'throttle';
-                    \Modules\InsiderFramework\Core\KernelSpace::setVariable(array('loadAVG' => $loadAVG), 'insiderFrameworkSystem');
+                    \Modules\InsiderFramework\Core\KernelSpace::setVariable(
+                        array(
+                            'loadAVG' => $loadAVG
+                        ),
+                        'insiderFrameworkSystem'
+                    );
                 }
 
                 switch (strtolower(trim($loadAVG['action']))) {

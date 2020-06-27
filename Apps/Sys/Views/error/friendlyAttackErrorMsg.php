@@ -14,9 +14,9 @@
 </head>
     <body>
         <div id="all" style='text-align: center;' unselectable='on' onselectstart='return false;' onmousedown='return false;'>
-            <h2>Esta página está enfretando alguns problemas.</h2><br/>
-            <h3>Volte mais tarde por favor.</h3>
-            <img style='width: 15em;' src='<?php echo REQUESTED_URL . "/Apps/Sys/assets/img/error_frame_cartoon.png"; ?>' />
+            <h2>What are you doing there ?</h2><br/>
+            <h4>Some information that your browser sent to the site is not in the way we expected. Perhaps an installed program has modified something on your page ...</h4>
+            <img style='width: 15em;' src='<?php echo REQUESTED_URL . "/Apps/Sys/assets/img/error_attack.png"; ?>' />
         </div>
     </body>
 </html>

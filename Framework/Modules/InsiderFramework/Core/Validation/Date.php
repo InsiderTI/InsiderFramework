@@ -38,7 +38,7 @@ trait Date
      * Verifica se uma variável é uma data
      *
      * @author Marcello Costa
-     * 
+     *
      * @package Modules\InsiderFramework\Core\Validation\Date
      *
      * @param string $date   String a ser verificada

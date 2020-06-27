@@ -61,7 +61,10 @@ class Model
                 $databasechoice = $databases[BD_APP];
                 $this->databasename = $databases[BD_APP]['databasename'];
             } else {
-                \Modules\InsiderFramework\Core\Error\ErrorHandler::i10nErrorRegister("Default database not defined in global database array", "app/sys");
+                \Modules\InsiderFramework\Core\Error\ErrorHandler::i10nErrorRegister(
+                    "Default database not defined in global database array",
+                    "app/sys"
+                );
             }
         } else {
             if (!isset($databases[$database])) {
@@ -157,8 +160,8 @@ class Model
             );
         }
 
-        $databaseClass = "\\Modules\\InsiderFramework\\Core\\DatabaseConnectors\\".
-                         ucfirst(strtolower(trim($this->connector))) ."\\Connector";
+        $databaseClass = "\\Modules\\InsiderFramework\\Core\\DatabaseConnectors\\" .
+                         ucfirst(strtolower(trim($this->connector))) . "\\Connector";
 
         try {
             $connector = new $databaseClass();
@@ -231,7 +234,10 @@ class Model
                     $this->connection->rollback();
 
                     $this->disconnect();
-                    \Modules\InsiderFramework\Core\Error\ErrorHandler::i10nErrorRegister("Error! The variable bindarray is not an array", "app/sys");
+                    \Modules\InsiderFramework\Core\Error\ErrorHandler::i10nErrorRegister(
+                        "Error! The variable bindarray is not an array",
+                        "app/sys"
+                    );
                 }
             }
 
@@ -301,7 +307,10 @@ class Model
                     $this->connection->rollback();
 
                     $this->disconnect();
-                    \Modules\InsiderFramework\Core\Error\ErrorHandler::i10nErrorRegister("Error! The bindarray variable is not an array!", "app/sys");
+                    \Modules\InsiderFramework\Core\Error\ErrorHandler::i10nErrorRegister(
+                        "Error! The bindarray variable is not an array!",
+                        "app/sys"
+                    );
                 }
             }
 

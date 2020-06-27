@@ -15,7 +15,7 @@ class ErrorHandler
      * Function that allows you to trigger an error directly to the user
      *
      * @author Marcello Costa
-     * 
+     *
      * @package Modules\InsiderFramework\Core\Error\ErrorHandler
      *
      * @param string $msg       Error message
@@ -36,7 +36,10 @@ class ErrorHandler
             die($output);
         }
         */
-        $consoleRequest = \Modules\InsiderFramework\Core\KernelSpace::getVariable('consoleRequest', 'insiderFrameworkSystem');
+        $consoleRequest = \Modules\InsiderFramework\Core\KernelSpace::getVariable(
+            'consoleRequest',
+            'insiderFrameworkSystem'
+        );
 
         // If it's an error inside a terminal (console)
         if ($consoleRequest) {
@@ -82,7 +85,7 @@ class ErrorHandler
         $errorMessage = "Uncaught TypeError: Argument " .
             $argumentNumber .
             " passed to " .
-            __METHOD__."() must be an instance of " .
+            __METHOD__ . "() must be an instance of " .
             $requiredClass . "," .
             "instance of " .
             $givenClass .
@@ -215,7 +218,12 @@ class ErrorHandler
                 ));
 
                 // Setting the global variable
-                \Modules\InsiderFramework\Core\KernelSpace::setVariable(array('fatalError' => true), 'insiderFrameworkSystem');
+                \Modules\InsiderFramework\Core\KernelSpace::setVariable(
+                    array(
+                        'fatalError' => true
+                    ),
+                    'insiderFrameworkSystem'
+                );
 
 
                 // Managing the error
@@ -255,7 +263,9 @@ class ErrorHandler
                     $xmlObj = "";
                     $message = \Modules\InsiderFramework\Core\Xml::arrayToXML($error, $xmlObj);
                     if ($message === false) {
-                        \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError("Unable to convert error to XML when triggering error");
+                        \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError(
+                            "Unable to convert error to XML when triggering error"
+                        );
                     }
                     echo $message;
                 }
@@ -283,7 +293,12 @@ class ErrorHandler
                 ));
 
                 // Setting the global variable
-                \Modules\InsiderFramework\Core\KernelSpace::setVariable(array('fatalError' => true), 'insiderFrameworkSystem');
+                \Modules\InsiderFramework\Core\KernelSpace::setVariable(
+                    array(
+                        'fatalError' => true
+                    ),
+                    'insiderFrameworkSystem'
+                );
 
                 // Managing the error
                 \Modules\InsiderFramework\Core\Error\ErrorHandler::manageError($ErrorMessage);
@@ -302,7 +317,10 @@ class ErrorHandler
      */
     public static function getFrameworkDebugStatus(): bool
     {
-        $contentConfig = \Modules\InsiderFramework\Core\KernelSpace::getVariable('contentConfig', 'insiderFrameworkSystem');
+        $contentConfig = \Modules\InsiderFramework\Core\KernelSpace::getVariable(
+            'contentConfig',
+            'insiderFrameworkSystem'
+        );
 
         // If the DEBUG it's not defined, the environment variables must be manually loaded
         // The path will not be mapped correctly with getcwd(), so the constante __DIR__
@@ -311,13 +329,17 @@ class ErrorHandler
 
         $path = explode(DIRECTORY_SEPARATOR, $path);
         if (count($path) === 0) {
-            \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError("Unable to recover installation directory when trigger error");
+            \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError(
+                "Unable to recover installation directory when trigger error"
+            );
         }
 
         try {
             $path = implode(DIRECTORY_SEPARATOR, array_slice($path, 0, count($path) - 3));
         } catch (\Exception $e) {
-            \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError("Unable to rebuild installation directory when trigger error");
+            \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError(
+                "Unable to rebuild installation directory when trigger error"
+            );
         }
 
         $coreEnvFile = INSTALL_DIR . DIRECTORY_SEPARATOR .
@@ -338,7 +360,9 @@ class ErrorHandler
             );
         }
         if (!property_exists($contentConfig, 'DEBUG')) {
-            \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError("Unable to set DEBUG state when trigger error");
+            \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError(
+                "Unable to set DEBUG state when trigger error"
+            );
         }
         \Modules\InsiderFramework\Core\KernelSpace::setVariable(
             array(
@@ -372,21 +396,34 @@ class ErrorHandler
         );
 
         // Registered errors
-        $registeredErrors = \Modules\InsiderFramework\Core\KernelSpace::getVariable('registeredErrors', 'insiderFrameworkSystem');
+        $registeredErrors = \Modules\InsiderFramework\Core\KernelSpace::getVariable(
+            'registeredErrors',
+            'insiderFrameworkSystem'
+        );
+
         if (!is_array($registeredErrors)) {
             $registeredErrors = [];
             \Modules\InsiderFramework\Core\KernelSpace::setVariable(array('registeredErrors' => $registeredErrors));
         }
 
         // The first thing to be done it's write the error in the web server log
-        if (!$consoleRequest){
+        if (!$consoleRequest) {
             error_log(\Modules\InsiderFramework\Core\Json::jsonEncodePrivateObject($error), 0);
         }
 
-        $responseFormat = \Modules\InsiderFramework\Core\KernelSpace::getVariable('responseFormat', 'insiderFrameworkSystem');
+        $responseFormat = \Modules\InsiderFramework\Core\KernelSpace::getVariable(
+            'responseFormat',
+            'insiderFrameworkSystem'
+        );
+
         if ($responseFormat === "") {
             $responseFormat = DEFAULT_RESPONSE_FORMAT;
-            \Modules\InsiderFramework\Core\KernelSpace::setVariable(array('responseFormat' => $responseFormat), 'insiderFrameworkSystem');
+            \Modules\InsiderFramework\Core\KernelSpace::setVariable(
+                array(
+                    'responseFormat' => $responseFormat
+                ),
+                'insiderFrameworkSystem'
+            );
         }
 
         // The first part it's displayed if the processing has not successful in the next lines
@@ -396,7 +433,12 @@ class ErrorHandler
         $defaultMsg = 'Oops, something is wrong with this URL. See the error_log for details';
         if (!isset($registeredErrors['messageToUser']) || !in_array($defaultMsg, $registeredErrors['messageToUser'])) {
             $registeredErrors['messageToUser'][] = $defaultMsg;
-            \Modules\InsiderFramework\Core\KernelSpace::setVariable(array('registeredErrors' => $registeredErrors), 'insiderFrameworkSystem');
+            \Modules\InsiderFramework\Core\KernelSpace::setVariable(
+                array(
+                    'registeredErrors' => $registeredErrors
+                ),
+                'insiderFrameworkSystem'
+            );
         }
 
         // Recovering the fatal error variable
@@ -405,14 +447,22 @@ class ErrorHandler
         // Recovering the error counter
         $errorCount = \Modules\InsiderFramework\Core\KernelSpace::getVariable('errorCount', 'insiderFrameworkSystem');
 
-        $debugbacktrace = \Modules\InsiderFramework\Core\KernelSpace::getVariable('debugbacktrace', 'insiderFrameworkSystem');
+        $debugbacktrace = \Modules\InsiderFramework\Core\KernelSpace::getVariable(
+            'debugbacktrace',
+            'insiderFrameworkSystem'
+        );
 
         // In here the framework checks if this piece of code already been executed
         // with some fatal error. If so, they will display a message with the error
         // directly for the user and write a log with the detais.
         if ($debugbacktrace === null) {
             $debugbacktrace = debug_backtrace();
-            \Modules\InsiderFramework\Core\KernelSpace::setVariable(array('debugbacktrace' => $debugbacktrace), 'insiderFrameworkSystem');
+            \Modules\InsiderFramework\Core\KernelSpace::setVariable(
+                array(
+                    'debugbacktrace' => $debugbacktrace
+                ),
+                'insiderFrameworkSystem'
+            );
         }
 
         // If there is not an error
@@ -421,7 +471,12 @@ class ErrorHandler
         } else {
             $errorCount++;
         }
-        \Modules\InsiderFramework\Core\KernelSpace::setVariable(array('errorCount' => $errorCount), 'insiderFrameworkSystem');
+        \Modules\InsiderFramework\Core\KernelSpace::setVariable(
+            array(
+                'errorCount' => $errorCount
+            ),
+            'insiderFrameworkSystem'
+        );
 
         // If more than 10 errors as mappeded
         if ($errorCount > 10) {
@@ -436,7 +491,7 @@ class ErrorHandler
             
             // If the debug it's not enable
             if (!DEBUG) {
-                if (is_array($debugbacktrace)){
+                if (is_array($debugbacktrace)) {
                     $debugbacktrace = json_encode($debugbacktrace);
                 }
                 // Stopping the execution with a default message
@@ -448,11 +503,11 @@ class ErrorHandler
 
                 echo '<< DEBUG ERROR DISPLAY >>';
                 \Modules\InsiderFramework\Core\Manipulation\Development::PrintDump($debugbacktrace);
-                die("FILE: " . __FILE__ . "<br/>LINE: ". __LINE__);
+                die("FILE: " . __FILE__ . "<br/>LINE: " . __LINE__);
             }
         }
 
-        if ($consoleRequest){
+        if ($consoleRequest) {
             $climate = \Modules\InsiderFramework\Core\KernelSpace::getVariable('climate', 'insiderFrameworkSystem');
             $climate->br();
             $climate->to('error')->red($error->getSubject())->br();
@@ -461,7 +516,7 @@ class ErrorHandler
             $climate->to('error')->red("File: " . $error->getFile())->br();
             $climate->to('error')->red("Line: " . $error->getLine())->br();
             $climate->to('error')->red("Fatal: " . $error->getFatal())->br();
-            if ($error->getFatal()){
+            if ($error->getFatal()) {
                 die();
             }
         }
@@ -471,7 +526,9 @@ class ErrorHandler
         $path = explode(DIRECTORY_SEPARATOR, $path);
         if (count($path) === 0) {
             \Modules\InsiderFramework\Core\Request::clearAndRestartBuffer();
-            \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError("Unable to recover installation directory when trigger error");
+            \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError(
+                "Unable to recover installation directory when trigger error"
+            );
         }
 
         try {
@@ -508,7 +565,12 @@ class ErrorHandler
             )
         ) {
             $registeredErrors['messagesToAdmin'][$msgToAdmin['jsonMessage']] = $msgToAdmin;
-            \Modules\InsiderFramework\Core\KernelSpace::setVariable(array('registeredErrors' => $registeredErrors), 'insiderFrameworkSystem');
+            \Modules\InsiderFramework\Core\KernelSpace::setVariable(
+                array(
+                    'registeredErrors' => $registeredErrors
+                ),
+                'insiderFrameworkSystem'
+            );
         }
 
         // If the DEBUG it's enable
@@ -553,21 +615,33 @@ class ErrorHandler
                     );
                     $C = new \Controllers\sys\ErrorController('\\Controllers\\sys\\sys', null, false);
 
-                    $registeredErrors = \Modules\InsiderFramework\Core\KernelSpace::getVariable('registeredErrors', 'insiderFrameworkSystem');
+                    $registeredErrors = \Modules\InsiderFramework\Core\KernelSpace::getVariable(
+                        'registeredErrors',
+                        'insiderFrameworkSystem'
+                    );
                     $C->adminMessageError();
                     break;
             }
         } else {
             // Getting the send mail policy
-            $contentConfig = \Modules\InsiderFramework\Core\KernelSpace::getVariable('contentConfig', 'insiderFrameworkSystem');
+            $contentConfig = \Modules\InsiderFramework\Core\KernelSpace::getVariable(
+                'contentConfig',
+                'insiderFrameworkSystem'
+            );
+
             if ($contentConfig === null) {
                 \Modules\InsiderFramework\Core\Error\ErrorHandler::getFrameworkDebugStatus();
-                $contentConfig = \Modules\InsiderFramework\Core\KernelSpace::getVariable('contentConfig', 'insiderFrameworkSystem');
+                $contentConfig = \Modules\InsiderFramework\Core\KernelSpace::getVariable(
+                    'contentConfig',
+                    'insiderFrameworkSystem'
+                );
             }
 
             if (!property_exists($contentConfig, 'ERROR_MAIL_SENDING_POLICY')) {
                 \Modules\InsiderFramework\Core\Request::clearAndRestartBuffer();
-                \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError("Unable to read email sending policy when trigger error");
+                \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError(
+                    "Unable to read email sending policy when trigger error"
+                );
             }
 
             switch (strtolower(trim($contentConfig->ERROR_MAIL_SENDING_POLICY))) {
@@ -652,6 +726,8 @@ class ErrorHandler
 
         $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 5);
 
-        \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError("The file " . $text . " was not found ! Details: " . json_encode($backtrace));
+        \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError(
+            "The file " . $text . " was not found ! Details: " . json_encode($backtrace)
+        );
     }
 }

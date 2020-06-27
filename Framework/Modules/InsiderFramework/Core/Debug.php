@@ -66,9 +66,15 @@ class Debug
                     'Memory Usage: <span style="color:#FF0000;">' . $memoryUsage . 'Mb</span>';
                 $msg .= '</div>';
 
-                \Modules\InsiderFramework\Core\KernelSpace::setVariable(array(
-                    'injectedHtml' => \Modules\InsiderFramework\Core\KernelSpace::getVariable('injectedHtml', 'insiderFrameworkSystem') . $msg
-                ), 'insiderFrameworkSystem');
+                \Modules\InsiderFramework\Core\KernelSpace::setVariable(
+                    array(
+                        'injectedHtml' => \Modules\InsiderFramework\Core\KernelSpace::getVariable(
+                            'injectedHtml',
+                            'insiderFrameworkSystem'
+                        ) . $msg
+                    ),
+                    'insiderFrameworkSystem'
+                );
                 break;
         }
     }

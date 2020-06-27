@@ -9,7 +9,7 @@ use Modules\InsiderFramework\Console\ConsoleError;
 use Modules\InsiderFramework\Core\Error\ErrorMessage;
 
 /**
- * Classe responsável por renderizar erros não fatais (como o erro 404)
+ * Class responsible for rendering non-fatal errors (such as 404 error)
  *
  * @author Marcello Costa
  *
@@ -20,7 +20,7 @@ use Modules\InsiderFramework\Core\Error\ErrorMessage;
 class ErrorController extends \Modules\InsiderFramework\Core\Controller
 {
     /**
-     * Exibe a página de erro genérica
+     * Displays the generic error page
      *
      * @author Marcello Costa
      *
@@ -54,7 +54,7 @@ class ErrorController extends \Modules\InsiderFramework\Core\Controller
     }
 
     /**
-     * Renderiza a página de erro para o administrador do sistema
+     * Render the error page to the system administrator
      *
      * @author Marcello Costa
      *
@@ -98,11 +98,11 @@ class ErrorController extends \Modules\InsiderFramework\Core\Controller
                 \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError('Unknow error: ' . json_encode($msg));
             }
         }
-        $this->renderView('sys::error/sys_error_msg.sgv');
+        $this->renderView('sys::error/sysErrorMsg.sgv');
     }
 
     /**
-     * Exibe a página de erro para alto uso da CPU
+     * Displays the error page for high CPU usage
      *
      * @author Marcello Costa
      *
@@ -114,11 +114,11 @@ class ErrorController extends \Modules\InsiderFramework\Core\Controller
     */
     public function loadAvg(): void
     {
-        $this->renderView('sys::error/load_avg.sgv');
+        $this->renderView('sys::error/loadAvg.sgv');
     }
 
     /**
-     * Renderiza o template "Erro 404 (página não encontrada)"
+     * Render the template "Error 404 (page not found)"
      *
      * @author Marcello Costa
      *

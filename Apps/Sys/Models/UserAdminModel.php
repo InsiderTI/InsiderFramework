@@ -3,28 +3,28 @@
 namespace Models\sys;
 
 /**
- * Classe responsável pelo gerenciamento de usuários no banco de dados
- * do framework
- * 
+ * Class responsible for managing users in the database
+ * of the framework
+ *
  * @author Marcello Costa
  *
- * @package Models\sys\UserAdmin_Model
+ * @package Models\sys\UserAdminModel
  */
-class UserAdmin_Model extends \Modules\InsiderFramework\Core\Model
+class UserAdminModel extends \Modules\InsiderFramework\Core\Model
 {
     /**
-     * Atualiza o token de reset do password de um usuário
+     * Updates a user's password reset token
      *
      * @author Marcello Costa
-     * 
+     *
      * @package Models\sys\UserAdmin_Model
      *
-     * @param string $email Email do usuário
-     * @param string $token Token do usuário
-     * 
-     * @return bool Retorno da operação
+     * @param string $email User email
+     * @param string $token User token
+     *
+     * @return bool Return from operation
      */
-    function updateResetTokenPassword(string $email, string $token): bool
+    public function updateResetTokenPassword(string $email, string $token): bool
     {
         $query = "UPDATE users SET "
             . "RESETPASSWDTOKEN = :token "
@@ -36,62 +36,57 @@ class UserAdmin_Model extends \Modules\InsiderFramework\Core\Model
             'email' => $email
         );
 
-        // Realizando update
         $result = $this->execute($query, $bindarray);
 
-        // Erro
         if ($result !== null) {
-            \Modules\InsiderFramework\Core\Error\ErrorHandler::ErrorRegister('Error performing update of user reset token');
+            \Modules\InsiderFramework\Core\Error\ErrorHandler::ErrorRegister(
+                'Error performing update of user reset token'
+            );
         }
 
-        // Retornando o sucesso
         return true;
     }
 
     /**
-     * Verifica a validade de um token de reset de senha
+     * Checks the validity of a password reset token
      *
      * @author Marcello Costa
-     * 
+     *
      * @package Models\sys\UserAdmin_Model
      *
-     * @param string $email Email do usuário
-     * @param string $token Token do usuário
-     * 
-     * @return bool Retorno da checagem
+     * @param string $email User email
+     * @param string $token User token
+     *
+     * @return bool Check return
      */
-    function checkResetToken(string $email, string $token): bool
+    public function checkResetToken(string $email, string $token): bool
     {
-        // Recupera informações do usuário
+        // Retrieves user information
         $userdata = $this->recoveryUserData($email);
 
-        // Se existir a informação e ela for válida
+        // If the information exists and it is valid
         if (isset($userdata['resetpasswdtoken']) and $userdata['resetpasswdtoken'] == $token) {
             return true;
         }
 
-        // Se algo não confere
-        else {
-            return false;
-        }
+        return false;
     }
 
     /**
-     * Recupera os dados do usuário
+     * Recovers user data
      *
      * @author Marcello Costa
-     * 
+     *
      * @package Models\sys\UserAdmin_Model
      *
-     * @param string $login Login do usuário
-     * @param int    $id    ID do usuário
-     * 
-     * @return array Dados recuperados
+     * @param string $login User login
+     * @param int    $id    User ID
+     *
+     * @return array Recovered data
      */
-    function recoveryUserData(string $login = null, int $id = null): array
+    public function recoveryUserData(string $login = null, int $id = null): array
     {
-        // Se for uma busca por login
-        if ($login !== NULL) {
+        if ($login !== null) {
             $queryuserdata = "SELECT * from users s INNER JOIN "
                 . "rel_users_groups rug on (s.ID "
                 . "= rug.USERID) INNER JOIN login_registry lr on (lr.USERID = s.ID) WHERE s.LOGIN = :login LIMIT 1";
@@ -99,10 +94,7 @@ class UserAdmin_Model extends \Modules\InsiderFramework\Core\Model
             $bindarray = array(
                 'login' => $login
             );
-        }
-
-        // Se for uma busca por ID
-        else {
+        } else {
             $queryuserdata = "SELECT * from users s INNER JOIN "
                 . "rel_users_groups rug on (s.ID "
                 . "= rug.USERID) INNER JOIN login_registry lr on (lr.USERID = s.ID) WHERE s.ID = :id LIMIT 1";
@@ -112,54 +104,43 @@ class UserAdmin_Model extends \Modules\InsiderFramework\Core\Model
             );
         }
 
-        // Retorno do status do usuário
         $statususer = $this->select($queryuserdata, $bindarray, true);
 
-        // Retornando dados
-        if ($statususer !== NULL) {
+        if ($statususer !== null) {
             return $statususer;
         }
-        // Sem resultados encontrados
-        else {
-            return [];
-        }
+
+        return [];
     }
 
     /**
-     * Modifica a senha de acesso do usuário
+     * Modifies the user's access password
      *
      * @author Marcello Costa
-     * 
+     *
      * @package Models\sys\UserAdmin_Model
      *
-     * @param string $login   Email do usuário
-     * @param string $newpass Nova senha
-     * 
+     * @param string $login   User email
+     * @param string $newpass New password
+     *
      * @return bool Processing result
      */
-    function updatePassUser(string $login, string $newpass): bool
+    public function updatePassUser(string $login, string $newpass): bool
     {
-        // Apagando sessão do usuário que está
-        // talvez logado
-
-        // Recuperando ID do usuário
         $queryuserdata = "SELECT ID from users WHERE LOGIN = :login LIMIT 1";
 
         $bindarray = array(
             'login' => $login
         );
 
-        // Gravando ação
         $idusertmp = $this->select($queryuserdata, $bindarray, true);
 
-        // Usuário não encontrado
         if (empty($idusertmp)) {
             return false;
         } else {
             $iduser = $idusertmp['ID'];
         }
 
-        // Apagando registro no banco
         $deletequery = "UPDATE login_registry SET "
             . "KEYCOOKIE = '' "
             . "WHERE USERID = :iduser;";
@@ -168,15 +149,12 @@ class UserAdmin_Model extends \Modules\InsiderFramework\Core\Model
             'iduser' => $iduser
         );
 
-        // Gravando ação
         $result = $this->execute($deletequery, $bindarray);
 
-        // Se deu algum erro
         if ($result !== null) {
             return false;
         }
 
-        // Atualizando senha no banco da aplicação
         $updatequery = "UPDATE users SET "
             . "PASSWORD = :password "
             . "WHERE LOGIN = :login;";
@@ -186,10 +164,8 @@ class UserAdmin_Model extends \Modules\InsiderFramework\Core\Model
             'login' => $login
         );
 
-        // Gravando ação
         $result = $this->execute($updatequery, $bindarray);
 
-        // Se deu algum erro
         if ($result !== null) {
             return false;
         } else {
@@ -198,25 +174,25 @@ class UserAdmin_Model extends \Modules\InsiderFramework\Core\Model
     }
 
     /**************************************/
-    // Código abaixo não revisado
+    // Code not reviewed below
     /**************************************/
 
     /**
      * Cadastro um usuário no banco de dados
      *
      * @todo Revisar código da função
-     * 
+     *
      * @author Marcello Costa
-     * 
+     *
      * @package Models\sys\UserAdmin_Model
      *
      * @param string $login    Login do usuário
      * @param string $password Senha do usuário
      * @param array  $groups   ID dos grupos ao qual o usuário pertence
-     * 
+     *
      * @return bool Processing result de cadastro
      */
-    function addUser(string $login, string $password, array $groups = null): bool
+    public function addUser(string $login, string $password, array $groups = null): bool
     {
         // Tabela users
         $query = "INSERT INTO users SET "
@@ -290,25 +266,24 @@ class UserAdmin_Model extends \Modules\InsiderFramework\Core\Model
      * Atualiza o cadastro de um usuário no banco de dados
      *
      * @todo Revisar código da função
-     * 
+     *
      * @author Marcello Costa
-     * 
+     *
      * @package Models\sys\UserAdmin_Model
      *
      * @param string $oldlogin Login atual do usuário
      * @param string $newlogin Novo Login do usuário
      * @param string $password Senha do usuário
      * @param array  $groups   ID dos grupos ao qual o usuário pertence
-     * 
+     *
      * @return bool Retorno da operação
      */
-    function updateUser(
+    public function updateUser(
         string $oldlogin,
         string $newlogin = null,
         string $password = null,
         array $groups = null
-    ): bool
-    {
+    ): bool {
         // Tabela users
         // Se o password não foi atualizado
         if ($password === null) {
@@ -326,10 +301,7 @@ class UserAdmin_Model extends \Modules\InsiderFramework\Core\Model
 
             // Novo login
             $login = $newlogin;
-        }
-
-        // Senha sendo atualizada
-        else {
+        } else {
             // Login sendo atualizado com senha
             if ($newlogin !== null && ($oldlogin != $newlogin)) {
                 $query = "UPDATE users SET "
@@ -345,10 +317,7 @@ class UserAdmin_Model extends \Modules\InsiderFramework\Core\Model
 
                 // Novo login
                 $login = $newlogin;
-            }
-
-            // Mantendo login
-            else {
+            } else {
                 $query = "UPDATE users SET "
                     . "PASSWORD = :password "
                     . "WHERE LOGIN = :oldlogin;";
@@ -367,10 +336,7 @@ class UserAdmin_Model extends \Modules\InsiderFramework\Core\Model
         // Apesar de não ter sido atualizado nada, o processo foi concluído com sucesso
         if (!isset($bindarray)) {
             return true;
-        }
-
-        // Se alguma modificação deve ser realizada
-        else {
+        } else {
             // Atualizando tabela de users de acordo com os parâmetros
             // acima especificados
             $resultupdateuser = $this->execute($query, $bindarray);
@@ -415,10 +381,7 @@ class UserAdmin_Model extends \Modules\InsiderFramework\Core\Model
         // Usuário não encontrado
         if (empty($useridtmp)) {
             return false;
-        }
-
-        // Usuário encontrado
-        else {
+        } else {
             // Definindo ID do usuário
             $userid = $useridtmp['ID'];
         }
@@ -479,17 +442,17 @@ class UserAdmin_Model extends \Modules\InsiderFramework\Core\Model
      * Loga um usuário no banco do framework
      *
      * @todo Revisar código da função
-     * 
+     *
      * @author Marcello Costa
-     * 
+     *
      * @package Models\sys\UserAdmin_Model
      *
      * @param string $login       Login do usuário
      * @param string $valuecookie Valor do cookie de identificação
-     * 
+     *
      * @return bool Processing result
      */
-    function login(string $login, string $valuecookie): bool
+    public function login(string $login, string $valuecookie): bool
     {
         // Recuperando ID do usuário
         $queryuserid = "SELECT ID from users WHERE LOGIN = :login LIMIT 1";
@@ -540,16 +503,16 @@ class UserAdmin_Model extends \Modules\InsiderFramework\Core\Model
      * Desloga um usuário no banco do framework
      *
      * @todo Revisar código da função
-     * 
+     *
      * @author Marcello Costa
-     * 
+     *
      * @package Models\sys\UserAdmin_Model
      *
      * @param string $login Login do usuário
-     * 
+     *
      * @return bool Processing result
      */
-    function logout(string $login): bool
+    public function logout(string $login): bool
     {
         // Recuperando ID do usuário
         $queryuserid = "SELECT ID from users WHERE LOGIN = :login LIMIT 1";

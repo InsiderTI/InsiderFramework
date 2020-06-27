@@ -3,25 +3,19 @@
 namespace Modules\InsiderFramework\Console;
 
 /**
- * Main function of console
+ * Main function of console.
  *
  * @author Marcello Costa
- *
- * @package Modules\InsiderFramework\Console\Application
  */
 class Application
 {
     /**
-    * Manage command line request
-    *
-    * @author Marcello Costa
-    *
-    * @package Modules\InsiderFramework\Console\Application
-    *
-    * @param object $climate Climate object
-    *
-    * @return void
-    */
+     * Manage command line request.
+     *
+     * @author Marcello Costa
+     *
+     * @param object $climate Climate object
+     */
     public static function manageCommand(&$climate): void
     {
         if ($climate->arguments->defined('help')) {
@@ -29,23 +23,21 @@ class Application
             die();
         }
 
-        // If action has not been defined
         if (!($climate->arguments->defined('action'))) {
             $climate->br();
-            $climate->to('error')->red("Syntax error")->br();
-            $climate->to('error')->write("Type <light_blue>console.php --help</light_blue> for help")->br();
-                    
+            $climate->to('error')->red('Syntax error')->br();
+            $climate->to('error')->write('Type <light_blue>console.php --help</light_blue> for help')->br();
+
             $climate->usage();
             die();
         }
-        
-        // If action has been defined, get the action
+
         $climate->arguments->parse();
         $action = $climate->arguments->get('action');
 
         $actionsAndParameters = \Modules\InsiderFramework\Console\Application::getActionsAndParameters();
 
-        if (!isset($actionsAndParameters['validActions'][strtolower($action)])){
+        if (!isset($actionsAndParameters['validActions'][strtolower($action)])) {
             \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister("Action '$action' not found");
         }
 
@@ -56,34 +48,31 @@ class Application
     }
 
     /**
-    * Install or Update a package
-    *
-    * @author Marcello Costa
-    *
-    * @package Modules\InsiderFramework\Console\Application
-    *
-    * @param object $climate Climate object
-    *
-    * @return void
-    */
-    protected static function installOrUpdate(&$climate){
+     * Install or Update a package.
+     *
+     * @author Marcello Costa
+     *
+     * @param object $climate Climate object
+     */
+    protected static function installOrUpdate(&$climate)
+    {
         $remote = $climate->arguments->get('remote');
         $file = $climate->arguments->get('file');
 
         if (
-            ($remote === "" || $remote === null) &&
-            ($file === "" || $file === null)
-           ){
+            ($remote === '' || $remote === null) &&
+            ($file === '' || $file === null)
+        ) {
             $climate->br();
-            $climate->to('error')->red("Syntax error: target (remote or file) must be specified")->br();
-            $climate->to('error')->write("Type <light_blue>console.php --help</light_blue> for help")->br();
+            $climate->to('error')->red('Syntax error: target (remote or file) must be specified')->br();
+            $climate->to('error')->write('Type <light_blue>console.php --help</light_blue> for help')->br();
             die();
         }
-        
+
         $pkgController = new \Apps\Sys\PkgController();
         $authorization = \Modules\InsiderFramework\Core\Registry::getLocalAuthorization(REQUESTED_URL);
 
-        if ($remote."" !== ""){
+        if ($remote . '' !== '') {
             $target = $remote;
             $completePkgPath = $pkgController->downloadPackage($target);
         } else {
@@ -92,47 +81,46 @@ class Application
         }
 
         switch ($completePkgPath) {
-            // If can't get the file
-            case "false":
+            case 'false':
                 $climate->br();
-                $climate->to('error')->red("Package cannot be found or downloaded!")->br();
+                $climate->to('error')->red('Package cannot be found or downloaded!')->br();
                 die();
             break;
-            // If local package is on the latest version
-            case "up-to-date":
+
+            case 'up-to-date':
                 $climate->br();
-                $climate->to('error')->blue("Package already up-to-date")->br();
+                $climate->to('error')->blue('Package already up-to-date')->br();
                 die();
             break;
         }
-        
+
         // Checking if package is already storage on local file system
         if (!file_exists($completePkgPath) || !is_readable($completePkgPath)) {
             $climate->br();
-            $climate->to('error')->red("File not found or not readable: " . $completePkgPath)->br();
+            $climate->to('error')->red('File not found or not readable: ' . $completePkgPath)->br();
             die();
         }
 
         // Checking extension of package
         $extension = strtolower(pathinfo($completePkgPath)['extension']);
-        if ($extension !== "pkg") {
+        if ($extension !== 'pkg') {
             $climate->br();
-            $climate->to('error')->red("The file not seems to be a valid package: " . $completePkgPath)->br();
+            $climate->to('error')->red('The file not seems to be a valid package: ' . $completePkgPath)->br();
             die();
         }
 
         // Trying to extract the pkg file to temporary directory
         $tmpDir = INSTALL_DIR . DIRECTORY_SEPARATOR .
-                  "Framework" . DIRECTORY_SEPARATOR .
-                  "Cache" . DIRECTORY_SEPARATOR .
-                  "tmpUpdateDir_" .
+                  'Framework' . DIRECTORY_SEPARATOR .
+                  'Cache' . DIRECTORY_SEPARATOR .
+                  'tmpUpdateDir_' .
                   uniqid();
 
         while (is_dir($tmpDir) || is_file($tmpDir)) {
             $tmpDir = INSTALL_DIR . DIRECTORY_SEPARATOR .
-                      "Framework" . DIRECTORY_SEPARATOR .
-                      "Cache" . DIRECTORY_SEPARATOR .
-                      "tmpUpdateDir_" . uniqid();
+                      'Framework' . DIRECTORY_SEPARATOR .
+                      'Cache' . DIRECTORY_SEPARATOR .
+                      'tmpUpdateDir_' . uniqid();
         }
 
         // Creating the temporary directory
@@ -144,22 +132,24 @@ class Application
             $phar->extractTo($tmpDir, null, true);
         } catch (Exception $e) {
             $climate->br();
-            $climate->to('error')->red("The file seems to be corrupted: " . $completePkgPath)->br();
+            $climate->to('error')->red('The file seems to be corrupted: ' . $completePkgPath)->br();
             die();
         }
 
         // Verifying if the package version is later than the installed version
         $controlFile = $tmpDir . DIRECTORY_SEPARATOR .
-                       "Registry" . DIRECTORY_SEPARATOR .
-                       "Control.json";
+                       'Registry' . DIRECTORY_SEPARATOR .
+                       'Control.json';
 
         if (!file_exists($controlFile) || !is_readable($controlFile)) {
-            \Modules\InsiderFramework\Console\Application::stopInstallUpdate($tmpDir, "File not found or not readable: " . $controlFile);
+            \Modules\InsiderFramework\Console\Application::stopInstallUpdate(
+                $tmpDir,
+                'File not found or not readable: ' . $controlFile
+            );
         }
 
-        
         $packageControlData = new \Modules\InsiderFramework\Core\Registry\Definition\PackageControlData($controlFile);
-        
+
         $newPackage = $packageControlData->getPackage();
         $newPackageVersion = $packageControlData->getVersion();
         $newPackageSection = $packageControlData->getSection();
@@ -179,13 +169,15 @@ class Application
             if ($installedVersionParts === false) {
                 \Modules\InsiderFramework\Console\Application::stopInstallUpdate(
                     $tmpDir,
-                    "Wrong version of installed package " . $newPackage . ": " . $installedItemInfo['version']
+                    'Wrong version of installed package ' . $newPackage . ': ' . $installedItemInfo['version']
                 );
             }
 
             $newPackageVersionParts = \Modules\InsiderFramework\Core\Registry::getVersionParts($newPackageVersion);
             if ($newPackageVersionParts === false) {
-                \Modules\InsiderFramework\Console\Application::stopInstallUpdate("Wrong version of new package " . $newPackage . ": " . $newPackageVersion);
+                \Modules\InsiderFramework\Console\Application::stopInstallUpdate(
+                    'Wrong version of new package ' . $newPackage . ': ' . $newPackageVersion
+                );
             }
 
             $installedVersionString = $pkgController->getVersionFromInfo($installedVersionParts);
@@ -210,7 +202,10 @@ class Application
                             break;
 
                         case 'n':
-                            \Modules\InsiderFramework\Console\Application::stopInstallUpdate($tmpDir, "Aborting install");
+                            \Modules\InsiderFramework\Console\Application::stopInstallUpdate(
+                                $tmpDir,
+                                'Aborting install'
+                            );
                             break;
                     }
                     break;
@@ -229,24 +224,24 @@ class Application
                             break;
 
                         case 'n':
-                            \Modules\InsiderFramework\Console\Application::stopInstallUpdate($tmpDir, "");
+                            \Modules\InsiderFramework\Console\Application::stopInstallUpdate($tmpDir, '');
                             break;
                     }
                     break;
                 default:
                     \Modules\InsiderFramework\Console\Application::stopInstallUpdate(
                         $tmpDir,
-                        "Error verifying package version " . $newPackage . ": " . $newPackageVersion
+                        'Error verifying package version ' . $newPackage . ': ' . $newPackageVersion
                     );
                     break;
             }
         }
-      
+
         // Copying registry files
         $newpackageDirectory = INSTALL_DIR . DIRECTORY_SEPARATOR .
-                               "Framework" . DIRECTORY_SEPARATOR .
-                               "Registry" . DIRECTORY_SEPARATOR .
-                               "Controls" . DIRECTORY_SEPARATOR .
+                               'Framework' . DIRECTORY_SEPARATOR .
+                               'Registry' . DIRECTORY_SEPARATOR .
+                               'Controls' . DIRECTORY_SEPARATOR .
                                $newPackage;
 
         if (!is_dir($newpackageDirectory)) {
@@ -254,38 +249,43 @@ class Application
         }
         Modules\InsiderFramework\Core\FileTree::copyDirectory(
             $tmpDir . DIRECTORY_SEPARATOR .
-            "Registry",
+            'Registry',
             $newpackageDirectory
         );
-        
+
         $directory = null;
         if (strtolower($newPackageSection) === 'component') {
             $directory = $installedItemInfo['directory'];
         }
-        
+
         // Registering new item
-        \Modules\InsiderFramework\Core\Registry::registerItem($newPackageSection, $newPackage, $newPackageVersion, $directory);
+        \Modules\InsiderFramework\Core\Registry::registerItem(
+            $newPackageSection,
+            $newPackage,
+            $newPackageVersion,
+            $directory
+        );
 
         // Running the pre-install script
         $preInstallFile = $tmpDir . DIRECTORY_SEPARATOR .
-                          "Registry" . DIRECTORY_SEPARATOR .
-                          "Preinst.php";
+                          'Registry' . DIRECTORY_SEPARATOR .
+                          'Preinst.php';
 
         if (file_exists($preInstallFile)) {
             Modules\InsiderFramework\Core\FileTree::requireOnceFile($preInstallFile);
         }
-        
+
         // Copying the files to the root
         Modules\InsiderFramework\Core\FileTree::copyDirectory(
             $tmpDir . DIRECTORY_SEPARATOR .
-            "Data",
+            'Data',
             INSTALL_DIR
         );
 
         // Running the pos-install script
         $posInstallFile = $tmpDir . DIRECTORY_SEPARATOR .
-                          "Registry" . DIRECTORY_SEPARATOR .
-                          "Posinst.php";
+                          'Registry' . DIRECTORY_SEPARATOR .
+                          'Posinst.php';
 
         if (file_exists($posInstallFile)) {
             Modules\InsiderFramework\Core\FileTree::requireOnceFile($posInstallFile);
@@ -293,39 +293,36 @@ class Application
 
         // Erasing temporary directory
         Modules\InsiderFramework\Core\FileTree::deleteDirectory($tmpDir);
-        
+
         $climate->br();
-        $climate->to('error')->blue("Package installed succefully: " . basename($completePkgPath))->br();
+        $climate->to('error')->blue('Package installed succefully: ' . basename($completePkgPath))->br();
         die();
     }
 
     /**
-    * Remove a package
-    *
-    * @author Marcello Costa
-    *
-    * @package Modules\InsiderFramework\Console\Application
-    *
-    * @param object $climate Climate object
-    *
-    * @return void
-    */
-    protected static function remove(&$climate): void {
+     * Remove a package.
+     *
+     * @author Marcello Costa
+     *
+     * @param object $climate Climate object
+     */
+    protected static function remove(&$climate): void
+    {
         $authorization = \Modules\InsiderFramework\Core\Registry::getLocalAuthorization(REQUESTED_URL);
-        
+
         $section = $climate->arguments->get('section');
         if (!($section)) {
             $climate->br();
-            $climate->to('error')->red("Syntax error: section needs to be specified for uninstall from mirrors!")->br();
-            $climate->to('error')->write("Type <light_blue>console.php --help</light_blue> for help")->br();
+            $climate->to('error')->red('Syntax error: section needs to be specified for uninstall from mirrors!')->br();
+            $climate->to('error')->write('Type <light_blue>console.php --help</light_blue> for help')->br();
             die();
         }
 
         $target = $climate->arguments->get('[additionalParameters]');
-        if ($target === "") {
+        if ($target === '') {
             $climate->br();
-            $climate->to('error')->red("Syntax error: target must be specified")->br();
-            $climate->to('error')->write("Type <light_blue>console.php --help</light_blue> for help")->br();
+            $climate->to('error')->red('Syntax error: target must be specified')->br();
+            $climate->to('error')->write('Type <light_blue>console.php --help</light_blue> for help')->br();
             die();
         }
 
@@ -339,106 +336,99 @@ class Application
     }
 
     /**
-    * Initialize console environment
-    *
-    * @author Marcello Costa
-    *
-    * @package Modules\InsiderFramework\Console\Application
-    *
-    * @param object $climate Climate object
-    *
-    * @return void
-    */
+     * Initialize console environment.
+     *
+     * @author Marcello Costa
+     *
+     * @param object $climate Climate object
+     */
     public static function initialize(&$climate): void
     {
         \Modules\InsiderFramework\Console\Application::loadOperations($climate);
     }
 
     /**
-    * Load possible actions and additional parameters for console operations
-    *
-    * @author Marcello Costa
-    *
-    * @package Modules\InsiderFramework\Console\Application
-    *
-    * @return array Array of actions and parameters
-    */
-    protected static function getActionsAndParameters(){
-        $consoleRegistryDir = "Modules" . DIRECTORY_SEPARATOR .
-                              "InsiderFramework" . DIRECTORY_SEPARATOR .
-                              "Console";
+     * Load possible actions and additional parameters for console operations.
+     *
+     * @author Marcello Costa
+     *
+     * @return array Array of actions and parameters
+     */
+    protected static function getActionsAndParameters()
+    {
+        $consoleRegistryDir = 'Modules' . DIRECTORY_SEPARATOR .
+                              'InsiderFramework' . DIRECTORY_SEPARATOR .
+                              'Console';
 
         $dataActions = \Modules\InsiderFramework\Core\Registry::getLocalConfigurationFile(
             $consoleRegistryDir . DIRECTORY_SEPARATOR .
-            "Actions.json"
+            'Actions.json'
         );
 
         $dataAdditionalParameters = \Modules\InsiderFramework\Core\Registry::getLocalConfigurationFile(
             $consoleRegistryDir . DIRECTORY_SEPARATOR .
-            "AdditionalParameters.json"
+            'AdditionalParameters.json'
         );
 
         if (
             !isset($dataActions['actions']) ||
             !isset($dataAdditionalParameters['additionalParameters'])
-        ){
-            \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister('Invalid actions/additionalParameters file of console');
+        ) {
+            \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister(
+                'Invalid actions/additionalParameters file of console'
+            );
         }
 
-        foreach($dataActions['actions'] as $actionKey => $actionValue){
+        foreach ($dataActions['actions'] as $actionKey => $actionValue) {
             if (
                 !isset($dataActions['actions'][$actionKey]['description'])
-            ){
+            ) {
                 \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister('Invalid actions file of console');
             }
 
             $description = "\n\t\t" . implode("\n\t\t", $dataActions['actions'][$actionKey]['description']);
-            $dataActions['actions'][$actionKey]['description']=$description;
+            $dataActions['actions'][$actionKey]['description'] = $description;
         }
 
         return array(
             'validActions' => $dataActions['actions'],
-            'additionalParameters' => $dataAdditionalParameters['additionalParameters']
+            'additionalParameters' => $dataAdditionalParameters['additionalParameters'],
         );
     }
 
     /**
-    * Load possible operations on console
-    *
-    * @author Marcello Costa
-    *
-    * @package Modules\InsiderFramework\Console\Application
-    *
-    * @param object $climate Climate object
-    *
-    * @return void
-    */
+     * Load possible operations on console.
+     *
+     * @author Marcello Costa
+     *
+     * @param object $climate Climate object
+     */
     protected static function loadOperations(&$climate): void
     {
         $actionsAndParameters = \Modules\InsiderFramework\Console\Application::getActionsAndParameters();
 
-        $parsedActions = "";
+        $parsedActions = '';
 
         foreach ($actionsAndParameters['validActions'] as $validAction) {
-            $parsedActions .= $validAction['description']."\n";
+            $parsedActions .= $validAction['description'] . "\n";
         }
 
         $helpArray = array(
             'help' => [
-                'prefix'       => 'h',
-                'longPrefix'   => 'help',
-                'description'  => "Shows this help"
-            ]
+                'prefix' => 'h',
+                'longPrefix' => 'help',
+                'description' => 'Shows this help',
+            ],
         );
 
         $actionsArray = array(
             'action' => [
-                'prefix'       => 'a',
-                'longPrefix'   => 'action',
-                'description'  => "Action to be executed. Valid actions are: \n".
+                'prefix' => 'a',
+                'longPrefix' => 'action',
+                'description' => "Action to be executed. Valid actions are: \n" .
                                 $parsedActions,
-                'required'    => true,
-            ]
+                'required' => true,
+            ],
         );
 
         $arguments = array_merge(
@@ -451,17 +441,13 @@ class Application
     }
 
     /**
-     * Function thats process an update or install of package
+     * Function thats process an update or install of package.
      *
      * @author Marcello Costa
      *
-     * @package Core
-     *
      * @param string $tmpDir  Temporary directory
      * @param string $message Message of error
-     *
-     * @return void
-    */
+     */
     protected static function stopInstallUpdate($tmpDir, $message): void
     {
         $climate = \Modules\InsiderFramework\Core\KernelSpace::getVariable('climate', 'insiderFrameworkSystem');

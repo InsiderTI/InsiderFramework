@@ -3,7 +3,7 @@
 namespace Apps\Sys\Controllers;
 
 /**
- * Classe com as funções de gerenciamento de packages
+ *Class with package management functions
  *
  * @author Marcello Costa
  *
@@ -13,11 +13,11 @@ namespace Apps\Sys\Controllers;
  */
 class PkgController extends \Modules\InsiderFramework\Core\Controller
 {
-    /** @var string Diretório de packages do mirror */
+    /** @var string Mirror package directory */
     public static $mirrorDir = INSTALL_DIR . DIRECTORY_SEPARATOR . "mirror";
 
     /**
-     * Teste climate
+     * Climate test
      *
      * @author Marcello Costa
      *
@@ -29,11 +29,11 @@ class PkgController extends \Modules\InsiderFramework\Core\Controller
     */
     public function testeClimate(): void
     {
-        echo "teste concluído";
+        echo "Test completed";
     }
     
     /**
-     * Função que retorna as informações de um item instalado
+     * Function that returns information about an installed item
      *
      * @author Marcello Costa
      *
@@ -41,19 +41,18 @@ class PkgController extends \Modules\InsiderFramework\Core\Controller
      *
      * @Route (path="getinstallediteminfo")
      *
-     * @param string $item          Item que está sendo buscado
-     * @param string $authorization Token de autorização
-     * @param bool   $requestCall   Flag que determina se a função está
-     *                              sendo chamada via request ou não
+     * @param string $item          Item being fetched
+     * @param string $authorization Authorization token
+     * @param bool   $requestCall   Flag that determines whether the function is
+     *                              being called via request or not
      *
-     * @return string|void Dados do item
+     * @return string|void Item data
     */
     public function getInstalledItemInfo(
         string $item = null,
         string $authorization = null,
         bool $requestCall = false
-    ): ?string
-    {
+    ): ?string {
         $POST = \Modules\InsiderFramework\Core\KernelSpace::getVariable('POST', 'insiderFrameworkSystem');
         
         if ($item === null || $authorization === null) {
@@ -78,11 +77,8 @@ class PkgController extends \Modules\InsiderFramework\Core\Controller
             }
         }
 
-        // Chave de autorização local do framework
         $localAuthorization = \Modules\InsiderFramework\Core\Registry::getLocalAuthorization(REQUESTED_URL);
 
-        // Requisição local
-        // Se o token de autorização é válido
         if ($authorization === $localAuthorization) {
             $dataReturn = \Modules\InsiderFramework\Core\Registry::getItemInfo($item);
 
@@ -92,8 +88,10 @@ class PkgController extends \Modules\InsiderFramework\Core\Controller
                 $this->responseJson($dataReturn);
             }
         } else {
-            if ($authorization."" !== "") {
-                \Modules\InsiderFramework\Core\Error\ErrorHandler::ErrorRegister('Invalid Authorization Token: '.$authorization);
+            if ($authorization . "" !== "") {
+                \Modules\InsiderFramework\Core\Error\ErrorHandler::ErrorRegister(
+                    'Invalid Authorization Token: ' . $authorization
+                );
             } else {
                 if (!$requestCall) {
                     return json_encode('Received null Authorization Token');
@@ -105,15 +103,15 @@ class PkgController extends \Modules\InsiderFramework\Core\Controller
     }
     
     /**
-     * Função que retorna a versão formatada de um package.
+     * Function that returns the formatted version of a package
      *
      * @author Marcello Costa
      *
      * @package Apps\Sys\Controllers\PkgController
      *
-     * @param array $dataInfoItem Dados de um único package
+     * @param array $dataInfoItem Data from a single package
      *
-     * @return string|bool Versão do package
+     * @return string|bool Package version
     */
     public function getVersionFromInfo(array $dataInfoItem)
     {
@@ -129,33 +127,33 @@ class PkgController extends \Modules\InsiderFramework\Core\Controller
     
     
     /**
-     * Faz o download de um package em algum dos mirros configurados
+     * Download a package in any of the configured mirrors
      *
      * @author Marcello Costa
      *
      * @package Apps\Sys\Controllers\PkgController
      *
-     * @param string $package Nome do package
+     * @param string $package Package name
      *
-     * @return string Caminho do arquivo baixado
+     * @return string Downloaded file path
     */
     public function downloadPackage(string $package): string
     {
         $climate = \Modules\InsiderFramework\Core\KernelSpace::getVariable('climate', 'insiderFrameworkSystem');
 
-        // Array de packages encontrados
+        // Array of packages found
         $foundPackages = [];
 
-        // Buscando qual a versão do package instalada locamente (se instalado)
+        // Searching for the version of the package installed locally (if installed)
         $localAuthorization = \Modules\InsiderFramework\Core\Registry::getLocalAuthorization(REQUESTED_URL);
 
-        if ($localAuthorization === false){
+        if ($localAuthorization === false) {
             $noAuthCode = \Modules\InsiderFramework\Core\KernelSpace::getVariable(
                 'routingActions',
                 'RoutingSystem'
             )['NotAuth'];
 
-            $msg = "Client Error - Cannot retrive local authorization for download package ".$localAuthorization;
+            $msg = "Client Error - Cannot retrive local authorization for download package " . $localAuthorization;
             http_response_code($noAuthCode['responsecode']);
             error_log($msg);
             $this->responseJson($msg);
@@ -164,7 +162,7 @@ class PkgController extends \Modules\InsiderFramework\Core\Controller
 
         $localVersion = json_decode($this->getInstalledItemInfo($package, $localAuthorization, false));
 
-        // Variável que guarda todos os repositórios mapeados
+        // Variable that stores all mapped repositories
         $repoData = [];
         
         if (count(REMOTE_REPOSITORIES) === 0) {
@@ -172,7 +170,7 @@ class PkgController extends \Modules\InsiderFramework\Core\Controller
         }
         
         $domain = "";
-        // Para cada repositório configurado
+
         foreach (REMOTE_REPOSITORIES as $repo) {
             if ($domain === "") {
                 $parsedDomain = parse_url($repo['DOMAIN']);
@@ -191,13 +189,10 @@ class PkgController extends \Modules\InsiderFramework\Core\Controller
             }
         }
 
-        // Para cada domínio
         foreach ($repoData as $domain => $domainData) {
             $url = $domain . "/sys/existsinmirror";
 
-            // Requisitando mirror
             $ch = curl_init();
-
             curl_setopt($ch, CURLOPT_POST, true);
             curl_setopt($ch, CURLOPT_POSTFIELDS, array(
                 'item' =>  $package,
@@ -208,23 +203,19 @@ class PkgController extends \Modules\InsiderFramework\Core\Controller
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             $content = curl_exec($ch);
 
-            // Se não conseguiu alcançar o servidor
             if (curl_errno($ch)) {
                 $msg = "Could not send request to server. ERROR: " . curl_error($ch);
                 $climate->br();
                 $climate->to('error')->red($msg)->br();
                 continue;
             } else {
-                // Pegando o código HTTP de retorno
                 $resultStatus = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
                 if ($resultStatus == 200) {
                     if ($content !== null) {
                         $data = json_decode($content);
 
-                        // Se retornou a versão, o package existe no mirror
                         if (is_object($data) && (property_exists($data, 'version'))) {
-                            // Incluindo package no array
                             $remoteVersion = $data->version;
                             $foundPackages[$domain] = array(
                                 'version' => $remoteVersion,
@@ -253,8 +244,8 @@ class PkgController extends \Modules\InsiderFramework\Core\Controller
             curl_close($ch);
         }
 
-        // Quando terminar a busca, para cada package encontrado, verifica
-        // em qual servidor está o package mais novo
+        // When the search is finished, for each package found, check
+        // on which server is the newest package
         $latestVersion = "";
         $latestServer = "";
         foreach ($foundPackages as $server => $data) {
@@ -270,7 +261,6 @@ class PkgController extends \Modules\InsiderFramework\Core\Controller
 
             $remoteVersion = $this->getVersionFromInfo($remoteVersion);
 
-            // Se o objeto da versão local não é válido
             if (!is_object($localVersion) || (!property_exists($localVersion, 'version'))) {
                 $msg = "Invalid local version registry: " . json_encode($localVersion);
                 $climate->br();
@@ -278,8 +268,7 @@ class PkgController extends \Modules\InsiderFramework\Core\Controller
                 \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError($msg);
             }
 
-            // Se é 0.0.0 o package não está instalado ou se a versão do servidor é maior que a versão local
-            // Se não está instalado
+            // If it is 0.0.0 the package is not installed or if the server version is larger than the local version
             if ($localVersion->version === "0.0.0.") {
                 if (version_compare($remoteVersion, $localVersion->version) > 0) {
                     $latestVersion = $remoteVersion;
@@ -295,7 +284,6 @@ class PkgController extends \Modules\InsiderFramework\Core\Controller
             }
         }
 
-        // Se encontrou algum servidor com o package atualizado
         if (filter_var($latestServer, FILTER_VALIDATE_URL) !== false) {
             if (!is_dir(PkgController::$mirrorDir)) {
                 \Modules\InsiderFramework\Core\FileTree::createDirectory(PkgController::$mirrorDir, 777);
@@ -303,12 +291,10 @@ class PkgController extends \Modules\InsiderFramework\Core\Controller
             
             $fileDestPath = PkgController::$mirrorDir . DIRECTORY_SEPARATOR . $package . '-' . $remoteVersion . '.pkg';
 
-            // Se o arquivo existe, apaga o mesmo
             if (file_exists($fileDestPath)) {
                 \Modules\InsiderFramework\Core\FileTree::deleteFile($fileDestPath);
             }
 
-            // Baixando arquivo
             set_time_limit(0);
 
             $fp = fopen($fileDestPath, 'w+');
@@ -345,7 +331,6 @@ class PkgController extends \Modules\InsiderFramework\Core\Controller
             fwrite($fp, $pkgcontent);
             fclose($fp);
 
-            // Se o arquivo ainda não existe, erro
             if (!file_exists($fileDestPath)) {
                 $msg = "Cannot create package on mirror directory ";
                 $climate->br();
@@ -364,17 +349,17 @@ class PkgController extends \Modules\InsiderFramework\Core\Controller
     }
     
     /**
-     * Verifica se o package está disponivel no mirror.
+     * Checks whether the package is available on the mirror.
      *
-     * @todo É claro que isto pode ter um cache de ambos os lados,
-     * mas por enquanto ficará implementado sem esta funcionalidade.
+     * @todo Of course, this can have a cache on both sides,
+     *       but for now it will be implemented without this functionality.
      *
      * @author Marcello Costa
      *
      * @package Apps\Sys\Controllers\PkgController
      *
      * @Route(path="existsinmirror")
-     * 
+     *
      * @return void
      */
     public function existsInMirror(): void
@@ -407,29 +392,27 @@ class PkgController extends \Modules\InsiderFramework\Core\Controller
         $item = $POST['item'];
         $authorization = $POST['authorization'];
 
-        // Chave de autorização local do framework
         $domainForAuthorization = REQUESTED_URL;
         $localAuthorization = \Modules\InsiderFramework\Core\Registry::getLocalAuthorization($domainForAuthorization);
 
-        if ($localAuthorization === false){
+        if ($localAuthorization === false) {
             $noAuthCode = \Modules\InsiderFramework\Core\KernelSpace::getVariable(
                 'routingActions',
                 'RoutingSystem'
             )['NotAuth'];
 
-            $msg = "Server Error - Cannot retrive local authorization for ".$domainForAuthorization;
+            $msg = "Server Error - Cannot retrive local authorization for " . $domainForAuthorization;
             http_response_code($noAuthCode['responsecode']);
             error_log($msg);
             $this->responseJson($msg);
             die();
         }
 
-        // Se o token de autorização é inválido
         if ($authorization !== $localAuthorization) {
-            if ($localAuthorization."" === ""){
+            if ($localAuthorization . "" === "") {
                 $msg = 'Server Error - Received null authorization token';
             } else {
-                $msg = 'Server Error - Invalid authorization token: '.$authorization;
+                $msg = 'Server Error - Invalid authorization token: ' . $authorization;
             }
             $noAuthCode = \Modules\InsiderFramework\Core\KernelSpace::getVariable(
                 'routingActions',
@@ -441,8 +424,6 @@ class PkgController extends \Modules\InsiderFramework\Core\Controller
             die();
         }
 
-        // Verificando se o package existe no cache de mirror
-        // Se o diretório de mirror não existe
         if (!is_dir(PkgController::$mirrorDir)) {
             \Modules\InsiderFramework\Core\FileTree::createDirectory(PkgController::$mirrorDir, 777);
             $msg = 'Server Error - Is is not a valid repository';
@@ -460,7 +441,7 @@ class PkgController extends \Modules\InsiderFramework\Core\Controller
 
         $list = glob($fileName);
 
-        // Se o(s) arquivo(s) existe(m) no cache
+        // Whether the file (s) exists in the cache
         if (count($list) !== 0) {
             $latestPackage = "";
             foreach ($list as $file) {
@@ -480,7 +461,6 @@ class PkgController extends \Modules\InsiderFramework\Core\Controller
             return;
         }
 
-        // Package not found
         $msg = "Package '" . $item . "' not found";
         $notFoundCode = \Modules\InsiderFramework\Core\KernelSpace::getVariable(
             'routingActions',
@@ -492,18 +472,18 @@ class PkgController extends \Modules\InsiderFramework\Core\Controller
     }
 
     /**
-     * Fornece o download de um package requisitado via url
+     * Provides the download of a requested package via url
      *
      * @author Marcello Costa
      *
      * @package Apps\Sys\Controllers\PkgController
      *
      * @Route(path="servepackage")
-     * 
+     *
      * @return void
      */
     public function servepackage(): void
-    {   
+    {
         $POST = \Modules\InsiderFramework\Core\KernelSpace::getVariable('POST', 'insiderFrameworkSystem');
         
         if (
@@ -514,30 +494,25 @@ class PkgController extends \Modules\InsiderFramework\Core\Controller
         ) {
             \Modules\InsiderFramework\Core\Error\ErrorHandler::ErrorRegister('Missing parameters on request');
         }
-        
-        // Chave de autorização local do framework
+
         $localAuthorization = \Modules\InsiderFramework\Core\Registry::getLocalAuthorization(REQUESTED_URL);
         $authorization = $POST['authorization'];
         $version = $POST['version'];
         $package = $POST['package'];
 
-        // Requisição local
-        // Se o token de autorização é inválido
         if ($authorization !== $localAuthorization) {
-            if ($localAuthorization."" === ""){
+            if ($localAuthorization . "" === "") {
                 $msg = 'Server Error - Received null Authorization Token';
             } else {
-                $msg = 'Server Error - Invalid Authorization Token: '.$authorization;
+                $msg = 'Server Error - Invalid Authorization Token: ' . $authorization;
             }
             \Modules\InsiderFramework\Core\Error\ErrorHandler::ErrorRegister($msg);
         }
-        
-        // Se o diretório de mirror não existe
+
         if (!is_dir(PkgController::$mirrorDir)) {
             \Modules\InsiderFramework\Core\FileTree::createDirectory(PkgController::$mirrorDir, 777);
         }
 
-        // Verificando se o package existe no cache de mirror
         $pathOfPackage = PkgController::$mirrorDir . DIRECTORY_SEPARATOR . $package . "-" . $version . ".pkg";
         if (!file_exists($pathOfPackage)) {
             $i10nMsg = \Modules\InsiderFramework\Core\Manipulation\I10n::getTranslate(

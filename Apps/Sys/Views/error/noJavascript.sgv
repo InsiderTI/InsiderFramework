@@ -1,8 +1,8 @@
 {template src='Sys::errorgeneric'}
 {block id='error'}
     <div id="all" unselectable='on' onselectstart='return false;' onmousedown='return false;'>
-        <h1 style='font-weight:bold;text-shadow: 4px -4rpx grey;'>Ops, algo está faltando...</h1>
-        <h2>Seu navegador não possui o JavaScript habilitado !</h2>
+        <h1 style='font-weight:bold;text-shadow: 4px -4rpx grey;'>Oops, something is missing ...</h1>
+        <h2>Your browser does not have JavaScript enabled!</h2>
         <img src='<?php
 
         echo REQUESTED_URL . "/Apps/Sys/assets/img/error_javascript.png" ?>' />

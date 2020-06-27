@@ -1,17 +1,17 @@
 {
-    "DB_APP": "database1",
-    "DATABASES": {
-        "database1": {
-            "dbms": "mysql",
-            "connector": "mysql",
-            "hostname": "138.197.60.220",
-            "port": "3356",
-            "databasename": "insiderti_frame",
-            "username": "root",
-            "password": "6f6cef84bec9ae2e00ded5a9d50eed66ca98303c69695a3780dd825d52bdb1c8",
-            "persistent": false,
-            "charset": "utf8",
-            "isolationLevel": "REPEATABLE READ"
-        }
+  "DB_APP": "database1",
+  "DATABASES": {
+    "database1": {
+      "dbms": "mysql",
+      "connector": "mysql",
+      "hostname": "127.0.0.1",
+      "port": "3356",
+      "databasename": "insiderframework_site",
+      "username": "123",
+      "password": "123",
+      "persistent": false,
+      "charset": "utf8",
+      "isolationLevel": "REPEATABLE READ"
     }
+  }
 }

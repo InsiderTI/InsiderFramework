@@ -11,7 +11,7 @@
         <meta name="msapplication-TileColor" content="#da532c">
         <meta name="theme-color" content="#ffffff">
         
-        {* Charset do framework *}
+        {* Framework charset *}
         <meta charset="<?php echo ENCODE; ?>"/>
         {component id='title'}
         
@@ -27,7 +27,7 @@
         <?php
         if (DEBUG) {
             ?>
-            {* Estilos de debug do framework *}
+            {* Framework debugging CSS *}
             <link rel="stylesheet" href='<?php echo REQUESTED_URL; ?>/apps/sys/assets/css/debug.css' />
             <?php
         }
@@ -35,7 +35,6 @@
     </head>
     <body style="overflow: hidden;">
         <div style='text-align: center; z-index: 999; background: #fff; position: absolute; height: 100%; width: 100%;'>
-            {* Bloco do erro *}
             {block id='error'}{/block}
         </div>
         

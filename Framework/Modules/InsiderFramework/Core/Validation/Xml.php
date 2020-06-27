@@ -19,7 +19,7 @@ trait Xml
      * @package Modules\InsiderFramework\Core\Validation\Xml
      *
      * @param string $xmlstr String to be verified
-     * 
+     *
      * @return bool If it's a XML returns true
     */
     public static function isXML(string $xmlstr): bool

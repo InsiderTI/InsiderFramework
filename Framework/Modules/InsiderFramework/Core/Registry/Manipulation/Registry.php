@@ -33,7 +33,9 @@ trait Registry
         );
 
         if ($regcomponentfile === false) {
-            \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister('Cannot load SagaciousComponents.json data');
+            \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister(
+                'Cannot load SagaciousComponents.json data'
+            );
         }
 
         if (is_array($regcomponentfile)) {
@@ -198,7 +200,7 @@ trait Registry
         $section = "";
         $packageData = [];
         foreach ($filespath as $sectionFP => $filepath) {
-            if (!file_exists($filepath) || !is_readable($filepath)){
+            if (!file_exists($filepath) || !is_readable($filepath)) {
                 \Modules\InsiderFramework\Core\Error\ErrorHandler::i10nErrorRegister(
                     "Registry Error: File '%" . $filepath . "%' not found or unable to read",
                     "app/sys"
@@ -237,7 +239,7 @@ trait Registry
             }
         }
 
-        if (!empty($packageData)){
+        if (!empty($packageData)) {
             $packageName = array_key_first($packageData);
 
             // Getting control details
@@ -248,14 +250,14 @@ trait Registry
                                   $packageName . DIRECTORY_SEPARATOR .
                                   "Control.json";
 
-            if (!file_exists($packageControlFile)){
+            if (!file_exists($packageControlFile)) {
                 \Modules\InsiderFramework\Core\Error\ErrorHandler::i10nErrorRegister(
                     "Registry Error: Control file '%" . $packageControlFile . "%' not found or unable to read",
                     "app/sys"
                 );
             }
             $controlJsonData = \Modules\InsiderFramework\Core\Json::getJSONDataFile($packageControlFile);
-            if ($controlJsonData === false){
+            if ($controlJsonData === false) {
                 \Modules\InsiderFramework\Core\Error\ErrorHandler::i10nErrorRegister(
                     "Registry Error: Control file '%" . $packageControlFile . "%' not found or unable to read",
                     "app/sys"
@@ -272,7 +274,7 @@ trait Registry
                                   $packageName . DIRECTORY_SEPARATOR .
                                   "Md5sum.json";
 
-            if (!file_exists($md5ControlFile)){
+            if (!file_exists($md5ControlFile)) {
                 \Modules\InsiderFramework\Core\Error\ErrorHandler::i10nErrorRegister(
                     "Registry Error: Md5 file '%" . $md5ControlFile . "%' not found or unable to read",
                     "app/sys"
@@ -280,7 +282,7 @@ trait Registry
             }
 
             $md5JsonData = \Modules\InsiderFramework\Core\Json::getJSONDataFile($md5ControlFile);
-            if ($md5JsonData === false){
+            if ($md5JsonData === false) {
                 \Modules\InsiderFramework\Core\Error\ErrorHandler::i10nErrorRegister(
                     "Registry Error: Control file '%" . $md5ControlFile . "%' not found or unable to read",
                     "app/sys"
@@ -369,7 +371,10 @@ trait Registry
             }
         }
         if (isset($versionData['version2'])) {
-            \Modules\InsiderFramework\Core\Error\ErrorHandler::i10nErrorRegister("Multiple versions of packages are not yet supported", "app/sys");
+            \Modules\InsiderFramework\Core\Error\ErrorHandler::i10nErrorRegister(
+                "Multiple versions of packages are not yet supported",
+                "app/sys"
+            );
         }
 
         return $versionData['version1'];
@@ -386,17 +391,18 @@ trait Registry
     *
     * @return array Array of data
     */
-    public static function getLocalConfigurationFile($relativePath): array {
+    public static function getLocalConfigurationFile($relativePath): array
+    {
         $data = \Modules\InsiderFramework\Core\Json::getJSONDataFile(
             INSTALL_DIR . DIRECTORY_SEPARATOR .
             "Framework" . DIRECTORY_SEPARATOR .
             "Registry" . DIRECTORY_SEPARATOR .
-            "Local" . DIRECTORY_SEPARATOR . 
+            "Local" . DIRECTORY_SEPARATOR .
             $relativePath,
             true
         );
 
-        if ($data === false){
+        if ($data === false) {
             return array();
         }
 
@@ -426,19 +432,21 @@ trait Registry
                 $filePath = $registryDirectory . DIRECTORY_SEPARATOR .
                             "Sections" . DIRECTORY_SEPARATOR .
                             "Guilds.json";
-
+                break;
             case 'modules':
                 $filePath = $registryDirectory . DIRECTORY_SEPARATOR .
                             "Sections" . DIRECTORY_SEPARATOR .
                             "Modules.json";
                 break;
             case 'app':
-                $filePath = $registryDirectory . DIRECTORY_SEPARATOR . 
+                $filePath = $registryDirectory . DIRECTORY_SEPARATOR .
                             "Sections" . DIRECTORY_SEPARATOR .
                             "Apps.json";
                 break;
             default:
-                \Modules\InsiderFramework\Core\Error\ErrorHandler::ErrorRegister('Invalid Section: '.$packageControlData->getSection());
+                \Modules\InsiderFramework\Core\Error\ErrorHandler::ErrorRegister(
+                    'Invalid Section: ' . $packageControlData->getSection()
+                );
                 break;
         }
         
@@ -494,19 +502,19 @@ trait Registry
                 $filePath = $registryDirectory . DIRECTORY_SEPARATOR .
                             "Sections" . DIRECTORY_SEPARATOR .
                             "Guilds.json";
-
+                break;
             case 'modules':
                 $filePath = $registryDirectory . DIRECTORY_SEPARATOR .
                             "Sections" . DIRECTORY_SEPARATOR .
                             "Modules.json";
                 break;
             case 'app':
-                $filePath = $registryDirectory . DIRECTORY_SEPARATOR . 
+                $filePath = $registryDirectory . DIRECTORY_SEPARATOR .
                             "Sections" . DIRECTORY_SEPARATOR .
                             "Apps.json";
                 break;
             default:
-                \Modules\InsiderFramework\Core\Error\ErrorHandler::ErrorRegister('Invalid Section: '.$section);
+                \Modules\InsiderFramework\Core\Error\ErrorHandler::ErrorRegister('Invalid Section: ' . $section);
                 break;
         }
         
@@ -526,31 +534,33 @@ trait Registry
                 $filePath = $registryDirectory . DIRECTORY_SEPARATOR .
                             "Sections" . DIRECTORY_SEPARATOR .
                             "Guilds.json";
-
+                break;
             case 'modules':
                 $filePath = $registryDirectory . DIRECTORY_SEPARATOR .
                             "Sections" . DIRECTORY_SEPARATOR .
                             "Modules.json";
                 break;
             case 'app':
-                $filePath = $registryDirectory . DIRECTORY_SEPARATOR . 
+                $filePath = $registryDirectory . DIRECTORY_SEPARATOR .
                             "Sections" . DIRECTORY_SEPARATOR .
                             "Apps.json";
                 break;
             default:
-                \Modules\InsiderFramework\Core\Error\ErrorHandler::ErrorRegister('Invalid Section: '.$section);
+                \Modules\InsiderFramework\Core\Error\ErrorHandler::ErrorRegister('Invalid Section: ' . $section);
                 break;
         }
 
         switch (strtolower($section)) {
             case 'app':
             case 'guild':
-                \Modules\InsiderFramework\Core\Error\ErrorHandler::ErrorRegister('Remove not implemented for section: '.$section);
-            break;
+                \Modules\InsiderFramework\Core\Error\ErrorHandler::ErrorRegister(
+                    'Remove not implemented for section: ' . $section
+                );
+                break;
             case 'modules':
                 break;
             default:
-                \Modules\InsiderFramework\Core\Error\ErrorHandler::ErrorRegister('Invalid Section: '.$section);
+                \Modules\InsiderFramework\Core\Error\ErrorHandler::ErrorRegister('Invalid Section: ' . $section);
                 break;
         }
         
