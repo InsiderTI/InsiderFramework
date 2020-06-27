@@ -75,5 +75,6 @@ RUN a2enmod headers
 
 # Init script
 ADD init.sh /usr/local/bin/init.sh
+ADD welcomeInstall.php /tmp/welcomeInstall.php
 RUN chmod +x /usr/local/bin/init.sh
 ENTRYPOINT /usr/local/bin/init.sh && /bin/bash

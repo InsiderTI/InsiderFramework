@@ -1,19 +1,19 @@
-document.addEventListener("DOMContentLoaded", function (event) {
-    // Variável de monitoramento de URL
-    laststatehistory = null;
-});
+document.addEventListener("DOMContentLoaded", function(event) {
+  // Variável de monitoramento de URL
+  laststatehistory = null
+})
 
 // Monitorando a mudança de URL
-window.onpopstate = function (event) {
-    // Se o último estado da URL for diferente
-    if (JSON.stringify(event.state) !== laststatehistory) {
-        // Grava o estado atual
-        laststatehistory = JSON.stringify(event.state);
+window.onpopstate = function(event) {
+  // Se o último estado da URL for diferente
+  if (JSON.stringify(event.state) !== laststatehistory) {
+    // Grava o estado atual
+    laststatehistory = JSON.stringify(event.state)
 
-        // Recarrega a página
-        location.reload();
-    }
-};
+    // Recarrega a página
+    location.reload()
+  }
+}
 
 /**
  *   @author Marcello Costa
@@ -25,10 +25,10 @@ window.onpopstate = function (event) {
  *   @param  {String}  str        String onde deverá ser feita a busca
  *
  *   @returns  {Void}
-*/
-function ReplaceAll(find, replace, str) {
-    return str.split(find).join(replace);
-};
+ */
+function replaceAll(find, replace, str) {
+  return str.split(find).join(replace)
+}
 
 /**
  *   @author Marcello Costa
@@ -38,15 +38,15 @@ function ReplaceAll(find, replace, str) {
  *   @param  {*}  val    Variável a ser testada
  *
  *   @returns  {Bool}  Resultado da função
-*/
-function IsJSON(val) {
-    try {
-        JSON.parse(val);
-    } catch (e) {
-        return false;
-    }
-    return true;
-};
+ */
+function isJSON(val) {
+  try {
+    JSON.parse(val)
+  } catch (e) {
+    return false
+  }
+  return true
+}
 
 /**
  *   @author Marcello Costa
@@ -58,28 +58,28 @@ function IsJSON(val) {
  *   @param  {String}  resultview    Resultado devolvido de uma requisição ajax à uma view
  *
  *   @returns  {Array}  Resultado separado em um array
-*/
-function ParseJSONView(resultview) {
-    // Se é um JSON
-    if (IsJSON(resultview)) {
-        // Efetua o parse do resultado
-        resultjson = JSON.parse(resultview);
+ */
+function parseJSONView(resultview) {
+  // Se é um JSON
+  if (isJSON(resultview)) {
+    // Efetua o parse do resultado
+    resultjson = JSON.parse(resultview)
 
-        // Tratando CSS
-        resultjson['css'] = ReplaceAll('\\n\\', '', resultjson['css']);
+    // Tratando CSS
+    resultjson["css"] = replaceAll("\\n\\", "", resultjson["css"])
 
-        // Tratando SCRIPT
-        resultjson['script'] = ReplaceAll('\\n\\', '', resultjson['script']);
+    // Tratando SCRIPT
+    resultjson["script"] = replaceAll("\\n\\", "", resultjson["script"])
 
-        // Retornando valores
-        return resultjson;
-    }
+    // Retornando valores
+    return resultjson
+  }
 
-    // Se não é um JSON, não pode ser tratado por esta função
-    else {
-        return false;
-    }
-};
+  // Se não é um JSON, não pode ser tratado por esta função
+  else {
+    return false
+  }
+}
 
 /**
  *   @author Marcello Costa
@@ -89,15 +89,15 @@ function ParseJSONView(resultview) {
  *   @param  {milliseconds}  Tempo que o script ficará parado
  *
  *   @returns  {Void}
-*/
-function Sleep(milliseconds) {
-    var start = new Date().getTime();
-    for (var i = 0; i < 1e7; i++) {
-        if ((new Date().getTime() - start) > milliseconds) {
-            break;
-        }
+ */
+function sleep(milliseconds) {
+  var start = new Date().getTime()
+  for (var i = 0; i < 1e7; i++) {
+    if (new Date().getTime() - start > milliseconds) {
+      break
     }
-};
+  }
+}
 
 /**
  *   @author Marcello Costa
@@ -107,10 +107,10 @@ function Sleep(milliseconds) {
  *   @param  {String}  cookiename    Nome do cookie
  *
  *   @returns  {Void}
-*/
-function DeleteCookie(cookiename) {
-    document.cookie = cookiename + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-};
+ */
+function deleteCookie(cookiename) {
+  document.cookie = cookiename + "=; expires=Thu, 01 Jan 1970 00:00:01 GMT;"
+}
 
 /**
  *   @author Marcello Costa
@@ -122,19 +122,18 @@ function DeleteCookie(cookiename) {
  *   @param  {Int}     days    Validade do cookie (em dias)
  *
  *   @returns  {Void}
-*/
-var UpdateDataCookieJS = function (name, value, days) {
-    var expires;
-    if (days) {
-        var date = new Date();
-        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-        expires = "; expires=" + date.toGMTString();
-    }
-    else {
-        expires = "";
-    }
-    document.cookie = name + "=" + value + expires + "; path=/";
-};
+ */
+function updateDataCookieJS(name, value, days) {
+  var expires
+  if (days) {
+    var date = new Date()
+    date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000)
+    expires = "; expires=" + date.toGMTString()
+  } else {
+    expires = ""
+  }
+  document.cookie = name + "=" + value + expires + "; path=/"
+}
 
 /**
  *   @author Marcello Costa
@@ -144,21 +143,21 @@ var UpdateDataCookieJS = function (name, value, days) {
  *   @param  {String}  c_name    Nome do cookie
  *
  *   @returns  {Void}
-*/
-function GetDataCookieJS(c_name) {
-    if (document.cookie.length > 0) {
-        c_start = document.cookie.indexOf(c_name + "=");
-        if (c_start != -1) {
-            c_start = c_start + c_name.length + 1;
-            c_end = document.cookie.indexOf(";", c_start);
-            if (c_end == -1) {
-                c_end = document.cookie.length;
-            }
-            return unescape(document.cookie.substring(c_start, c_end));
-        }
+ */
+function getDataCookieJS(c_name) {
+  if (document.cookie.length > 0) {
+    c_start = document.cookie.indexOf(c_name + "=")
+    if (c_start != -1) {
+      c_start = c_start + c_name.length + 1
+      c_end = document.cookie.indexOf(";", c_start)
+      if (c_end == -1) {
+        c_end = document.cookie.length
+      }
+      return unescape(document.cookie.substring(c_start, c_end))
     }
-    return "";
-};
+  }
+  return ""
+}
 
 /**
  *   @author Marcello Costa
@@ -169,23 +168,21 @@ function GetDataCookieJS(c_name) {
  *   @param  {Bool}    json    Converter dados recebidos para JSON
  *
  *   @returns  {String}  String convertida para json
-*/
-function ConvertDataToPost(data, json) {
+ */
+function convertDataToPost(data, json) {
+  // Convertendo ou não dados para JSON
+  if (json === true) {
+    newdatatmp = JSON.stringify(data)
+  } else {
+    newdatatmp = data
+  }
 
-    // Convertendo ou não dados para JSON
-    if (json === true) {
-        newdatatmp = JSON.stringify(data);
-    }
-    else {
-        newdatatmp = data;
-    }
+  // Substituindo barras "/" por "\/"
+  newdata = replaceAll("/", "\\/", newdatatmp)
 
-    // Substituindo barras "/" por "\/"
-    newdata = ReplaceAll('/', '\\/', newdatatmp);
-
-    // Retornando dados tratados
-    return newdata;
-};
+  // Retornando dados tratados
+  return newdata
+}
 
 /**
  *   @author Marcello Costa
@@ -193,22 +190,22 @@ function ConvertDataToPost(data, json) {
  *   Retorna os parâmetros GET da requisição atual
  *
  *   @returns  {Array}  Array associativo com as chaves e valores GET
-*/
+ */
 function getGetParams() {
-    urlgets = window.location.search.replace("?", "").split("&");
-    params = {};
+  urlgets = window.location.search.replace("?", "").split("&")
+  params = {}
 
-    for (var i = 0, len = urlgets.length; i < len; i++) {
-        if (urlgets[i] !== "") {
-            keyvalue = urlgets[i].split("=");
-            truekey = keyvalue[0];
-            truevalue = keyvalue[1];
-            params[truekey] = truevalue;
-        }
+  for (var i = 0, len = urlgets.length; i < len; i++) {
+    if (urlgets[i] !== "") {
+      keyvalue = urlgets[i].split("=")
+      truekey = keyvalue[0]
+      truevalue = keyvalue[1]
+      params[truekey] = truevalue
     }
+  }
 
-    return params;
-};
+  return params
+}
 
 /**
  *   @author Marcello Costa
@@ -218,20 +215,20 @@ function getGetParams() {
  *   @param  {String}  timestamp    desc
  *
  *   @returns  {Void}
-*/
-function ConvertTimeStamp(timestamp) {
-    timestamp_tmp = timestamp.split('-');
+ */
+function convertTimeStamp(timestamp) {
+  timestamp_tmp = timestamp.split("-")
 
-    ano = timestamp_tmp[0];
-    mes = timestamp_tmp[1];
-    diahora = timestamp_tmp[2];
+  ano = timestamp_tmp[0]
+  mes = timestamp_tmp[1]
+  diahora = timestamp_tmp[2]
 
-    dia_tmp = diahora.split(' ');
-    dia = dia_tmp[0];
-    hora = dia_tmp[1];
+  dia_tmp = diahora.split(" ")
+  dia = dia_tmp[0]
+  hora = dia_tmp[1]
 
-    return (dia + "/" + mes + "/" + ano + " " + hora);
-};
+  return dia + "/" + mes + "/" + ano + " " + hora
+}
 
 /**
  *   @author Marcello Costa
@@ -244,24 +241,23 @@ function ConvertTimeStamp(timestamp) {
  *   @param  {String}  format         Formato das datas
  *
  *   @returns  {Bool}
-*/
+ */
 function firstDateIsGreater(dataInicial, dataFinal, format = "YYYY-MM-DD") {
-    data_1 = moment(dataInicial, format);
-    data_2 = moment(dataFinal, format);
+  data_1 = moment(dataInicial, format)
+  data_2 = moment(dataFinal, format)
 
-    if (data_1 == 'Invalid Date') {
-        throw new Error("Invalid Date Format");
-    }
+  if (data_1 == "Invalid Date") {
+    throw new Error("Invalid Date Format")
+  }
 
-    if (data_1 === data_2) {
-        return true;
-    }
-    if (data_1 < data_2) {
-        return true;
-    }
-    else {
-        return false;
-    }
+  if (data_1 === data_2) {
+    return true
+  }
+  if (data_1 < data_2) {
+    return true
+  } else {
+    return false
+  }
 }
 
 /* Strip de tags html (primeiro método) */
@@ -274,20 +270,20 @@ function firstDateIsGreater(dataInicial, dataFinal, format = "YYYY-MM-DD") {
  *   @param  {String}  str    String a ser tratada
  *
  *   @returns  {String}  String tratada
-*/
+ */
 var tagsToReplace = {
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;'
-};
+  "&": "&amp;",
+  "<": "&lt;",
+  ">": "&gt;",
+}
 
 function replaceTag(tag) {
-    return tagsToReplace[tag] || tag;
-};
+  return tagsToReplace[tag] || tag
+}
 
-function SafeTagsReplace(str) {
-    return str.replace(/[&<>]/g, replaceTag);
-};
+function safeTagsReplace(str) {
+  return str.replace(/[&<>]/g, replaceTag)
+}
 
 /* Strip de tags html (segundo método) */
 /**
@@ -296,32 +292,31 @@ function SafeTagsReplace(str) {
  *
  *   Remove tags html de uma string. Para usar faça: decodeEntities('<img src=fake onerror="prompt(1)">');
  *
- *   @param  {String}  str    String a ser tratada
+ *   @param {String} str String a ser tratada
  *
- *   @returns  {String}  String tratada
-*/
-var decodeEntities = (function () {
-    //create a new html document (doesn't execute script tags in child elements)
-    var doc = document.implementation.createHTMLDocument("");
-    var element = doc.createElement('div');
+ *   @returns {String} String tratada
+ */
+function decodeEntities() {
+  var doc = document.implementation.createHTMLDocument("")
+  var element = doc.createElement("div")
 
-    function getText(str) {
-        element.innerHTML = str;
-        str = element.textContent;
-        element.textContent = '';
-        return str;
-    };
+  function getText(str) {
+    element.innerHTML = str
+    str = element.textContent
+    element.textContent = ""
+    return str
+  }
 
-    function decodeHTMLEntities(str) {
-        if (str && typeof str === 'string') {
-            var x = getText(str);
-            while (str !== x) {
-                str = x;
-                x = getText(x);
-            }
-            return x;
-        }
-    };
-    return decodeHTMLEntities;
-})();
+  function decodeHTMLEntities(str) {
+    if (str && typeof str === "string") {
+      var x = getText(str)
+      while (str !== x) {
+        str = x
+        x = getText(x)
+      }
+      return x
+    }
+  }
+  return decodeHTMLEntities
+}
 /* Fim do Strip de tags html */

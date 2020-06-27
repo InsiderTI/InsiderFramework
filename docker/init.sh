@@ -7,24 +7,24 @@ FILE2=/init-complete
 
 if [ ! -f "$FILE" ] && [ ! -f "$FILE2" ]; then
     touch $FILE;
-    
-    indexwait="<html><head><meta http-equiv='refresh' content='50'></head><body><div style='text-align: center;'><img src='favicon.png'/><br/><h2>Installing system...</h2><br/>Wait until all dependencies are downloaded</div></body></html>";
+
     mv /var/www/insiderframework/Web/index.php /var/www/insiderframework/Web/index_tmp.php
-    echo $indexwait > /var/www/insiderframework/Web/index.php
+    cp /tmp/welcomeInstall.php /var/www/insiderframework/Web/index.php
     
-    # Changing chown and permissons
-    CACHEDIR=/var/www/insiderframework/Framework/cache
+    # Changing chown and permissions
+    CACHEDIR=/var/www/insiderframework/Framework/Cache
     if [ ! -d "$CACHEDIR" ]; then
-        mkdir -p /var/www/insiderframework/Framework/cache
+        mkdir -p /var/www/insiderframework/Framework/Cache
     fi
     chown -R www-data:www-data /var/www/insiderframework
-    chmod 770 -R /var/www/insiderframework/framework
+    chmod 770 -R /var/www/insiderframework/Framework
 
     # Installing php modules
     cd /var/www/insiderframework/Framework/Modules && composer install
     
     rm $FILE;
     rm /var/www/insiderframework/Web/index.php;
+    rm /tmp/welcomeInstall.php
     mv /var/www/insiderframework/Web/index_tmp.php /var/www/insiderframework/Web/index.php
     touch $FILE2;
 fi
