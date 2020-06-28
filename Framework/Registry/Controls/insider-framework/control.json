@@ -6,14 +6,12 @@
   "provides": {
     "sagacious": "0.2.1",
     "phpmailer": "5.2.13",
-    "php-openssl-cryptor": "1.0.1",
-    "moment.js": "2.22.1"
+    "php-openssl-cryptor": "1.0.1"
   },
   "depends": {
     "sagacious": "=0.2.1",
     "phpmailer": "=5.2.13",
-    "php-openssl-cryptor": "=1.0.1",
-    "moment.js": ">= 2.22.1, < 3.0.0"
+    "php-openssl-cryptor": "=1.0.1"
   },
   "recommends": {},
   "description": "The Insider Framework is a web framework that links two languages (PHP and Node.Js), delivering a versatile solution for building applications and web APIs"

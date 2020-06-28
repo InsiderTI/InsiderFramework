@@ -14,12 +14,6 @@
         {* Framework charset *}
         <meta charset="<?php echo ENCODE; ?>"/>
         {component id='title'}
-        
-        {* MomentJs *}
-        <script type='text/javascript' src='<?php echo REQUESTED_URL; ?>/apps/sys/assets/js/moment.js/2.22.1/moment-with-locales.min.js'></script>
-        <script>
-            moment.locale('<?php echo LINGUAS; ?>');
-        </script>
 
         {* Scripts of framework *}
         <script type='text/javascript' src='<?php echo REQUESTED_URL; ?>/apps/sys/assets/js/js_only_insiderframework.js'></script>
