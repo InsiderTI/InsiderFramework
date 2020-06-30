@@ -3,7 +3,7 @@
 namespace Modules\InsiderFramework\Sagacious\Lib;
 
 /**
- * Classe de tratamento de elementos na página
+ * Class of handling elements on the page
  *
  * @author Marcello Costa
  *
@@ -12,15 +12,15 @@ namespace Modules\InsiderFramework\Sagacious\Lib;
 class SgsPage
 {
   /**
-   * Atualiza dinamicamente o CSS da página quando,
-   * por exemplo, um novo componente é criado e este deve
-   * modificar o css da página
+   * Dynamically updates the page's CSS when,
+   * for example, a new component is created and it must
+   * modify the page css
    *
    * @author Marcello Costa
    *
    * @package Modules\InsiderFramework\Sagacious\Lib\SgsPage
    *
-   * @param string $css Código CSS (com tag style) a ser colocado na página
+   * @param string $css CSS code (with style tag) to be placed on the page
    *
    * @return void
    */
@@ -28,25 +28,18 @@ class SgsPage
     {
         $cssExploded = explode("\n", $css);
 
-        // Novo css em uma única linha
         $newcss = "";
 
-        // Contando número de linhas
         $countCss = count($cssExploded);
 
-        // Para cada linha
         foreach ($cssExploded as $i => $cssline) {
-            // Se ainda não chegou no final
             if ($i < $countCss - 1) {
-                // Adiciona uma quebra de linha (para o javascript
-                // funcionar corretamente)
                 $newcss .= $cssline . "\n";
             } else {
                 $newcss .= $cssline;
             }
         }
 
-        // Inserindo css na variável global
         $injectedCss = \Modules\InsiderFramework\Core\KernelSpace::getVariable('injectedCss', 'sagacious');
         $injectedCss = $injectedCss . $newcss;
         \Modules\InsiderFramework\Core\KernelSpace::setVariable(
@@ -58,15 +51,15 @@ class SgsPage
     }
 
     /**
-     * Atualiza dinamicamente o JS da página quando,
-     * por exemplo, um novo componente é criado e este deve
-     * modificar o js da página
+     * Dynamically updates the page's JS when,
+     * for example, a new component is created and it must
+     * modify the page js
      *
      * @author Marcello Costa
      *
      * @package Modules\InsiderFramework\Sagacious\Lib\SgsPage
      *
-     * @param string $js Código JS a ser adicionado (com tag <script>);
+     * @param string $js JS code to be added (with <script> tag);
      *
      * @return void
      */
@@ -86,15 +79,15 @@ class SgsPage
     }
 
     /**
-     * Atualiza dinamicamente o HTML da página quando,
-     * por exemplo, um novo componente é criado e este deve
-     * modificar o html da página
+     * Dynamically updates the HTML of the page when,
+     * for example, a new component is created and it must
+     * modify the page's html
      *
      * @author Marcello Costa
      *
      * @package Modules\InsiderFramework\Sagacious\Lib\SgsPage
      *
-     * @param string $html Código HTML a ser adicionado;
+     * @param string $html HTML code to be added; HTML code to be added
      *
      * @return void
      */
@@ -109,73 +102,61 @@ class SgsPage
     }
 
     /**
-      * Função que minifica um código JS
+      * Function that minifies JS code
       *
       * @author Marcello Costa
       *
       * @package Modules\InsiderFramework\Sagacious\Lib\SgsPage
       *
-      * @param string $js Código JS a ser minificado
+      * @param string $js JS code to be minified
       *
-      * @return string JS minificado
+      * @return string Minified JS
     */
     public static function jsMinify(string $js): string
     {
-        // Remove comentários
         $pattern = '/(?:(?:\/\*(?:[^*]|(?:\*+[^*\/]))*\*+\/)|(?:(?<!\:|\\\|\')\/\/.*))/';
         $js = preg_replace($pattern, '', $js);
-
-        // Colocando tudo em uma linha
         $js = str_replace(array("\n", "\r"), '', $js);
-
-        // Remove múltiplos espaços por apenas um
         $js = preg_replace('!\s+!', ' ', $js);
 
         return $js;
     }
 
     /**
-     * Função que minifica um código CSS
+     * Function that minifies a CSS code
      *
      * @author Marcello Costa
      *
      * @package Modules\InsiderFramework\Sagacious\Lib\SgsPage
      *
-     * @param string $css Código CSS a ser minificado
+     * @param string $css CSS code to be minified
      *
-     * @return string CSS minificado
+     * @return string Minified CSS
     */
     public static function cssMinify(string $css): string
     {
-        // Remove comentários
         $css = preg_replace('!/\*[^*]*\*+([^/][^*]*\*+)*/!', '', $css);
-
-        // Remove espaços após dois pontos
         $css = str_replace(': ', ':', $css);
-
-        // Remove espaços em branco
         $css = str_replace(array("\r\n", "\r", "\n", "\t", '  ', '    ', '    '), '', $css);
 
-        // Retorna o CSS minificado
         return $css;
     }
 
     /**
-     * Função que traduz uma string baseado no ID
+     * Function that translates a string based on the ID
      *
      * @author Marcello Costa
      *
      * @package Modules\InsiderFramework\Sagacious\Lib\SgsPage
      *
-     * @param string $app  Nome do app onde está localizada a tradução
-     * @param string $id   Id da string a ser traduzida
-     * @param string $lang Linguagem para qual será traduzida a string
+     * @param string $app  Name of the app where the translation is located
+     * @param string $id   String id to be translated
+     * @param string $lang Language into which the string will be translated
      *
-     * @return string CSS minificado
+     * @return string Minified CSS
    */
     public static function translateString(string $app, string $id, string $lang = LINGUAS): string
     {
-        // Se não existe o diretório de tradução
         $pathLang = INSTALL_DIR . DIRECTORY_SEPARATOR . "Apps" . DIRECTORY_SEPARATOR .
         $app . DIRECTORY_SEPARATOR . "I10n" . DIRECTORY_SEPARATOR . $lang;
 
@@ -187,11 +168,8 @@ class SgsPage
             );
         }
 
-        // Para cada arquivo json encontrado no diretório, busca o ID
-        // Arquivo de conteúdo
         $content = [];
 
-        // Para cada arquivo
         foreach (\Modules\InsiderFramework\Core\FileTree::dirTree($pathLang) as $file) {
             $contentFile = \Modules\InsiderFramework\Core\Json::getJSONDataFile($file);
             if ($contentFile !== false && $contentFile !== null) {
@@ -203,7 +181,6 @@ class SgsPage
             $content = array_change_key_case($content, CASE_LOWER);
         }
 
-      // Se não encontrar a tradução da string
         if (!isset($content[$id])) {
             \Modules\InsiderFramework\Core\Error\ErrorHandler::i10nErrorRegister(
                 "Error trying to translate string %" . $id . "%" .

@@ -92,7 +92,7 @@ class SgsComponent implements ISgsComponent
      */
     public function renderComponent(): void
     {
-        // Se o código do componente não pode ser exibido
+        // If the component code cannot be displayed
         if (!is_string($this->code) && !is_null($this->code) && !is_numeric($this->code)) {
             $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1);
             \Modules\InsiderFramework\Core\Error\ErrorHandler::i10nErrorRegister(

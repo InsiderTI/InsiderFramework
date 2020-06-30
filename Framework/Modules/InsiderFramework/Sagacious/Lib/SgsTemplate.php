@@ -8,7 +8,7 @@ use Modules\InsiderFramework\Core\KernelSpace;
 use Modules\InsiderFramework\Sagacious\Lib\SgsBags\SgsViewsBag;
 
 /**
- * Classe sagacious de renderização de templates
+ * Sagacious template rendering class
  *
  * @author Marcello Costa
  *
@@ -16,13 +16,13 @@ use Modules\InsiderFramework\Sagacious\Lib\SgsBags\SgsViewsBag;
  */
 class SgsTemplate
 {
-    /** @var string App do objeto SgsTemplate */
+    /** @var string SgsTemplate object app */
     protected $app = "";
 
-    /** @var string Caminho do arquivo de template */
+    /** @var string Template file path */
     protected $templateFilename = "";
 
-    /** @var object Objeto SgsView */
+    /** @var object SgsView Object */
     protected $SgsView = "";
 
     /**
@@ -40,13 +40,13 @@ class SgsTemplate
     }
 
     /**
-     * Função que devolve o nome do app
+     * Function that returns the name of the app
      *
      * @author Marcello Costa
      *
      * @package Modules\InsiderFramework\Sagacious\Lib\SgsTemplate
      *
-     * @return string Nome do app
+     * @return string App name
      */
     public function getApp(): string
     {
@@ -54,13 +54,13 @@ class SgsTemplate
     }
 
     /**
-     * Função que devolve o nome do arquivo do template
+     * Function that returns the template file name
      *
      * @author Marcello Costa
      *
      * @package Modules\InsiderFramework\Sagacious\Lib\SgsTemplate
      *
-     * @return string Nome do arquivo do template
+     * @return string Template file name
      */
     public function getTemplateFilename(): string
     {
@@ -68,13 +68,13 @@ class SgsTemplate
     }
 
     /**
-     * Função que devolve o objeto de views do template
+     * Function that returns the template views object
      *
      * @author Marcello Costa
      *
      * @package Modules\InsiderFramework\Sagacious\Lib\SgsTemplate
      *
-     * @return \Modules\InsiderFramework\Sagacious\Lib\SgsView Objeto de views do template
+     * @return \Modules\InsiderFramework\Sagacious\Lib\SgsView Template views object
      */
     public function getSgsView(): SgsView
     {
@@ -82,13 +82,13 @@ class SgsTemplate
     }
 
     /**
-     * Função que converte arquivo SGV em PHP
+     * Function that converts SGV file to PHP
      *
      * @author Marcello Costa
      *
      * @package Modules\InsiderFramework\Sagacious\Lib\SgsTemplate
      *
-     * @param \Modules\InsiderFramework\Sagacious\Lib\SgsView $SgsView View a ser renderizada
+     * @param \Modules\InsiderFramework\Sagacious\Lib\SgsView $SgsView View to be rendered
      *
      * @return array Código PHP
      */
@@ -97,10 +97,10 @@ class SgsTemplate
         $this->SgsView = $SgsView;
 
         $viewconverted = $this->convertSGV2PHPAux($this->SgsView);
-
-        // Invertendo a ordem de detecção das views e templates pois
-        // esta ordem importa para outras funções que irão utilizar
-        // utilizar estas informações
+        
+        // Inverting the order of detection of views and templates because
+        // this order matters for other functions that will use
+        // use this information
         if (count($viewconverted['templatesPath']) > 1) {
             $viewconverted['templatesPath'] = array_reverse($viewconverted['templatesPath']);
         }
@@ -108,20 +108,14 @@ class SgsTemplate
             $viewconverted['viewsPath'] = array_reverse($viewconverted['viewsPath']);
         }
 
-        // Armazenando o código em um array
         $renderCode = $viewconverted['renderCode'];
-
-        // Componentes encontrados
         $viewComponents = $viewconverted['components'];
 
-        // Criando um nome baseado na $direct_render para que este seja
-        // utilizado dentro do código abaixo. Isto evita que variáveis e funções
-        // sejam criadas com o mesmo nome e gerem problemas na renderização
         $vname = md5($this->getApp() . $this->SgsView->getViewFileName());
 
-        // Para cada componente encontrado, montar um array contendo as propriedades
-        // que serão utilizadas no arquivo em cache
-        // Serializando componentes detectados para serem enviados para o arquivo em cache
+        // For each component found, assemble an array containing the properties
+        // that will be used in the cached file
+        // Serializing detected components to be sent to the cached file
         if ($viewComponents !== null) {
             $structuredArrayOfComponents = [];
 
@@ -154,7 +148,7 @@ class SgsTemplate
                         \\Modules\\InsiderFramework\\Sagacious\\Lib\\SgsView::InitializeViewCode('$componentsIds');
                     ?>";
 
-                // Colocando este código no início conteúdo do arquivo
+                // Placing this code at the beginning of the file
                 $renderCode = $declarationComponent . "\n" . $renderCode;
             }
         }
@@ -165,21 +159,19 @@ class SgsTemplate
     }
 
     /**
-     * Função que remove os comentários da view
+     * Function that removes comments from the view
      *
      * @author Marcello Costa
      *
      * @package Modules\InsiderFramework\Sagacious\Lib\SgsTemplate
      *
-     * @param string $noCommentsTemplateCode Código que terá os
-     *                                       comentários removidos
+     * @param string $noCommentsTemplateCode Code without comments
      *
      * @return void
      */
     public function removeComments(string &$noCommentsTemplateCode = null): void
     {
         if ($noCommentsTemplateCode !== null) {
-            // Removendo comentários
             $pattern = '/{\*.*?\*}/si';
             $replacement = '';
             $noCommentsTemplateCode = preg_replace($pattern, $replacement, $noCommentsTemplateCode);
@@ -187,23 +179,20 @@ class SgsTemplate
     }
 
     /**
-     * Função que converte o código de uma view em php
+     * Function that converts a view's code to php
      *
      * @author Marcello Costa
      *
      * @package Modules\InsiderFramework\Sagacious\Lib\SgsTemplate
      *
-     * @param \Modules\InsiderFramework\Sagacious\Lib\SgsView $SgsView View a ser convertida em php
+     * @param \Modules\InsiderFramework\Sagacious\Lib\SgsView $SgsView View to be converted to php
      *
-     * @return array Retorna um array de string contendo código html e
-     *               os componentes encontrados
+     * @return array Returns an array of string containing html code and
+     *               the components found
      */
     public function convertSGV2PHPAux(SgsView $SgsView): array
     {
-        // Variável que irá guardar os componentes encontrados no código
         $componentsFound = array();
-
-        // Lendo conteúdo da view
         $codeView = \Modules\InsiderFramework\Core\FileTree::fileReadContent(
             INSTALL_DIR . DIRECTORY_SEPARATOR . $SgsView->getViewFilename(),
             true
@@ -215,46 +204,38 @@ class SgsTemplate
             );
         }
 
-        // Contador de declarações de template dentro da view
         $countTemplates = 0;
-
-        // Código de um próvavel template dentro da view
         $templateCode = "";
-
-        // Paths dos templates nas views (se existirem)
         $templatesPath = [];
 
-        // Path da view que está sendo processada
         $viewsPath = array(
             0 => $SgsView->getViewFilename()
         );
 
-        // Blocos detectados na view
         $blocks = [];
         $endblocks = 0;
 
-        // Contadores de blocos de javascripts e css
         $startjavascripts = 0;
         $endjavascripts = 0;
         $startcss = 0;
         $endcss = 0;
 
-        // Regex geral para componentes, views, templates, etc
+        // General regex for components, views, templates, etc.
         $dataGroup = ".*?";
         $generalPattern = "/" . "(?P<allMatch>\{(?P<declaration>[^\s]+)(?<data>" .
                         $dataGroup . ")[ ]*\})" . "/i";
 
-        // Pattern para src
+        // Pattern for src
         $srcPattern = "/" . "(.*)src( *)?=( *)?['\"](?P<src>.*)['\"]" . "/i";
 
         /*
-         * Esta função é divida em duas partes. A primeira parte busca declarações de componentes
-         * e trata as mesmas (se possível) ou contabiliza-as. Na segunda parte, as declarações
-         * que não foram tratadas pela primeira parte são processadas.
-         */
+         * This function is splitted into two parts. The first part seeks component declarations
+         * and treats them (if possible) or accounts for them. In the second part, the statements
+         * that were not dealt with by the first party are processed.
+        */
 
-        ///////////////////////// PARTE-1 //////////////////////////////////////////////////////
-        // Buscando por views, templates e blocos dentro do código da view
+        ///////////////////////// PART-1 //////////////////////////////////////////////////////
+        // Searching for views, models and blocks within the view code
         $codeView = preg_replace_callback(
             $generalPattern,
             function ($gM) use (
@@ -274,15 +255,14 @@ class SgsTemplate
                 &$startcss,
                 &$endcss
             ) {
-                // Verificando declarações literais
+                // Checking literal statements
                 $literal = strpos($gM['allMatch'], ' literal ');
                 if ($literal == false) {
                     $literal = strpos($gM['allMatch'], ' literal}');
                 }
 
-                // Se NÃO é uma declaração literal
                 if ($literal === false) {
-                    // Contabiliza e converte (em alguns casos) as declarações encontradas pela regex
+                    // Account and convert (in some cases) the statements found by the regex
                     return $this->processDeclaration(
                         $gM,
                         $SgsView,
@@ -306,23 +286,25 @@ class SgsTemplate
             },
             $codeView
         );
-        ///////////////////////// FIM-PARTE-1 /////////////////////////////////////////////////////
+        ///////////////////////// END-OF-PART-1 /////////////////////////////////////////////////////
 
         ///////////////////////////////////////////////////////////////////////////////////////////
-        // Até aqui foi processado o código da view sem levar em consideração o template e views
-        // dentro de views. Daqui para baixo o algoritmo processa o código restante.
-        ///////////////////////// PARTE-2 /////////////////////////////////////////////////////////
-        // Se foi encontrado um template na view
+        // So far the view code has been processed without taking into account the template and views
+        // within views. From here on down the algorithm processes the remaining code.
+        ///////////////////////////////////////////////////////////////////////////////////////////
+
+        ///////////////////////// PART-2 /////////////////////////////////////////////////////////
+        // If a template was found in the view
         if ($templateCode !== "") {
-            // Removendo temporariamente os blocos da view e declaração de template
+            // Temporarily removing blocks from the view and template declaration
             $tmpView = $codeView;
             $tmpTemplate = $templateCode;
             $regexTemplate = "/" . "\{( *)?template(.*?)\}" . "/i";
             $tmpView = preg_replace($regexTemplate, "", $tmpView, 1);
 
-            // Para cada bloco encontrado anteriormente
+            // For each block previously found
             foreach ($blocks as $blockId => $data) {
-                // Removendo a declaração
+                // Removing the declaration
                 $regexBlock = "/" .
                               "{block id( {0,})?=( {0,})?['\"]" .
                               $blockId .
@@ -332,29 +314,29 @@ class SgsTemplate
                 $tmpView = preg_replace($regexBlock, "", $tmpView, 1);
                 $tmpTemplate = preg_replace($regexBlock, "", $tmpTemplate, 1);
 
-                // Captura o conteúdo correspondente
+                // Capture the corresponding content
                 preg_match_all($regexBlock, $codeView, $blockMatches, PREG_SET_ORDER);
                 if (is_array($blockMatches) && count($blockMatches) > 0) {
-                    // Conteúdo do bloco na view
+                    // Block content in the view
                     $contentBlock = $blockMatches[0]['blockContent'];
 
-                    // Regex de blocos dentro do template
+                    // Regex of blocks within the template
                     $regexBlockTemplate = "/" .
                                           "{block id=['\"]( {0,})?" .
                                           $blockId .
                                           "['\"][}](?P<blockContent>.*){\/block}" .
                                           "/Uis";
 
-                    // Se é para preservar o conteúdo do bloco
+                    // Whether to preserve the contents of the block
                     if ($data['settings']['keepContent'] === true) {
-                        // Recuperando provável conteúdo do bloco
+                        // Retrieving likely block content
                         preg_match_all($regexBlockTemplate, $templateCode, $blockMatches, PREG_SET_ORDER);
                         if (isset($blockMatches[0]['blockContent'])) {
                             $contentBlock = $blockMatches[0]['blockContent'] . $contentBlock;
                         }
                     }
 
-                    // Substituindo os códigos de view no template
+                    // Replacing the view codes in the template
                     $templateCode = preg_replace_callback($regexBlockTemplate, function ($bVM) use ($contentBlock) {
                         return $contentBlock;
                     }, $templateCode);
@@ -367,7 +349,7 @@ class SgsTemplate
                 }
             }
 
-            // Código fora de blocos na view
+            // Code out of blocks in the view
             if (trim($tmpView) !== "") {
                 \Modules\InsiderFramework\Core\Error\ErrorHandler::i10nErrorRegister(
                     'A code has been found outside of declaration of blocks at view %' .
@@ -382,13 +364,13 @@ class SgsTemplate
             $templateCode = preg_replace_callback(
                 $generalPattern,
                 function ($gMT) use ($srcPattern, &$templatesPath, &$viewsPath, &$componentsFound) {
-                    // Verificando declarações literais
+                    // Checking literal statements
                     $literal = strpos($gMT['allMatch'], ' literal ');
                     if ($literal == false) {
                         $literal = strpos($gMT['allMatch'], ' literal}');
                     }
 
-                    // Se NÃO é uma declaração literal
+                    // If it is NOT a literal statement
                     if ($literal === false) {
                         switch ($gMT['declaration']) {
                             case 'template':
@@ -475,7 +457,7 @@ class SgsTemplate
                 $templateCode
             );
         } else {
-            // Se não foi encontrado um template na view mas a mesma faz referência a blocos
+            // If a template was not found in the view but it references blocks
             if (count($blocks) > 0 || $endblocks > 0) {
                 \Modules\InsiderFramework\Core\Error\ErrorHandler::i10nErrorRegister(
                     'The view %' .
@@ -485,15 +467,15 @@ class SgsTemplate
                 );
             }
 
-            // Se não existe código do template, então ele é o código da view
+            // If there is no template code, then it is the view code
             $templateCode = $codeView;
         }
 
-        // Processa o código de blocos CSS e JS
+        // Process CSS and JS block code
         $this->processJsCode($gMT, $templateCode);
         $this->processCssCOde($gMT, $templateCode);
 
-        // Removendo a palavra literal (uma única vez) de todas os matches
+        // Removing the literal word (once) from all matches
         $templateCode = preg_replace_callback(
             $generalPattern,
             function ($gMT) use ($srcPattern, &$templatesPath, &$viewsPath, &$componentsFound) {
@@ -535,7 +517,7 @@ class SgsTemplate
             $templateCode
         );
 
-        // Verificando se o número de tags dos elementos está certo
+        // Checking if the number of tags of the elements is right
         $this->checkOpenCloseTags(
             $blocks,
             $endblocks,
@@ -547,9 +529,9 @@ class SgsTemplate
             $SgsView
         );
 
-        // Removendo comentários
+        // Removing comments
         $this->removeComments($templateCode);
-        ///////////////////////// FIM-PARTE-2 /////////////////////////
+        ///////////////////////// END-OF-PART-2 /////////////////////////
 
         return array(
             'renderCode' => $templateCode,
@@ -560,14 +542,14 @@ class SgsTemplate
     }
 
     /**
-     * Converte uma declaração encontrada pela regex
+     * Converts a declaration found by the regex
      *
      * @author Marcello Costa
      *
      * @package Modules\InsiderFramework\Sagacious\Lib\SgsTemplate
      *
-     * @param array  $gMT          Array de matches de declarações
-     * @param string $templateCode Código do template+views processados
+     * @param array  $gMT          Declaration Match Array
+     * @param string $templateCode Template code + processed views
      *
      * @return void
      */
@@ -577,13 +559,13 @@ class SgsTemplate
             // CSS
             $cssPattern = "/" . "(?P<allMatch>{css}(?P<cssContent>.*)?{\/css})" . "/Uis";
             $templateCode = preg_replace_callback($cssPattern, function ($gMT) use ($templateCode) {
-                // Verificando declarações literais
+                // Checking literal statements
                 $literal = strpos($gMT['allMatch'], ' literal ');
                 if ($literal == false) {
                     $literal = strpos($gMT['allMatch'], ' literal}');
                 }
 
-                // Se NÃO é uma declaração literal
+                // If it is NOT a literal statement
                 if ($literal === false) {
                     $sgsPage = new SgsPage();
                     return $sgsPage->cssMinify($gMT['cssContent']);
@@ -595,31 +577,31 @@ class SgsTemplate
     }
 
     /**
-     * Converte uma declaração encontrada pela regex
+     * Converts a declaration found by the regex
      *
      * @author Marcello Costa
      *
      * @package Modules\InsiderFramework\Sagacious\Lib\SgsTemplate
      *
-     * @param array  $gMT          Array de matches de declarações
-     * @param string $templateCode Código do template+views processados
+     * @param array  $gMT          Declaration Match Array
+     * @param string $templateCode Template code + processed views
      *
      * @return void
      */
     private function processJsCode(array &$gMT = null, string $templateCode = null): void
     {
         if ($gMT !== null && $templateCode !== null) {
-            // Tratando declarações javascript e css
+            // Handling javascript and css declarations
             // JS
             $javascriptPattern = "/" . "(?P<allMatch>{javascript}(?P<jsContent>.*)?{\/javascript})" . "/Uis";
             $templateCode = preg_replace_callback($javascriptPattern, function ($gMT) use ($templateCode) {
-                // Verificando declarações literais
+                // Checking literal statements
                 $literal = strpos($gMT['allMatch'], ' literal ');
                 if ($literal == false) {
                     $literal = strpos($gMT['allMatch'], ' literal}');
                 }
 
-                // Se NÃO é uma declaração literal
+                // If it is NOT a literal statement
                 if ($literal === false) {
                     $sgsPage = new SgsPage();
                     return $sgsPage->jsMinify($gMT['jsContent']);
@@ -631,20 +613,20 @@ class SgsTemplate
     }
 
     /**
-     * Verifica o número de declarações abertas/fechadas
+     * Checks the number of open / closed statements
      *
      * @author Marcello Costa
      *
      * @package Modules\InsiderFramework\Sagacious\Lib\SgsTemplate
      *
-     * @param array  $blocks           Array de blocos encontrados
-     * @param int    $endblocks        Quantidade de blocos fechados
-     * @param int    $startcss         Quantidade de declarações css iniciadas
-     * @param int    $endcss           Quantidade de declarações css encerradas
-     * @param int    $startjavascripts Quantidade de declarações js iniciadas
-     * @param int    $endjavascripts   Quantidade de declarações js encerradas
-     * @param int    $countTemplates   Quantidade de decalrações de template
-     * @param object $SgsView          Objeto da view
+     * @param array  $blocks           Array of blocks found
+     * @param int    $endblocks        Number of closed blocks
+     * @param int    $startcss         Number of css declarations started
+     * @param int    $endcss           Number of css declarations closed
+     * @param int    $startjavascripts Number of js declarations started
+     * @param int    $endjavascripts   Number of js statements already closed
+     * @param int    $countTemplates   Number of template decals
+     * @param object $SgsView          View object
      *
      * @return void
      */
@@ -658,9 +640,9 @@ class SgsTemplate
         int &$countTemplates,
         &$SgsView
     ): void {
-        // Se foram declarados templates
+        // Whether templates were declared
         if ($countTemplates > 0) {
-            // Se não foram encontrados blocos na view
+            // If no blocks were found in the view
             if (count($blocks) === 0) {
                 \Modules\InsiderFramework\Core\Error\ErrorHandler::i10nErrorRegister(
                     'A template has been defined inside view %' .
@@ -670,7 +652,7 @@ class SgsTemplate
                 );
             }
 
-            // Se existe divergência entre o número de blocos declarados e o número de fechamentos de blocos
+            // If there is a discrepancy between the number of blocks declared and the number of block closings
             if (count($blocks) !== $endblocks) {
                 \Modules\InsiderFramework\Core\Error\ErrorHandler::i10nErrorRegister(
                     'Error in declaration of blocks at view %' . $SgsView->getViewFilename() . '%',
@@ -679,7 +661,7 @@ class SgsTemplate
             }
         }
 
-        // Se existe divergência entre o número de blocos js declarados e o número de fechamentos de blocos
+        // If there is a discrepancy between the number of declared js blocks and the number of block closings
         if ($startjavascripts !== $endjavascripts) {
             \Modules\InsiderFramework\Core\Error\ErrorHandler::i10nErrorRegister(
                 'Error in declaration of javascripts at view %' .
@@ -689,7 +671,7 @@ class SgsTemplate
             );
         }
 
-        // Se existe divergência entre o número de blocos css declarados e o número de fechamentos de blocos
+        // If there is a discrepancy between the number of declared css blocks and the number of block closings
         if ($startcss !== $endcss) {
             \Modules\InsiderFramework\Core\Error\ErrorHandler::i10nErrorRegister(
                 'Error in declaration of css at view %' .
@@ -701,29 +683,29 @@ class SgsTemplate
     }
 
     /**
-     * Contabiliza e converte (em alguns casos) as declarações encontradas pela regex
+     * Account and convert (in some cases) the statements found by the regex
      *
      * @author Marcello Costa
      *
      * @package Modules\InsiderFramework\Sagacious\Lib\SgsTemplate
      *
-     * @param array  $gM               Array de matches de declarações
-     * @param object $SgsView          Objeto da view
-     * @param string $codeView         Código da view sendo processada
-     * @param array  $componentsFound  Array de componentes encontrados
-     * @param array  $blocks           Array de blocos encontrados
-     * @param int    $endblocks        Quantidade de blocos fechados
-     * @param int    $startcss         Quantidade de declarações css iniciadas
-     * @param int    $endcss           Quantidade de declarações css encerradas
-     * @param int    $startjavascripts Quantidade de declarações js iniciadas
-     * @param int    $endjavascripts   Quantidade de declarações js encerradas
-     * @param array  $viewsPath        Path das views
-     * @param array  $templatesPath    Path dos templates
-     * @param int    $countTemplates   Contador de declaração de templates
-     * @param string $templateCode     Código do template+views processados
-     * @param string $srcPattern       Regex de elementos com SRC
+     * @param array  $gM               Declaration Match Array
+     * @param object $SgsView          View object
+     * @param string $codeView         View code being processed
+     * @param array  $componentsFound  Found component array
+     * @param array  $blocks           Array of blocks found
+     * @param int    $endblocks        Number of closed blocks
+     * @param int    $startcss         Number of css declarations started
+     * @param int    $endcss           Number of css declarations closed
+     * @param int    $startjavascripts Number of js declarations started
+     * @param int    $endjavascripts   Number of statements already closed
+     * @param array  $viewsPath        Path of views
+     * @param array  $templatesPath    Path of templates
+     * @param int    $countTemplates   Template declaration counter
+     * @param string $templateCode     Template code + processed views
+     * @param string $srcPattern       Regex of elements with SRC
      *
-     * @return string Código da declaração convertida
+     * @return string Converted declaration code
      */
     private function processDeclaration(
         array $gM,
@@ -765,16 +747,13 @@ class SgsTemplate
                 );
                 break;
 
-                // Identificando os blocos
             case 'block':
                 return $this->processBlockCode($gM, $blocks);
                 break;
 
             case '/block':
-                // Incrementando contador de blocos
                 $endblocks++;
 
-                // Mantendo a declaração no código da view para tratamento posterior
                 return $gM['allMatch'];
                 break;
 
@@ -783,39 +762,30 @@ class SgsTemplate
                 break;
 
             case "css":
-                // Incrementando contador de css
                 $startcss++;
 
-                // Mantendo a declaração no código da view para tratamento posterior
                 return $gM['allMatch'];
                 break;
 
             case "/css":
-                // Incrementando contador de css
                 $endcss++;
 
-                // Mantendo a declaração no código da view para tratamento posterior
                 return $gM['allMatch'];
                 break;
 
             case "javascript":
-                // Incrementando contador de javascripts
                 $startjavascripts++;
 
-                // Mantendo a declaração no código da view para tratamento posterior
                 return $gM['allMatch'];
                 break;
 
             case '/javascript':
-                // Incrementando contador de javascripts
                 $endjavascripts++;
 
-                // Mantendo a declaração no código da view para tratamento posterior
                 return $gM['allMatch'];
                 break;
 
             case "javascript_file":
-                // Regex para javascript_file
                 return $this->processJavaScriptFileCode($gM);
                 break;
 
@@ -834,15 +804,15 @@ class SgsTemplate
     }
 
     /**
-    * Converte uma declaração encontrada pela regex
+    * Converts a declaration found by the regex
     *
     * @author Marcello Costa
     *
     * @package Modules\InsiderFramework\Sagacious\Lib\SgsTemplate
     *
-    * @param array $gM Array de matches de declarações
+    * @param array $gM Declaration Match Array
     *
-    * @return string Código da declaração convertida
+    * @return string Converted declaration code
     */
     private function processViewsBagCode(array &$gM): string
     {
@@ -860,20 +830,20 @@ class SgsTemplate
     }
 
     /**
-     * Converte uma declaração encontrada pela regex
+     * Converts a declaration found by the regex
      *
      * @author Marcello Costa
      *
      * @package Modules\InsiderFramework\Sagacious\Lib\SgsTemplate
      *
-     * @param array   $gM      Array de matches de declarações
-     * @param SgsView $SgsView Objeto da view
+     * @param array   $gM      Declaration Match Array
+     * @param SgsView $SgsView View object
      *
-     * @return string Código da declaração convertida
+     * @return string Converted declaration code
      */
     private function processI10nCode(array &$gM, &$SgsView): string
     {
-        // Pattern para id
+        // Pattern to id
         $i10nPattern = "/" . "\{(.*)id( {0,})?=( {0,})?['|\"]" .
                        "(?P<id>[^'|\"]*)['|\"](( {1,})? ((lang)?" .
                        "( {0,})?=( {0,})?(['|\"](?P<lang>[^'|\"]*))))?" .
@@ -881,12 +851,12 @@ class SgsTemplate
 
         preg_match_all($i10nPattern, strtolower($gM['allMatch']), $i10nIDMatches, PREG_SET_ORDER);
 
-        // Se o ID foi encontrado no bloco
+        // If the ID was found in the block
         if (is_array($i10nIDMatches) && count($i10nIDMatches) > 0) {
             if (trim($i10nIDMatches[0]['id']) !== "") {
                 $id = $i10nIDMatches[0]['id'];
 
-                // ID não encontrado
+                // ID not found
                 if ($id === "") {
                     \Modules\InsiderFramework\Core\Error\ErrorHandler::i10nErrorRegister(
                         'The declaration of translation %' . $gM['allMatch'] .
@@ -896,24 +866,22 @@ class SgsTemplate
                     );
                 }
 
-                // Pegando a linguagem de tradução
+                // Taking the translation language
                 $lang = LINGUAS;
                 if (isset($i10nIDMatches[0]['lang'])) {
                     $lang = $i10nIDMatches[0]['lang'];
                 }
                 $lang = strtolower($lang);
 
-                // Variável que define se a string será exibida com echo ou retornada
+                // Variable that defines whether the string will be echoed or returned
                 $componentCode = false;
 
-                // Variável que informa que não devem ser printadas tags php
+                // Variable that informs that php tags should not be printed
                 $stripphptags = false;
 
-                // Se existem propriedades
                 if (isset($i10nIDMatches[0]['settings'])) {
                     $settings = explode(';', $i10nIDMatches[0]['settings']);
 
-                    // Para cada setting
                     foreach ($settings as $setting) {
                         if (trim($setting) !== "") {
                             switch (strtolower($setting)) {
@@ -929,25 +897,20 @@ class SgsTemplate
                     }
                 }
 
-                // Definido o comando que irá chamar o método de tradução
                 $cmd = "echo";
                 if ($componentCode) {
                     $cmd = "return";
                 }
 
-                // App da view
                 $app = $SgsView->getApp();
 
-                // Se encontrar um parâmetro para não imprimir as tags php
                 if ($stripphptags !== false) {
-                    // Substituindo o que encontrou
                     $gM['allMatch'] = preg_replace(
                         "{" . $gM['allMatch'] . "}",
                         $cmd . " \\Sagacious\\SgsPage::translateString('$app', '$id', '$lang')",
                         $gM['allMatch']
                     );
                 } else {
-                    // Substituindo o que encontrou
                     $gM['allMatch'] = preg_replace(
                         "{" . $gM['allMatch'] . "}",
                         "<?php " . $cmd . " \\Sagacious\\SgsPage::translateString('$app', '$id', '$lang'); ?>",
@@ -961,22 +924,21 @@ class SgsTemplate
     }
 
     /**
-     * Converte uma declaração encontrada pela regex
+     * Converts a declaration found by the regex
      *
      * @author Marcello Costa
      *
      * @package Modules\InsiderFramework\Sagacious\Lib\SgsTemplate
      *
-     * @param array $gM Array de matches de declarações
+     * @param array $gM Declaration Match Array
      *
-     * @return string Código da declaração convertida
+     * @return string Converted declaration code
      */
     private function processCssFileCode(array $gM): string
     {
-        // Regex para css_file
+        // Regex for css_file
         $regex = "/" . "{( {0,})?css_file src=['\"](?P<src>(.*))['\"]( {0,})?}" . "/";
 
-        // Verificando se a declaração é válida
         preg_match_all($regex, $gM[0], $matchescssfiles, PREG_SET_ORDER);
         if (count($matchescssfiles) === 0 || !isset($matchescssfiles[0]['src'])) {
             \Modules\InsiderFramework\Core\Error\ErrorHandler::i10nErrorRegister(
@@ -986,13 +948,10 @@ class SgsTemplate
                 "app/sys"
             );
         } else {
-            // Definido o valor em uma variável para
-            // ser utilizada em alguns casos
             $csspath = $matchescssfiles[0]['src'];
 
             $sgsPage = new SgsPage();
 
-            // Removendo barra no início do nome do arquivo (caso exista)
             if ($csspath[0] == "/") {
                 $csspath = \Modules\InsiderFramework\Core\Manipulation\Text::extractString(
                     $csspath,
@@ -1001,7 +960,6 @@ class SgsTemplate
                 );
             }
 
-            // Se o arquivo especificado não for CSS, não é compatível
             $ext = pathinfo($csspath, PATHINFO_EXTENSION);
             if (strtolower($ext) !== "css") {
                 \Modules\InsiderFramework\Core\Error\ErrorHandler::i10nErrorRegister(
@@ -1010,8 +968,6 @@ class SgsTemplate
                 );
             }
 
-            // Minificando o arquivo em tempo de execução (se não existir ou for diferente)
-            // Arquivo não existe
             if (!(file_exists(INSTALL_DIR . DIRECTORY_SEPARATOR . "Web" . DIRECTORY_SEPARATOR . $csspath))) {
                 \Modules\InsiderFramework\Core\Error\ErrorHandler::i10nErrorRegister(
                     'CSS file not found: %' . $csspath . '%',
@@ -1019,10 +975,8 @@ class SgsTemplate
                 );
             }
 
-            // Se o arquivo minificado não existir
             $minnamecssfile = str_replace(".css", ".min.css", $csspath);
             if (!(file_exists(INSTALL_DIR . DIRECTORY_SEPARATOR . "Web" . DIRECTORY_SEPARATOR . $minnamecssfile))) {
-                // Cria o arquivo minificado
                 $minifiedcsscontent = $sgsPage->cssMinify(
                     \Modules\InsiderFramework\Core\FileTree::fileReadContent(
                         INSTALL_DIR . DIRECTORY_SEPARATOR . "Web" . DIRECTORY_SEPARATOR . $csspath
@@ -1034,7 +988,6 @@ class SgsTemplate
                     $minifiedcsscontent
                 );
             } else {
-                // Recuperando o hash de ambos os arquivos
                 $hashfile = md5_file(
                     INSTALL_DIR . DIRECTORY_SEPARATOR . "Web" . DIRECTORY_SEPARATOR . $csspath
                 );
@@ -1042,10 +995,7 @@ class SgsTemplate
                     INSTALL_DIR . DIRECTORY_SEPARATOR . "Web" . DIRECTORY_SEPARATOR . $minnamecssfile
                 );
 
-                // Se o hash for diferente
                 if ($hashfile !== $hashfilemin) {
-                    // Reconstrói o arquivo
-                    // Objeto KC_Ftree utilizado na função
                     \Modules\InsiderFramework\Core\FileTree::deleteFile(
                         INSTALL_DIR . DIRECTORY_SEPARATOR . "Web" . DIRECTORY_SEPARATOR . $minnamecssfile
                     );
@@ -1063,28 +1013,26 @@ class SgsTemplate
                 }
             }
 
-            // Coloca a linha html que chama o css
             return "<link href='" . REQUESTED_URL . "/" . $minnamecssfile . "' rel='stylesheet' type='text/css'>";
         }
     }
 
     /**
-     * Converte uma declaração encontrada pela regex
+     * Converts a declaration found by the regex
      *
      * @author Marcello Costa
      *
      * @package Modules\InsiderFramework\Sagacious\Lib\SgsTemplate
      *
-     * @param array $gM Array de matches de declarações
+     * @param array $gM Declaration Match Array
      *
-     * @return string Código da declaração convertida
+     * @return string Converted declaration code
      */
     private function processJavaScriptFileCode(array $gM): string
     {
-        // Pattern para javascript_file
+        // Pattern for javascript_file
         $regex = "/" . "{( {0,})?javascript_file src=['\"](?P<src>(.*))['\"]( {0,})?}" . "/";
 
-        // Verificando se a declaração é válida
         preg_match_all($regex, $gM[0], $matchesjsfiles, PREG_SET_ORDER);
         if (count($matchesjsfiles) === 0 || !isset($matchesjsfiles[0]['src'])) {
             \Modules\InsiderFramework\Core\Error\ErrorHandler::i10nErrorRegister(
@@ -1093,18 +1041,14 @@ class SgsTemplate
                 "app/sys"
             );
         } else {
-            // Definido o valor em uma variável para
-            // ser utilizada em alguns casos
             $jspath = $matchesjsfiles[0]['src'];
 
             $sgsPage = new SgsPage();
 
-            // Removendo barra no início do nome do arquivo (caso exista)
             if ($jspath[0] == "/") {
                 $jspath = \Modules\InsiderFramework\Core\Manipulation\Text::extractString($jspath, 1, strlen($jspath));
             }
 
-            // Se o arquivo especificado não for JS, não é compatível
             $ext = pathinfo($jspath, PATHINFO_EXTENSION);
             if (strtolower($ext) !== "js") {
                 \Modules\InsiderFramework\Core\Error\ErrorHandler::i10nErrorRegister(
@@ -1113,8 +1057,6 @@ class SgsTemplate
                 );
             }
 
-            // Minificando o arquivo em tempo de execução (se não existir ou for diferente)
-            // Arquivo não existe
             if (!(file_exists(INSTALL_DIR . DIRECTORY_SEPARATOR . "Web" . DIRECTORY_SEPARATOR . $jspath))) {
                 \Modules\InsiderFramework\Core\Error\ErrorHandler::i10nErrorRegister(
                     'JS File not found: %' . $jspath . '%',
@@ -1122,10 +1064,8 @@ class SgsTemplate
                 );
             }
 
-            // Se o arquivo minificado não existir
             $minnamejsfile = str_replace(".js", ".min.js", $jspath);
             if (!(file_exists(INSTALL_DIR . DIRECTORY_SEPARATOR . "Web" . DIRECTORY_SEPARATOR . $minnamejsfile))) {
-                // Cria o arquivo minificado
                 $minifiedjscontent = $sgsPage->jsMinify(
                     \Modules\InsiderFramework\Core\FileTree::fileReadContent(
                         INSTALL_DIR . DIRECTORY_SEPARATOR . "Web" . DIRECTORY_SEPARATOR . $jspath
@@ -1136,15 +1076,12 @@ class SgsTemplate
                     $minifiedjscontent
                 );
             } else {
-                // Recuperando o hash de ambos os arquivos
                 $hashfile = md5_file(INSTALL_DIR . DIRECTORY_SEPARATOR . "Web" . DIRECTORY_SEPARATOR . $jspath);
                 $hashfilemin = md5_file(
                     INSTALL_DIR . DIRECTORY_SEPARATOR . "Web" . DIRECTORY_SEPARATOR . $minnamejsfile
                 );
 
-                // Se o hash for diferente
                 if ($hashfile !== $hashfilemin) {
-                    // Reconstrói o arquivo
                     \Modules\InsiderFramework\Core\FileTree::deleteFile(
                         INSTALL_DIR . DIRECTORY_SEPARATOR . "Web" . DIRECTORY_SEPARATOR . $minnamejsfile
                     );
@@ -1160,39 +1097,38 @@ class SgsTemplate
                 }
             }
 
-            // Coloca a linha html que chama o javascript
             return "<script type='text/javascript' src='" . REQUESTED_URL . "/" . $minnamejsfile . "'></script>";
         }
     }
 
     /**
-     * Converte uma declaração encontrada pela regex
+     * Converts a declaration found by the regex
      *
      * @author Marcello Costa
      *
      * @package Modules\InsiderFramework\Sagacious\Lib\SgsTemplate
      *
-     * @param array $gM              Array de matches de declarações
-     * @param array $componentsFound Array de componentes encontrados
+     * @param array $gM              Declaration Match Array
+     * @param array $componentsFound Found component array
      *
-     * @return string Código do componente convertido
+     * @return string Converted component code
      */
     private function processComponentCode(array &$gM, array &$componentsFound): string
     {
-        // Pattern para components
+        // Pattern for components
         $componentPattern = "/" . "\{(.*)id( {0,})?=( {0,})?['|\"]" .
         "(?P<id>[^'|\"]*)['|\"](( {1,})? ((settings)?( {0,})?=( {0,})?(['|\"]" .
         "(?P<settings>.+?(?=['|\"]))))['|\"]( {0,})?\})?" . "/";
 
         preg_match_all($componentPattern, strtolower($gM['allMatch']), $blIDMatches, PREG_SET_ORDER);
 
-        // Se o ID foi encontrado no bloco
+        // If the ID was found in the block
         if (is_array($blIDMatches) && count($blIDMatches) > 0) {
             if (trim($blIDMatches[0]['id']) !== "") {
-                // Recuperando o nome do componente
+                // Retrieving the component name
                 $id = $blIDMatches[0]['id'];
 
-                // ID não encontrado
+                // ID not found
                 if ($id === "") {
                     \Modules\InsiderFramework\Core\Error\ErrorHandler::i10nErrorRegister(
                         'The component %' . $gM['allMatch'] .
@@ -1203,19 +1139,13 @@ class SgsTemplate
                     );
                 }
 
-                // Guardando o componente encontrado no array
                 $componentsFound[] = $id;
-
-                // Variável que define se o código será exibido ou retornado
                 $componentCode = false;
-
-                // Variável que informa que não devem ser printadas tags php
                 $stripphptags = false;
 
                 if (isset($blIDMatches[0]['settings'])) {
                     $settings = explode(';', $blIDMatches[0]['settings']);
 
-                    // Para cada setting
                     foreach ($settings as $setting) {
                         if (trim($setting) !== "") {
                             switch (strtolower($setting)) {
@@ -1231,16 +1161,13 @@ class SgsTemplate
                     }
                 }
 
-                // Deve ser retornado o código ao invés de exibido
                 if ($componentCode) {
                     $typeFunction = "rawComponent";
                 } else {
                     $typeFunction = "renderComponent";
                 }
 
-                // Se encontrar um parâmetro para não imprimir as tags php
                 if ($stripphptags !== false) {
-                    // Substituindo o que encontrou
                     $gM['allMatch'] = preg_replace(
                         "{" . $gM['allMatch'] . "}",
                         "\\Modules\\InsiderFramework\\Sagacious\\Lib\\SgsView::executeComponentFunction('" .
@@ -1249,7 +1176,6 @@ class SgsTemplate
                         $gM['allMatch']
                     );
                 } else {
-                    // Substituindo o que encontrou
                     $gM['allMatch'] = preg_replace(
                         "{" . $gM['allMatch'] . "}",
                         "<?php " .
@@ -1276,16 +1202,16 @@ class SgsTemplate
     }
 
     /**
-     * Converte uma declaração encontrada pela regex
+     * Converts a declaration found by the regex
      *
      * @author Marcello Costa
      *
      * @package Modules\InsiderFramework\Sagacious\Lib\SgsTemplate
      *
-     * @param array $gM     Array de matches de declarações
-     * @param array $blocks Array de blocos encontrados
+     * @param array $gM     Declaration Match Array
+     * @param array $blocks Array of blocks found
      *
-     * @return string Código do bloco convertido
+     * @return string Converted block code
      */
     private function processBlockCode(array &$gM, array &$blocks): string
     {
@@ -1294,22 +1220,20 @@ class SgsTemplate
             $viewFileName = $this->SgsView->getViewFilename();
         }
 
-        // Pattern para id
+        // Pattern for id
         $id_pattern = "/" . "\{(.*)id( {0,})?=( {0,})?['|\"](?P<id>[^'|\"]*)" . "/i";
 
         preg_match_all($id_pattern, strtolower($gM['allMatch']), $blIDMatches, PREG_SET_ORDER);
 
-        // Pattern para um bloco inteiro com settings
+        // Pattern for an entire block with settings
         $blockWithSettingsPattern = "/" . "\{(.*)id( {0,})?=( {0,})?['|\"]" .
         "(?P<id>.*)['|\"]( {0,})" .
         "((settings)?( {0,})?=( {0,})?(['|\"]" .
         "(?P<settings>.+?(?=['|\"]))))['|\"]( {0,})?\}" . "/i";
 
-        // Se o ID foi encontrado no bloco
         if (is_array($blIDMatches) && count($blIDMatches) > 0) {
             if (trim($blIDMatches[0]['id']) !== "") {
                 if (!isset($blocks[$blIDMatches[0]['id']])) {
-                    // Verificando se o bloco tem settings
                     preg_match_all(
                         $blockWithSettingsPattern,
                         strtolower($gM['allMatch']),
@@ -1317,14 +1241,11 @@ class SgsTemplate
                         PREG_SET_ORDER
                     );
 
-                    // Variáveis possíveis para um bloco
                     $keepContent = false;
 
-                    // Se é um bloco que contém settings
                     if (is_array($blSettingsMatches) && count($blSettingsMatches) > 0) {
                         $settings = explode(';', $blSettingsMatches[0]['settings']);
 
-                        // Para cada setting
                         foreach ($settings as $setting) {
                             if (trim($setting) !== "") {
                                 switch (strtolower($setting)) {
@@ -1336,10 +1257,8 @@ class SgsTemplate
                         }
                     }
 
-                    // Gravando o ID do bloco e as propriedades
                     $blocks[$blIDMatches[0]['id']]['settings']['keepContent'] = $keepContent;
 
-                    // Mantendo a declaração no código da view para tratamento posterior
                     return $gM['allMatch'];
                 } else {
                     \Modules\InsiderFramework\Core\Error\ErrorHandler::i10nErrorRegister(
@@ -1371,19 +1290,19 @@ class SgsTemplate
     }
 
     /**
-     * Converte uma declaração encontrada pela regex
+     * Converts a declaration found by the regex
      *
      * @author Marcello Costa
      *
      * @package Modules\InsiderFramework\Sagacious\Lib\SgsTemplate
      *
-     * @param string $srcPattern      Pattern regex
-     * @param array  $gM              Array de matches de declarações
-     * @param array  $componentsFound Array de componentes encontrados
-     * @param array  $viewsPath       Array de views encontradas
-     * @param array  $templatesPath   Paths onde ficam localizados os templates
+     * @param string $srcPattern      Regex pattern
+     * @param array  $gM              Declaration Match Array
+     * @param array  $componentsFound Found component array
+     * @param array  $viewsPath       Array of views found
+     * @param array  $templatesPath   Paths where templates are located
      *
-     * @return string Código da view convertido
+     * @return string Converted view ID
      */
     private function processViewCode(
         string &$srcPattern,
@@ -1395,7 +1314,6 @@ class SgsTemplate
         //preg_match_all($srcPattern, strtolower($gM['allMatch']), $vWSRCMatches, PREG_SET_ORDER);
         preg_match_all($srcPattern, $gM['allMatch'], $vWSRCMatches, PREG_SET_ORDER);
 
-        // Se o SRC foi encontrado na view
         if (is_array($vWSRCMatches) && count($vWSRCMatches) > 0) {
             if (trim($vWSRCMatches[0]['src']) !== "") {
                 return $this->convertViewPathToCode($vWSRCMatches, $componentsFound, $viewsPath, $templatesPath);
@@ -1422,21 +1340,21 @@ class SgsTemplate
     }
 
     /**
-     * Converte uma declaração encontrada pela regex
+     * Converts a declaration found by the regex
      *
      * @author Marcello Costa
      *
      * @package Modules\InsiderFramework\Sagacious\Lib\SgsTemplate
      *
-     * @param object $SgsView        Objeto da view
-     * @param int    $countTemplates Contador de declaração de templates
-     * @param string $srcPattern     Pattern regex
-     * @param array  $gM             Array de matches de declarações
-     * @param string $codeView       Código da view sendo processada
-     * @param string $templateCode   Código do template pós processamento
-     * @param array  $templatesPath  Templates que foram detectados
+     * @param object $SgsView        View object
+     * @param int    $countTemplates Template declaration counter
+     * @param string $srcPattern     Regex pattern
+     * @param array  $gM             Declaration Match Array
+     * @param string $codeView       View code being processed
+     * @param string $templateCode   Post processing template code
+     * @param array  $templatesPath  Templates that were detected
      *
-     * @return string Código do template convertido
+     * @return string Converted template code
      */
     private function processTemplateCode(
         $SgsView,
@@ -1450,7 +1368,6 @@ class SgsTemplate
         if ($countTemplates == 0) {
             $countTemplates++;
 
-            // Verificando se o template é a primeira declaração da view
             preg_match_all($srcPattern, $gM['allMatch'], $tpSRCMatches, PREG_SET_ORDER);
             list($before) = str_split(preg_replace('/\s+/', '', $codeView), 9);
 
@@ -1463,12 +1380,9 @@ class SgsTemplate
                 );
             }
 
-            // Se o SRC foi encontrado no template
             if (is_array($tpSRCMatches) && count($tpSRCMatches) > 0) {
                 if (trim($tpSRCMatches[0]['src']) !== "") {
-                    // Se não tem a declaração do app
                     if (strpos($tpSRCMatches[0]['src'], "::") === false) {
-                        // Tentando pegar o app via explode
                         $dataSRC = explode(DIRECTORY_SEPARATOR, $tpSRCMatches[0]['src']);
                         if (count($dataSRC) < 3) {
                             \Modules\InsiderFramework\Core\Error\ErrorHandler::i10nErrorRegister(
@@ -1482,8 +1396,8 @@ class SgsTemplate
                         }
 
                         // 0 = app
-                        // 1 = diretório templates
-                        // 2 >= restante do path
+                        // 1 = templates directory
+                        // 2> = rest of the path
                         $file = "Apps" . DIRECTORY_SEPARATOR .
                                 $dataSRC[0] . DIRECTORY_SEPARATOR .
                                 "Templates" . DIRECTORY_SEPARATOR .
@@ -1492,26 +1406,22 @@ class SgsTemplate
                         $dataSRC = explode('::', $tpSRCMatches[0]['src']);
 
                         // 0 = app
-                        // 1 >= restante do path (sem templates)
+                        // 1> = rest of the path (no templates)
                         $file = "Apps" . DIRECTORY_SEPARATOR .
                                 $dataSRC[0] . DIRECTORY_SEPARATOR .
                                 "Templates" . DIRECTORY_SEPARATOR .
                                 $dataSRC[1] . ".sgv";
                     }
 
-                    // Inserindo template detectado
                     $templatesPath[] = $file;
 
-                    // Lendo conteúdo do template
                     $templatesPath[] = INSTALL_DIR . DIRECTORY_SEPARATOR . $file;
 
-                    // Objeto KC_Ftree utilizado na função
                     $templateCode = \Modules\InsiderFramework\Core\FileTree::fileReadContent(
                         INSTALL_DIR . DIRECTORY_SEPARATOR . $file,
                         true
                     );
 
-                    // Mantendo a declaração no código da view para tratamento posterior
                     return $gM['allMatch'];
                 } else {
                     \Modules\InsiderFramework\Core\Error\ErrorHandler::i10nErrorRegister(
@@ -1543,18 +1453,18 @@ class SgsTemplate
     }
 
     /**
-     * Converte uma declaração encontrada pela regex em código HTML
+     * Converts a declaration found by the regex into HTML code
      *
      * @author Marcello Costa
      *
      * @package Modules\InsiderFramework\Sagacious\Lib\SgsTemplate
      *
-     * @param array $matches         Matches de acordo com as funções da classe
-     * @param array $componentsFound Array de componentes encontrados
-     * @param array $viewsPath       Array de views encontradas
+     * @param array $matches         Matches according to class functions
+     * @param array $componentsFound Found component array
+     * @param array $viewsPath       Array of views found
      * @param array $templatesPath   Array de templates encontradas
      *
-     * @return string Código da view convertido em HTML
+     * @return string View code converted to HTML
      */
     private function convertViewPathToCode(
         array $matches,
@@ -1562,15 +1472,11 @@ class SgsTemplate
         array &$viewsPath,
         array &$templatesPath
     ): string {
-        // Se o SRC foi encontrado na view
         if (is_array($matches) && count($matches) > 0) {
             if (trim($matches[0]['src']) !== "") {
-                // Criando novo objeto SgsView para ser lido
                 $insideSgsView = new SgsView();
 
-                // Se não tem a declaração do app
                 if (strpos($matches[0]['src'], "::") === false) {
-                    // Tentando pegar o app via explode
                     $dataSRC = explode(DIRECTORY_SEPARATOR, $matches[0]['src']);
                     if (count($dataSRC) < 3) {
                         \Modules\InsiderFramework\Core\Error\ErrorHandler::i10nErrorRegister(
@@ -1582,21 +1488,18 @@ class SgsTemplate
                     }
 
                     // 0 = app
-                    // 1 = diretório views
-                    // 2 >= restante do path
+                    // 1 = views directory
+                    // 2> = rest of the path
                     $file = join(DIRECTORY_SEPARATOR, array_slice($dataSRC, 2, count($dataSRC) - 2)) . ".sgv";
                     $insideSgsView->setViewFilename($file, $dataSRC[0]);
                 } else {
                     $insideSgsView->setViewFilename($matches[0]['src'] . ".sgv");
                 }
 
-                // Recuperando código convertido da view
-                // e inserindo no lugar da declaração
                 $viewconverted = $this->convertSGV2PHPAux($insideSgsView);
 
                 $componentsFound = array_merge($componentsFound, $viewconverted['components']);
 
-                // Inserindo templates e views encontradas no processamento para serem retornados
                 $templatesPath = array_merge($viewconverted['templatesPath'], $templatesPath);
                 $viewsPath = array_merge($viewconverted['viewsPath'], $viewsPath);
 

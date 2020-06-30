@@ -5,7 +5,7 @@ namespace Modules\InsiderFramework\Sagacious\Lib;
 use Modules\InsiderFramework\Core\Aggregation;
 
 /**
- * Classe que define os estados dos components
+ * Class that defines the states of the components
  *
  * @author Marcello Costa
  *
@@ -20,7 +20,7 @@ class SgsComponentStates
     private $app;
 
     /**
-     * Método de construção dos estados do componente
+     * Construction method of component states
      *
      * @author Marcello Costa
      *

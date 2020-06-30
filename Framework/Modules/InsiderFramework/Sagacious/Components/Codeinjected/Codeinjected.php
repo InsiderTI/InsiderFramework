@@ -6,7 +6,7 @@ use Modules\InsiderFramework\Sagacious\Lib\SgsComponent;
 use Modules\InsiderFramework\Core\KernelSpace;
 
 /**
- * Classe principal do componente Codeinjected (SgsComponent)
+ * Main class of the Codeinjected component (SgsComponent)
  *
  * @author Marcello Costa
  *
