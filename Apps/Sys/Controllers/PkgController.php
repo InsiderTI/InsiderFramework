@@ -3,7 +3,7 @@
 namespace Apps\Sys\Controllers;
 
 /**
- *Class with package management functions
+ * Class with package management functions
  *
  * @author Marcello Costa
  *
@@ -15,22 +15,6 @@ class PkgController extends \Modules\InsiderFramework\Core\Controller
 {
     /** @var string Mirror package directory */
     public static $mirrorDir = INSTALL_DIR . DIRECTORY_SEPARATOR . "mirror";
-
-    /**
-     * Climate test
-     *
-     * @author Marcello Costa
-     *
-     * @package Apps\Sys\Controllers\PkgController
-     *
-     * @Route (path="testeclimate")
-     *
-     * @return void
-    */
-    public function testeClimate(): void
-    {
-        echo "Test completed";
-    }
     
     /**
      * Function that returns information about an installed item

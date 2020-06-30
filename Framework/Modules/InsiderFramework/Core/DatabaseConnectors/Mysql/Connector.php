@@ -12,7 +12,7 @@ namespace Modules\InsiderFramework\Core\DatabaseConnectors\Mysql;
 class Connector
 {
   /**
-   * Função de construção do objeto
+   * Object construction function
    *
    * @author Marcello Costa
    *

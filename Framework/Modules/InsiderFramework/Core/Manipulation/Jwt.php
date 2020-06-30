@@ -14,13 +14,13 @@ namespace Modules\InsiderFramework\Core\Manipulation;
 trait Jwt
 {
     /**
-     * Função para ler um token JWT
+     * Function to read a JWT token
      *
      * @author Marcello Costa
      *
      * @package Modules\InsiderFramework\Core\Manipulation\JWT
      *
-     * @return array Array de dados do token
+     * @return array Token data array
     */
     public static function getJwtTokenFromAuthorizationHeader(): array
     {

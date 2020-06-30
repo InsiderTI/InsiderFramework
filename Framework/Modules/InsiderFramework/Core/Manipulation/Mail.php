@@ -12,31 +12,31 @@ namespace Modules\InsiderFramework\Core\Manipulation;
 trait Mail
 {
     /**
-     * Função para enviar emails
+     * Function to send emails
      *
      * @author Marcello Costa
      *
      * @package Modules\InsiderFramework\Core\Manipulation\Mail
      *
-     * @param string $to           Destinatários
-     * @param string $from         Remetente
-     * @param string $frompass     Senha do email do remetente
-     * @param string $subject      Assunto da mensagem
-     * @param string $message      Corpo da mensagem
-     * @param string $messagealt   Mensagem alternativa
-     * @param string $smtpserver   Servidor SMTP que enviará a mensagem
-     * @param int    $smtpport     Porta do servidor SMTP que enviará a mensagem
-     * @param bool   $smtpauth     Se o servidor SMTP utilizar autenticação
-     * @param string $smtpsecure   Qual é o tipo de autenticacão do servidor SMTP
-     *                               (valores possíveis: tls ou ssl)
-     * @param string $replyto      Para quem a mensagem será respondida
-     * @param array  $ccto         Para quem a mensagem deverá ser enviada em cópia
-     * @param array  $bccto        Para quem a mensagem deverá ser enviada em cópia oculta
-     * @param array  $attachfiles  Caminho dos arquivos que serão anexados à mensagem
-     * @param string $content_type Tipo de conteúdo da mensagem
-     * @param string $charset      Codificação da mensagem
+     * @param string $to           Recipients
+     * @param string $from         Sender
+     * @param string $frompass     Sender's email password
+     * @param string $subject      Message subject
+     * @param string $message      Message body
+     * @param string $messagealt   Alternative message (no html)
+     * @param string $smtpserver   SMTP server that will send the message
+     * @param int    $smtpport     Port of the SMTP server that will send the message
+     * @param bool   $smtpauth     If the SMTP server uses authentication
+     * @param string $smtpsecure   What is the SMTP server authentication type
+     *                             (possible values: tls or ssl)
+     * @param string $replyto      To whom the message will be answered
+     * @param array  $ccto         To whom the message should be sent in copy
+     * @param array  $bccto        To whom the message should be sent in a blind copy
+     * @param array  $attachfiles  Path of files to be attached to the message
+     * @param string $content_type Type of message content
+     * @param string $charset      Message encoding
      *
-     * @return bool Retorno da operação de envio
+     * @return bool Return of the send operation
      */
     public static function sendMail(
         string $to,
@@ -56,79 +56,52 @@ trait Mail
         string $content_type = "text/html",
         string $charset = ENCODE
     ): bool {
-        // Criando novo objeto mailer
         $mail = new \PHPMailer();
-
-        // Modificando o charset
         $mail->CharSet = $charset;
-
-        // Dizendo que será utilizado SMTP
         $mail->isSMTP();
-
-        // Especifica o servidor de envio
         $mail->Host = $smtpserver;
-
-        // Habilita ou não a autenticação SMTP
         $mail->SMTPAuth = $smtpauth;
-
-        // Usuário SMTP
         $mail->Username = $from;
-
-        // Senha SMTP
         $mail->Password = $frompass;
-
-        // Ativa a segurança do SMTP se necessário
         $mail->SMTPSecure = $smtpsecure;
-
-        // Porta do SMTP
         $mail->Port = $smtpport;
-
-        // Remetente
         $mail->setFrom($from, $from);
-
-        // Destinatário
         $mail->addAddress($to);
-
-        // Responder para
         $mail->addReplyTo($replyto, $replyto);
 
-        // Cópia para
         if ($ccto !== null) {
             foreach ($ccto as $cc) {
                 $mail->addCC($cc);
             }
         }
 
-        // Cópia oculta
         if ($bccto !== null) {
             foreach ($bccto as $bcc) {
                 $mail->addBCC($bcc);
             }
         }
 
-        // Envia email com anexo
         if ($attachfiles !== null) {
             foreach ($attachfiles as $attfile) {
                 $mail->addAttachment($attfile);
             }
         }
 
-        // Se for HTML
         if ($content_type === "text/html") {
             $mail->isHTML(true);
         } else {
             $mail->isHTML(false);
         }
 
-        // Definido assunto, mensagem e mensagem alternativa
         $mail->Subject = $subject;
         $mail->Body    = $message;
         $mail->AltBody = $messagealt;
+        $mail->setLanguage(
+            'br',
+            $phpmailerDir . DIRECTORY_SEPARATOR .
+            "language" . DIRECTORY_SEPARATOR
+        );
 
-        // Definindo a linguagem do email
-        $mail->setLanguage('br', $phpmailerDir . DIRECTORY_SEPARATOR . "language" . DIRECTORY_SEPARATOR);
-
-        // Enviando email
         if (!$mail->send()) {
             return $mail->ErrorInfo;
         } else {

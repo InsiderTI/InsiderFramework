@@ -3,4 +3,8 @@
     Tests:
     <h5>View inside view Test</h5>
     <h5>ViewBag example: {viewsbag key='test'}</h5>
+
+    <div id='i10n'>
+        I10n message example (to PT_BR language): {component id='i10n-message'}
+    </div>
 {/block}

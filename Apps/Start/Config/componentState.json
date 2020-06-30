@@ -1,36 +1,49 @@
 {
-    "titletest": {
-        "states": {
-            "0": {
-                "class": "Title",
-                "props": {
-                    "fixedtitle": "Insider Framework"
-                }
-            }
-        },
-        "defaultstateid": "0"
+  "titletest": {
+    "states": {
+      "0": {
+        "class": "Title",
+        "props": {
+          "fixedtitle": "Insider Framework"
+        }
+      }
     },
-    "viewaux": {
-        "states": {
-            "0": {
-                "class": "View",
-                "props": {
-                    "doublecolonviewpath": "Start::auxview.sgv",
-                    "params": ""
-                }
-            }
-        },
-        "defaultstateid": "0"
+    "defaultstateid": "0"
+  },
+  "i10n-message": {
+    "states": {
+      "0": {
+        "class": "I10n",
+        "props": {
+          "domain": "app/Start",
+          "message": "Something here",
+          "linguas": "pt_br"
+        }
+      }
     },
-    "viewsBagexample": {
-        "states": {
-            "0": {
-                "class": "ViewsBag",
-                "props": {
-                    "field": "test"
-                }
-            }
-        },
-        "defaultstateid": "0"
-    }
+    "defaultstateid": "0"
+  },
+  "viewaux": {
+    "states": {
+      "0": {
+        "class": "View",
+        "props": {
+          "doublecolonviewpath": "Start::auxview.sgv",
+          "params": ""
+        }
+      }
+    },
+    "defaultstateid": "0"
+  },
+  "viewsBagexample": {
+    "states": {
+      "0": {
+        "class": "ViewsBag",
+        "props": {
+          "field": "test"
+        }
+      }
+    },
+    "defaultstateid": "0"
+  }
 }

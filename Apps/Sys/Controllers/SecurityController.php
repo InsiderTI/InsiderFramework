@@ -9,7 +9,7 @@ namespace Apps\Sys\Controllers;
  *
  * @package Apps\Sys\Controllers\SecurityController
  *
- * @Route (path="/security", defaultaction="getNativeAccessLevel")
+ * @Route (path="/security", defaultaction="getCustomAccessLevel")
  */
 class SecurityController extends \Modules\InsiderFramework\Core\Controller
 {
@@ -22,10 +22,9 @@ class SecurityController extends \Modules\InsiderFramework\Core\Controller
      *
      * @return bool Processing result
     */
-    protected function renewAccess(): bool
+    protected function renewAccess(string $cookieName = 'sec_cookie'): bool
     {
         // User session / cookie renewal code example
-        $cookieName = 'sec_cookie';
         if (\Modules\InsiderFramework\Core\Validation\Cookie::checkCookie($cookieName)) {
             $cookieValue = \Modules\InsiderFramework\Core\Manipulation\Cookie::getCookie($cookieName);
             \Modules\InsiderFramework\Core\Manipulation\Cookie::setCookie($cookieName, $cookieValue);

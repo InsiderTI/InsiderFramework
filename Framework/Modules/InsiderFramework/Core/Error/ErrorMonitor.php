@@ -3,8 +3,8 @@
 namespace Modules\InsiderFramework\Core\Error;
 
 /**
- * Monitor e redirecionador de erros. A função ErrorHandler atualmente tem como
- * única função inicializar a checagem de erros no código.
+ * Monitor and error redirector. The ErrorHandler function is currently
+ * only function to initialize the error checking in the code.
  *
  * @author Marcello Costa
  *
@@ -30,7 +30,7 @@ class ErrorMonitor
     }
 
     /**
-     * Função que trata todos os possíveis erros que ocorrem na execução
+     * Function that handles all possible errors that occur during execution
      *
      * @author Marcello Costa
      *
@@ -43,14 +43,14 @@ class ErrorMonitor
         // Tipos de erros PHP
         /*
 
-        Fatais:
+        Fatal:
         1       E_ERROR (integer)
         4       E_PARSE (integer)
         16      E_CORE_ERROR (integer)
         64      E_COMPILE_ERROR
         4096    E_RECOVERABLE_ERROR
 
-        Não fatais:
+        Not fatal:
         2       E_WARNING (integer)
         8       E_NOTICE (integer)
         32      E_CORE_WARNING
@@ -62,27 +62,23 @@ class ErrorMonitor
         8192    E_DEPRECATED
         16384   E_USER_DEPRECATED
         32767   E_ALL
-
         */
-        // Capturando o último erro
+
+        // Getting the last error
         $error = error_get_last();
 
-        // Se existir um erro
         if ($error !== null && error_reporting() !== 0) {
-            // Tipo de erro atual
             $errno = $error["type"];
             $message = $error["message"];
             $file = $error["file"];
             $line = $error["line"];
 
-            // Inicializa o flag de erro fatal
             $fatal = \Modules\InsiderFramework\Core\KernelSpace::getVariable('fatalError', 'insiderFrameworkSystem');
 
             if ($fatal === null) {
                 $fatal = false;
             }
 
-            // Limpando o que foi enviado para o output até então
             \Modules\InsiderFramework\Core\Request::clearAndRestartBuffer();
 
             switch ($errno) {
@@ -152,7 +148,6 @@ class ErrorMonitor
                     break;
             }
 
-            // Definindo tipo de erro (fatal ou não) no array
             \Modules\InsiderFramework\Core\KernelSpace::setVariable(
                 array(
                     'fatalError' => $fatal
@@ -160,21 +155,16 @@ class ErrorMonitor
                 'insiderFrameworkSystem'
             );
             $error['fatal'] = $fatal;
-
-            // Definindo tipo de erro
             $error['type'] = $errorType;
 
-            // Definindo o assunto da mensagem
             if ($fatal == true) {
                 $subject = "Fatal Error - Report Agent InsiderFramework";
             } else {
                 $subject = "Warning Error - Report Agent InsiderFramework";
             }
 
-            // Assunto do email
             $error['subject'] = $subject;
 
-            // Tipo de resposta
             $responseFormat = \Modules\InsiderFramework\Core\KernelSpace::getVariable(
                 'responseFormat',
                 'insiderFrameworkSystem'
@@ -185,7 +175,6 @@ class ErrorMonitor
                 $responseFormat = $responseFormat;
             }
 
-            // Enviando e exibindo mensagem
             $ErrorMessage = new \Modules\InsiderFramework\Core\Error\ErrorMessage(array(
                 'type' => $errorType,
                 'text' => $message,

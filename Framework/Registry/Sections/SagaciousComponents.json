@@ -1,18 +1,22 @@
 {
-    "Title": {
-        "version": "0.1.0",
-        "class": "Html\\Title\\Title"
-    },
-    "ViewsBag": {
-        "version": "0.1.0",
-        "class": "ViewsBag\\ViewsBag"
-    },
-    "View": {
-        "version": "0.1.0",
-        "class": "View\\View"
-    },
-    "Codeinjected": {
-        "version": "0.1.0",
-        "class": "Codeinjected\\Codeinjected"
-    }
+  "Title": {
+    "version": "0.1.0",
+    "class": "Html\\Title\\Title"
+  },
+  "I10n": {
+    "version": "0.1.0",
+    "class": "I10n\\I10n"
+  },
+  "ViewsBag": {
+    "version": "0.1.0",
+    "class": "ViewsBag\\ViewsBag"
+  },
+  "View": {
+    "version": "0.1.0",
+    "class": "View\\View"
+  },
+  "Codeinjected": {
+    "version": "0.1.0",
+    "class": "Codeinjected\\Codeinjected"
+  }
 }

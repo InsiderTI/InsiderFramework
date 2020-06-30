@@ -3,7 +3,7 @@
 namespace Modules\InsiderFramework\Core\RoutingSystem;
 
 /**
- * Classe de manipulação de permissões
+ * Permission handling class
  *
  * @package Modules\InsiderFramework\Core\RoutingSystem\Permission
  *
@@ -12,14 +12,14 @@ namespace Modules\InsiderFramework\Core\RoutingSystem;
 class Permission
 {
     /**
-     * Função padrão (native) do framework para checagem de segurança. Mais detalhes
-     * sobre como utilizar esta função na documentação.
+     * Standard (native) function of the framework for security checking. More details
+     * on how to use this function in the documentation.
      *
      * @author Marcello Costa
      *
      * @package Modules\InsiderFramework\Core\RoutingSystem\Permission
      *
-     * @return mixed Array de dados recuperados do banco ou string 'UNPRIVILEGEDUSER'
+     * @return mixed Array of data retrieved from the database or string 'UNPRIVILEGEDUSER'
      */
     public static function getNativeAccessLevel()
     {
@@ -29,31 +29,22 @@ class Permission
             'insiderFrameworkSystem'
         );
 
-        // Model para manipulação do banco
         $securitymodel = new \Modules\InsiderFramework\Core\Model();
 
-        // Se for uma requisição especial
         if (isset($server['HTTP_USER_AGENT']) && $consoleRequest) {
-            // Se a URL contiver o cookie idsession do usuário
             if (isset($server['QUERY_STRING']) && (strpos($server['QUERY_STRING'], 'cookieframeidsession') !== false)) {
-                // Recuperando o valor do cookie
                 preg_match("/cookieframeidsession=([^&]*)/", $server['QUERY_STRING'], $matches);
 
-                // Definindo o valor do cookie manualmente
                 \Modules\InsiderFramework\Core\Manipulation\Cookie::setCookie("idsession", $matches[1]);
                 $cookie = $matches[1];
             }
         } else {
-            // Tratando o cookie de sessão
             $cookie = \Modules\InsiderFramework\Core\Manipulation\Cookie::getCookie('idsession');
         }
 
-        // Se o cookie não existir
         if ($cookie === null) {
-            // Sem permissões para qualquer operação
             return 'UNPRIVILEGEDUSER';
         } else {
-            // Buscando o cookie na lista de usuários conectados
             $query = "select USERID from login_registry where KEYCOOKIE = :keycookie";
             $bindarray = array(
                 'keycookie' => $cookie
@@ -61,52 +52,29 @@ class Permission
 
             $useridr = $securitymodel->select($query, $bindarray, true);
 
-            // Se o cookie está no banco
             if (!(empty($useridr))) {
-                // Se existir mais de um user com o mesmo cookie
                 if (!(isset($useridr['USERID']))) {
                     \Modules\InsiderFramework\Core\Error\ErrorHandler::ErrorRegister(
                         'Error ! There are two users with the same access cookie!'
                     );
                 }
 
-                // Array de retorno de informações
-                $arrayr = array();
+                $permissionsArray = array();
+                $permissionsArray['USERID'][] = $useridr['USERID'];
 
-                // Armazenando ID do usuário no array de retorno
-                $arrayr['USERID'][] = $useridr['USERID'];
-
-                // Consultando os grupos aos quais o usuário pertence
                 $query = "select GROUPID from rel_users_groups where USERID = :userid";
-
                 $bindarray = array(
                     'userid' => $useridr['USERID']
                 );
                 $usergroups = $securitymodel->select($query, $bindarray, true);
 
-                // Inicializando USERGROUPS
-                $arrayr['USERGROUPS'] = [];
+                $permissionsArray['USERGROUPS'] = [];
 
-                // Armazenando os grupos que o usuário pertence
                 foreach ($usergroups as $ugk => $ugv) {
-                    $arrayr['USERGROUPS'][] = $ugv;
+                    $permissionsArray['USERGROUPS'][] = $ugv;
                 }
 
-                // Se o segundo nível de acesso existir
-                if (isset($sec_result)) {
-                    // Unindo os dois arrays
-                    $arrayr = \Modules\InsiderFramework\Core\Manipulation::arrayMergeRecursiveDistinct(
-                        $arrayr,
-                        $sec_result
-                    );
-                }
-
-                // Habilite esta linha para ativar a renovação automática da
-                // sessão/cookie do usuário em cada requisição
-                // renewAccess();
-
-                // Retornando os grupos do usuário e o ID do usuário
-                return ($arrayr);
+                return $permissionsArray;
             } else {
                 // Sem permissões para qualquer operação
                 return 'UNPRIVILEGEDUSER';

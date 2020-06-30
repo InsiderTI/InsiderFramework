@@ -3,7 +3,7 @@
 namespace Modules\InsiderFramework\Core\RoutingSystem;
 
 /**
- * Classe de manipulação de annotations
+ * Bootstrap methods for the system
  *
  * @author Marcello Costa
  *

@@ -3,8 +3,8 @@
 namespace Modules\InsiderFramework\Core\Loaders;
 
 /**
- * Este arquivo carrega as classes, interfaces e etc do ambiente
- * dinamicamente
+ * This file loads the classes, interfaces and etc. of the environment
+ * dynamically
  *
  * @author Marcello Costa
  *
@@ -25,13 +25,13 @@ class AutoLoader
     {
         spl_autoload_register(
             /**
-             * Inicializa as classes, interfaces e etc do ambiente
+             * Initializes environment classes, interfaces, etc.
              *
              * @author Marcello Costa
              *
              * @package Modules\InsiderFramework\Core\Loaders\AutoLoader
              *
-             * @param string $soughtitem Nome do item requisitado
+             * @param string $soughtitem Requested item name
              *
              * @return void
              */

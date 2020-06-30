@@ -3,7 +3,7 @@
 namespace Modules\InsiderFramework\Core\RoutingSystem;
 
 /**
- * Classe de manipulação de annotations
+ * Annotation handling class
  *
  * @author Marcello Costa
  *
@@ -12,41 +12,34 @@ namespace Modules\InsiderFramework\Core\RoutingSystem;
 class Annotation
 {
     /**
-     * Função que converte as annotations em array de dados
+     * Function that converts annotations to a data array
      *
      * @author Marcello Costa
      *
      * @package Modules\InsiderFramework\Core\RoutingSystem\Annotation
      *
-     * @param string $id       Identificação da classe
-     * @param string $comments Comentários a serem analisados
+     * @param string $id       Class identification
+     * @param string $comments Comments to be reviewed
      *
-     * @return array Dados extraídos das annotations
+     * @return array Data extracted from annotations
      */
     public static function getAnnotationsData($id, $comments): array
     {
         $routingSettings = \Modules\InsiderFramework\Core\KernelSpace::getVariable('routingSettings', 'RoutingSystem');
-
-        // Comentários sem tratamento de cas
         $commentsWithCase = explode("\n", $comments);
 
-        // Colocando tudo em minúsculas e dividindo comentários em linhas
         if ($routingSettings['routeCaseSensitive']) {
             $comments = explode("\n", $comments);
         } else {
             $comments = explode("\n", strtolower($comments));
         }
 
-        // Array de propriedades encontradas
         $annotationData = [];
         $annotationData[$id] = [];
 
-        // Para cada linha dos comentários
         foreach ($comments as $commentK => $comment) {
-            // Buscando declaração de annotation
             preg_match_all(read::$patternArgs, $comment, $annotationMatches, PREG_SET_ORDER, 0);
 
-            // Se encontrar uma declaração
             if (is_array($annotationMatches) && count($annotationMatches) > 0) {
                 $declaration = strtolower(str_replace(" ", "", $annotationMatches[0]['declaration']));
                 switch ($declaration) {
@@ -66,9 +59,7 @@ class Annotation
                             );
                         }
 
-                        // Se o roteamento está como case sensitive
                         if ($routingSettings['routeCaseSensitive']) {
-                            // Buscando declaração de annotation com case sensitive
                             preg_match_all(
                                 read::$patternArgs,
                                 $commentsWithCase[$commentK],
@@ -77,7 +68,6 @@ class Annotation
                                 0
                             );
 
-                            // Buscando os argumentos no comentário
                             preg_match_all(
                                 read::$betweenCommasPattern,
                                 $annotationMatchesWithCase[0]['args'],
@@ -87,7 +77,6 @@ class Annotation
                             );
                         }
 
-                        // Buscando os argumentos no comentário
                         preg_match_all(
                             read::$betweenCommasPattern,
                             $annotationMatches[0]['args'],
@@ -96,7 +85,6 @@ class Annotation
                             0
                         );
 
-                        // Para cada argumento da rota
                         foreach ($args as $argK => $arg) {
                             $argument = trim(strtolower($arg['Argument']));
                             if (isset($annotationData[$id]['route'][$argument])) {
@@ -108,7 +96,6 @@ class Annotation
                                 );
                             }
 
-                            // Se o roteamento está como case sensitive
                             if ($routingSettings['routeCaseSensitive']) {
                                 $annotationData[$id]['route'][$argument] = trim($argsCase[$argK]['Data']);
                             } else {
@@ -126,7 +113,6 @@ class Annotation
                             );
                         }
 
-                        // Buscando declaração de annotation com case sensitive
                         preg_match_all(
                             read::$patternArgs,
                             $commentsWithCase[$commentK],
@@ -135,7 +121,6 @@ class Annotation
                             0
                         );
 
-                        // Buscando os argumentos no comentário (com e sem case)
                         preg_match_all(
                             read::$betweenCommasPattern,
                             $annotationMatchesWithCase[0]['args'],
@@ -151,7 +136,6 @@ class Annotation
                             0
                         );
 
-                        // Para cada argumento da rota
                         foreach ($args as $argK => $arg) {
                             $argument = trim(strtolower($arg['Argument']));
                             if (isset($annotationData[$id]['permission'][$argument])) {
@@ -177,9 +161,7 @@ class Annotation
                             $annotationData[$id]['param'] = [];
                         }
 
-                        // Se o roteamento está como case sensitive
                         if ($routingSettings['routeCaseSensitive']) {
-                            // Buscando declaração de annotation com case sensitive
                             preg_match_all(
                                 read::$patternArgs,
                                 $commentsWithCase[$commentK],
@@ -194,7 +176,6 @@ class Annotation
                         }
 
                         foreach ($paramRoute as $pR) {
-                            // Buscando declaração de annotation
                             preg_match_all(
                                 read::$betweenCommasPattern,
                                 $pR,
