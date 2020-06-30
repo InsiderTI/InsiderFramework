@@ -9,7 +9,7 @@ use Modules\InsiderFramework\Sagacious\Lib\SgsComponentState;
 use Modules\InsiderFramework\Sagacious\Lib\SgsBags\SgsComponentsBag;
 
 /**
- * Classe responsável pelo objeto SgsView.
+ * Class responsible for the SgsView object.
  *
  * @author Marcello Costa
  *
@@ -17,20 +17,20 @@ use Modules\InsiderFramework\Sagacious\Lib\SgsBags\SgsComponentsBag;
  */
 class SgsView
 {
-    /** @var string Nome da view */
+    /** @var string Name of view */
     private $viewFilename;
 
-    /** @var string App do objeto SgsView */
+    /** @var string SgsView object app */
     private $app;
 
     /**
-     * Função para recuperar o nome do arquivo da view
+     * Function to retrieve the file name from the view
      *
      * @author Marcello Costa
      *
      * @package Modules\InsiderFramework\Sagacious\Lib\SgsView
      *
-     * @return string Nome do arquivo
+     * @return string File name
      */
     public function getViewFilename(): string
     {
@@ -38,14 +38,14 @@ class SgsView
     }
 
     /**
-     * Função para setar o nome do arquivo da view
+     * Function to set the file name of the view
      *
      * @author Marcello Costa
      *
      * @package Modules\InsiderFramework\Sagacious\Lib\SgsView
      *
-     * @param string $viewFilename Nome do arquivo
-     * @param string $app         Nome do arquivo
+     * @param string $viewFilename View file name
+     * @param string $app          Name of app
      *
      * @return void
      */
@@ -53,20 +53,17 @@ class SgsView
     {
         $pattern = "/" . "((?P<app>.*)::)?(?P<viewPath>.*)" . "/";
 
-        // Se não foi encontrada uma tag literal
         preg_match_all($pattern, $viewFilename, $viewFilenameMatches, PREG_SET_ORDER);
 
         if (is_array($viewFilenameMatches) && count($viewFilenameMatches) > 0) {
             $viewData = $viewFilenameMatches[0];
             $viewFilename = $viewData['viewPath'];
 
-            // Se foi especificado app via viewFilename
             if (trim($viewData['app']) !== "") {
                 $app = $viewData['app'];
             }
         }
 
-        // Se também não foi especificado o app via parâmetros da função
         if ($app == null) {
             \Modules\InsiderFramework\Core\Error\ErrorHandler::i10nErrorRegister(
                 'Unable to identify the origin of request to the view %' .
@@ -84,13 +81,13 @@ class SgsView
     }
 
     /**
-     * Recupera o app do objeto
+     * Retrieves the object app
      *
      * @author Marcello Costa
      *
      * @package Modules\InsiderFramework\Sagacious\Lib\SgsView
      *
-     * @return string Nome do app
+     * @return string Name of app
      */
     public function getApp(): string
     {
@@ -98,13 +95,13 @@ class SgsView
     }
 
     /**
-     * Seta o app do objeto
+     * Set the object's app
      *
      * @author Marcello Costa
      *
      * @package Modules\InsiderFramework\Sagacious\Lib\SgsView
      *
-     * @param string $app Nome do app
+     * @param string $app Name of app
      *
      * @return void
      */
