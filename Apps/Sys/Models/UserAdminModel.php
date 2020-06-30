@@ -178,23 +178,22 @@ class UserAdminModel extends \Modules\InsiderFramework\Core\Model
     /**************************************/
 
     /**
-     * Cadastro um usuário no banco de dados
+     * Register a user in the database
      *
-     * @todo Revisar código da função
+     * @todo Review function code
      *
      * @author Marcello Costa
      *
      * @package Models\sys\UserAdmin_Model
      *
      * @param string $login    Login do usuário
-     * @param string $password Senha do usuário
-     * @param array  $groups   ID dos grupos ao qual o usuário pertence
+     * @param string $password User password
+     * @param array  $groups   ID of the groups to which the user belongs
      *
-     * @return bool Processing result de cadastro
+     * @return bool Processing result of registration
      */
     public function addUser(string $login, string $password, array $groups = null): bool
     {
-        // Tabela users
         $query = "INSERT INTO users SET "
             . "LOGIN = :email, "
             . "PASSWORD = :senha"
@@ -205,36 +204,28 @@ class UserAdminModel extends \Modules\InsiderFramework\Core\Model
             'senha' => $password,
         );
 
-        // Tabela users
         $resultinsertuser = $this->execute($query, $bindarray);
 
-        // Erro ao inserir novo usuário
         if ($resultinsertuser !== null) {
             return false;
         }
 
-        // Recuperando ID recém inserido
         $queryuserid = "SELECT ID from users WHERE LOGIN = :login LIMIT 1";
 
         $bindarray = array(
             'login' => $login
         );
 
-        // Retorno do status do usuário
         $useridtmp = $this->select($queryuserid, $bindarray, true);
 
-        // Usuário não encontrado
         if (empty($useridtmp)) {
             return false;
         } else {
             $userid = $useridtmp['ID'];
         }
 
-        // Se existirem grupos
         if ($groups !== null && count($groups) !== 0) {
-            // Inserindo registros para cada grupo
             foreach ($groups as $g) {
-                // Tabela rel_users_groups
                 $query = "INSERT INTO rel_users_groups SET "
                     . "USERID = :userid, "
                     . "GROUPID = :group"
@@ -245,38 +236,34 @@ class UserAdminModel extends \Modules\InsiderFramework\Core\Model
                     'group' => $g,
                 );
 
-                // Tabela rel_users_groups
                 $resultinsertrel = $this->execute($query, $bindarray);
 
-                // Erro ao inserir novo usuário
                 if ($resultinsertrel !== null) {
                     return false;
                 }
             }
 
-            // Inserções feitas com sucesso
             return true;
         }
 
-        // Inserção feita com sucesso
         return true;
     }
 
     /**
-     * Atualiza o cadastro de um usuário no banco de dados
+     * Updates a user's registration in the database
      *
-     * @todo Revisar código da função
+     * @todo Review function code
      *
      * @author Marcello Costa
      *
      * @package Models\sys\UserAdmin_Model
      *
-     * @param string $oldlogin Login atual do usuário
-     * @param string $newlogin Novo Login do usuário
-     * @param string $password Senha do usuário
-     * @param array  $groups   ID dos grupos ao qual o usuário pertence
+     * @param string $oldlogin Current user login
+     * @param string $newlogin New user Login
+     * @param string $password User password
+     * @param array  $groups   ID of the groups to which the user belongs
      *
-     * @return bool Retorno da operação
+     * @return bool Return from operation
      */
     public function updateUser(
         string $oldlogin,
@@ -284,10 +271,7 @@ class UserAdminModel extends \Modules\InsiderFramework\Core\Model
         string $password = null,
         array $groups = null
     ): bool {
-        // Tabela users
-        // Se o password não foi atualizado
         if ($password === null) {
-            // Login sendo atualizado
             if ($newlogin !== null && ($oldlogin != $newlogin)) {
                 $query = "UPDATE users SET "
                     . "LOGIN = :newlogin "
@@ -299,10 +283,8 @@ class UserAdminModel extends \Modules\InsiderFramework\Core\Model
                 );
             }
 
-            // Novo login
             $login = $newlogin;
         } else {
-            // Login sendo atualizado com senha
             if ($newlogin !== null && ($oldlogin != $newlogin)) {
                 $query = "UPDATE users SET "
                     . "LOGIN = :newlogin, "
@@ -315,7 +297,6 @@ class UserAdminModel extends \Modules\InsiderFramework\Core\Model
                     'password' => $password,
                 );
 
-                // Novo login
                 $login = $newlogin;
             } else {
                 $query = "UPDATE users SET "
@@ -327,26 +308,19 @@ class UserAdminModel extends \Modules\InsiderFramework\Core\Model
                     'password' => $password,
                 );
 
-                // Login
                 $login = $oldlogin;
             }
         }
 
-        // Se não foi atualizado nada, então a variável bindarray não será preenchida.
-        // Apesar de não ter sido atualizado nada, o processo foi concluído com sucesso
         if (!isset($bindarray)) {
             return true;
         } else {
-            // Atualizando tabela de users de acordo com os parâmetros
-            // acima especificados
             $resultupdateuser = $this->execute($query, $bindarray);
 
-            // Erro ao atualizar registros
             if ($resultupdateuser !== null) {
                 return false;
             }
 
-            // Apagando registro de login no banco (deslogando usuário)
             $deletequery = "update login_registry set KEYCOOKIE = '' where USERID in (
                 select `ID` from (select `ID` from `users` where LOGIN = :login) as updatetable
             )";
@@ -357,38 +331,30 @@ class UserAdminModel extends \Modules\InsiderFramework\Core\Model
 
             $result = $this->execute($deletequery, $bindarray, true);
 
-            // Erro ao atualizar registros de login
             if ($result !== null) {
                 return false;
             }
         }
 
-        // Erro ao atualizar usuário
         if ($resultupdateuser !== null) {
             return false;
         }
 
-        // Recuperando ID recém inserido
         $queryuserid = "SELECT ID from users WHERE LOGIN = :login LIMIT 1";
 
         $bindarray = array(
             'login' => $login
         );
 
-        // Retorno do status do usuário
         $useridtmp = $this->select($queryuserid, $bindarray, true);
 
-        // Usuário não encontrado
         if (empty($useridtmp)) {
             return false;
         } else {
-            // Definindo ID do usuário
             $userid = $useridtmp['ID'];
         }
 
-        // Se existirem grupos listados ou um array vazio
         if ($groups !== null) {
-            // Deletando registros de grupo antigos
             $query = "DELETE FROM rel_users_groups WHERE "
                 . "USERID = :userid"
                 . ";";
@@ -397,19 +363,14 @@ class UserAdminModel extends \Modules\InsiderFramework\Core\Model
                 'userid' => $userid,
             );
 
-            // Tabela rel_users_groups
             $resultdeleterel = $this->execute($query, $bindarray);
 
-            // Erro ao apagar grupos
             if ($resultdeleterel !== null) {
                 return false;
             }
 
-            // Se foram especificados grupos
             if (count($groups) !== 0) {
-                // Inserindo registros para cada grupo
                 foreach ($groups as $g) {
-                    // Tabela rel_users_groups
                     $query = "INSERT INTO rel_users_groups SET "
                         . "USERID = :userid, "
                         . "GROUPID = :group"
@@ -420,59 +381,50 @@ class UserAdminModel extends \Modules\InsiderFramework\Core\Model
                         'group' => $g,
                     );
 
-                    // Tabela rel_users_groups
                     $resultinsertrel = $this->execute($query, $bindarray);
 
-                    // Erro ao inserir novo usuário
                     if ($resultinsertrel !== null) {
                         return false;
                     }
                 }
             }
 
-            // Inserções feitas com sucesso
             return true;
         }
 
-        // Atualização feita com sucesso
         return true;
     }
 
     /**
-     * Loga um usuário no banco do framework
+     * Logs a user into the framework database
      *
-     * @todo Revisar código da função
+     * @todo Review function code
      *
      * @author Marcello Costa
      *
      * @package Models\sys\UserAdmin_Model
      *
-     * @param string $login       Login do usuário
-     * @param string $valuecookie Valor do cookie de identificação
+     * @param string $login       User login
+     * @param string $valuecookie Identification cookie value
      *
      * @return bool Processing result
      */
     public function login(string $login, string $valuecookie): bool
     {
-        // Recuperando ID do usuário
         $queryuserid = "SELECT ID from users WHERE LOGIN = :login LIMIT 1";
 
         $bindarray = array(
             'login' => $login
         );
 
-        // Retorno do status do usuário
         $useridtmp = $this->select($queryuserid, $bindarray, true);
 
-        // Usuário não encontrado
         if (empty($useridtmp)) {
             return false;
         } else {
             $userid = $useridtmp['ID'];
         }
 
-        // Tabela login_registry
-        // Insere ou dá update (se já existir)
         $query = "INSERT INTO login_registry
                         (USERID, KEYCOOKIE)
                     VALUES
@@ -487,20 +439,17 @@ class UserAdminModel extends \Modules\InsiderFramework\Core\Model
             'valuecookie' => $valuecookie
         );
 
-        // Tabela rel_users_groups
         $resultinsertreg = $this->execute($query, $bindarray);
 
-        // Erro ao inserir novo usuário
         if ($resultinsertreg !== null) {
             return false;
         }
 
-        // Inserção concluída
         return true;
     }
 
     /**
-     * Desloga um usuário no banco do framework
+     * Log a user out of the framework database
      *
      * @todo Revisar código da função
      *
@@ -508,31 +457,26 @@ class UserAdminModel extends \Modules\InsiderFramework\Core\Model
      *
      * @package Models\sys\UserAdmin_Model
      *
-     * @param string $login Login do usuário
+     * @param string $login User login
      *
      * @return bool Processing result
      */
     public function logout(string $login): bool
     {
-        // Recuperando ID do usuário
         $queryuserid = "SELECT ID from users WHERE LOGIN = :login LIMIT 1";
 
         $bindarray = array(
             'login' => $login
         );
 
-        // Retorno do status do usuário
         $useridtmp = $this->select($queryuserid, $bindarray, true);
 
-        // Usuário não encontrado
         if (empty($useridtmp)) {
             return false;
         } else {
             $userid = $useridtmp['ID'];
         }
 
-        // Tabela login_registry
-        // Removendo registro do usuário do banco
         $deletequery = "UPDATE login_registry SET "
             . "KEYCOOKIE = '' "
             . "WHERE USERID = :userid;";
@@ -541,15 +485,12 @@ class UserAdminModel extends \Modules\InsiderFramework\Core\Model
             'userid' => $userid
         );
 
-        // Tabela rel_users_groups
         $result = $this->execute($deletequery, $bindarray);
 
-        // Erro ao remover usuário do registro de login
         if ($result !== null) {
             return false;
         }
 
-        // Remoção concluída
         return true;
     }
 }

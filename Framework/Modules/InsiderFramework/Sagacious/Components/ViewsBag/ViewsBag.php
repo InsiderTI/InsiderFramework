@@ -6,7 +6,7 @@ use Modules\InsiderFramework\Sagacious\Lib\SgsComponent;
 use Modules\InsiderFramework\Sagacious\Lib\SgsBags\SgsViewsBag;
 
 /**
- * Classe principal do componente viewsBag (SgsComponent)
+ * Main class of the viewsBag component (SgsComponent)
  *
  * @author Marcello Costa
  *

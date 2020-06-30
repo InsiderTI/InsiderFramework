@@ -6,7 +6,7 @@ use Modules\InsiderFramework\Sagacious\Lib\SgsComponent;
 use Modules\InsiderFramework\Sagacious\Lib\SgsPage;
 
 /**
- * Classe principal do objeto Title (SgsComponent)
+ * Main class of the Title object (SgsComponent)
  *
  * @author Marcello Costa
  *
@@ -40,14 +40,12 @@ class Title extends SgsComponent
             }
         }
 
-        // Definindo variável que conterá todo o título
         if (!(isset($title))) {
             $titleall = $fixedtitle;
         } else {
             $titleall = $fixedtitle . " - " . $title;
         }
 
-        // Atualização dinâmica para o título
         $js = "<script>
                 document.title = '" . $titleall . "';
              </script>";
@@ -55,7 +53,6 @@ class Title extends SgsComponent
         $KcPage = new SgsPage();
         \Modules\InsiderFramework\Sagacious\Lib\SgsPage::updateJsOfPage($js);
 
-        // Montando código HTML
         $this->code = "<title>" . $titleall . "</title>";
     }
 }

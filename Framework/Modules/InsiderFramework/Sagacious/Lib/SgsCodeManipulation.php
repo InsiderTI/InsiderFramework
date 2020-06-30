@@ -3,7 +3,7 @@
 namespace Modules\InsiderFramework\Sagacious\Lib;
 
 /**
- * Classe que manipula o código de views e templates
+ * Class that handles the code of views and templates
  *
  * @author Marcello Costa
  *
@@ -37,7 +37,7 @@ class SgsCodeManipulation
                 // It is necessary check where the comment is.
                 // If is located on the end of line
                 if (strpos((trim($newline)), '*/') == strlen(trim($newline))) {
-                    // Então a linha fica em branco
+                    // So the line is blank
                     $newline = null;
                 } else {
                     // From the position that starts to the end of line,

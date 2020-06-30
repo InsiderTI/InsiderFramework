@@ -6,7 +6,7 @@ use Modules\InsiderFramework\Sagacious\Lib\SgsComponent;
 use Modules\InsiderFramework\Core\KernelSpace;
 
 /**
- * Classe principal do componente I10n (SgsComponent)
+ * Main class of component I10n (SgsComponent)
  *
  * @author Marcello Costa
  *
