@@ -19,7 +19,7 @@
                 We are currently experiencing excess traffic.<br/>
                 Please try again in a few minutes.
             </h2>
-            <img src='/Apps/Sys/assets/img/error_queue.png' />
+            <img src='/Apps/Sys/assets/img/503.png' />
         </div>
     </body>
 </html>
