@@ -56,6 +56,7 @@ trait Mail
         string $content_type = "text/html",
         string $charset = ENCODE
     ): bool {
+        /*
         $mail = new \PHPMailer();
         $mail->CharSet = $charset;
         $mail->isSMTP();
@@ -107,5 +108,8 @@ trait Mail
         } else {
             return true;
         }
+        */
+
+        return true;
     }
 }

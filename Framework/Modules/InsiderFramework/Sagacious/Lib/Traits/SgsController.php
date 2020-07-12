@@ -55,8 +55,61 @@ trait SgsController
      */
     protected function renderView(string $viewFilename): void
     {
+        $view = $this->processViewCode($viewFilename);
+
+        // Displaying the view
+        $responseFormat = KernelSpace::getVariable(
+            'responseFormat',
+            'insiderFrameworkSystem'
+        );
+        
+
+        switch ($responseFormat) {
+            case 'JSON':
+            case 'XML':
+                $this->responseAPI($view);
+                break;
+
+            default:
+                echo $view;
+                break;
+        }
+    }
+
+    /**
+     * Process a view and return an string
+     *
+     * @author Marcello Costa
+     *
+     * @package Modules\InsiderFramework\Core\Controller
+     *
+     * @param string $viewFilename Pack/File name of view
+     *
+     * @return string Processed view
+     */
+    protected function processViewCode(string $viewFilename): string
+    {
         // Getting who's calling the render method
         $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1);
+
+        $currentRendering = \Modules\InsiderFramework\Core\KernelSpace::getVariable(
+            'currentRendering',
+            'insiderFrameworkSystem'
+        );
+
+        if (!$currentRendering) {
+            $currentRendering = \Modules\InsiderFramework\Core\KernelSpace::setVariable(
+                array(
+                    'currentRendering' => true
+                ),
+                'insiderFrameworkSystem'
+            );
+            if (DEBUG_BAR == true) {
+                global $kernelspace;
+                $debug = new \Modules\InsiderFramework\Core\Debug();
+                $debug->debugBar('processToInjectedHtml');
+            }
+        }
 
         $app = null;
         if (isset($backtrace[0])) {
@@ -203,10 +256,15 @@ trait SgsController
             // Require the php file
             if (ob_get_level() === 0) {
                 ob_start();
+            } else {
+                $view = ob_get_contents();
+                if ($view === '') {
+                    Request::clearAndRestartBuffer();
+                }
             }
+
             FileTree::requireFile($renderfilepath);
             $view = ob_get_contents();
-
             Request::clearAndRestartBuffer();
         } else {
             \Modules\InsiderFramework\Core\Error\ErrorHandler::i10nErrorRegister(
@@ -216,26 +274,11 @@ trait SgsController
             );
         }
 
-        // Displaying the view
-        $responseFormat = KernelSpace::getVariable(
-            'responseFormat',
-            'insiderFrameworkSystem'
-        );
-
-        switch ($responseFormat) {
-            case 'JSON':
-            case 'XML':
-                $this->responseAPI($view);
-                break;
-
-            default:
-                echo $view;
-                break;
-        }
+        return $view;
     }
 
     /**
-     * Render a view and returns the result as a string
+     * Alias function of processView function
      *
      * @author Marcello Costa
      *
@@ -247,16 +290,7 @@ trait SgsController
      */
     public function renderViewToString(string $viewFilename): string
     {
-        if (ob_get_level() === 0) {
-            ob_start();
-        }
-        $this->renderView($viewFilename);
-
-        $renderedView = ob_get_contents();
-
-        Request::clearAndRestartBuffer();
-        ob_end_clean();
-
+        $renderedView = $this->processViewCode($viewFilename);
         return $renderedView;
     }
 
@@ -406,6 +440,10 @@ trait SgsController
 
             // For each view
             foreach ($viewConverted['viewsPath'] as $vP) {
+                if (!file_exists(INSTALL_DIR . DIRECTORY_SEPARATOR . $vP)) {
+                    \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister('View file did not exist: ' . INSTALL_DIR . DIRECTORY_SEPARATOR . $vP);
+                }
+
                 // Searching for the modification date of the file
                 $dateModify = filemtime(INSTALL_DIR . DIRECTORY_SEPARATOR . $vP);
 
@@ -413,14 +451,21 @@ trait SgsController
                 $viewsData[$vP] = $dateModify;
             }
 
-            // For each template
-            foreach ($viewConverted['templatesPath'] as $tP) {
-                // Searching the modification date of the file
-                $dateModify = filemtime($tP);
-
-                // Inserting in the data array
-                $templatesData[$tP] = $dateModify;
+            if (!isset($viewConverted['templatesPath'][0])) {
+                \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister('Template file not specified in some of these views: ' . implode($viewConverted['viewsPath'], ','));
             }
+
+            $tP = $viewConverted['templatesPath'][0];
+            
+            if (!file_exists($tP)) {
+                \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister('Template file did not exist: ' . $tP);
+            }
+            
+            // Searching the modification date of the file
+            $dateModify = filemtime($tP);
+
+            // Inserting in the data array
+            $templatesData[$tP] = $dateModify;
 
             // Inserting in the end of data array
             $data[$originalFileName]['views'] = $viewsData;

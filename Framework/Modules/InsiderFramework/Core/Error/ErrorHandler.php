@@ -13,29 +13,20 @@ class ErrorHandler
 {
     /**
      * Function that allows you to trigger an error directly to the user
+     * and stop the execution of php script
      *
      * @author Marcello Costa
      *
      * @package Modules\InsiderFramework\Core\Error\ErrorHandler
      *
-     * @param string $msg       Error message
-     * @param int    $errorCode Error code
+     * @param string $msg          Error message
+     * @param int    $errorCode    Error code
+     * @param string $outputFormat HTML or JSON
      *
      * @return array Returns the result
      */
-    public static function primaryError(string $msg, int $errorCode = 500): array
+    public static function primaryError(string $msg, int $errorCode = 500, string $outputFormat = 'JSON'): array
     {
-        /*
-        if ($kernelspace === null) {
-            error_log($msg);
-            \Modules\InsiderFramework\Core\Request::clearAndRestartBuffer();
-            http_response_code($errorCode);
-            $msgToUser = [];
-            $msgToUser['error'] = $msg;
-            $output = json_encode($msgToUser);
-            die($output);
-        }
-        */
         $consoleRequest = \Modules\InsiderFramework\Core\KernelSpace::getVariable(
             'consoleRequest',
             'insiderFrameworkSystem'
@@ -46,18 +37,18 @@ class ErrorHandler
             die();
         }
 
-        // Writing to the log
         error_log($msg);
-
-        // Clear and restart the buffer
         \Modules\InsiderFramework\Core\Request::clearAndRestartBuffer();
 
         http_response_code($errorCode);
 
-        // JSON Output
-        $msgToUser = [];
-        $msgToUser['error'] = $msg;
-        $output = json_encode($msgToUser);
+        if (strtoupper($outputFormat) === 'JSON') {
+            $msgToUser = [];
+            $msgToUser['error'] = $msg;
+            $output = json_encode($msgToUser);
+        } else {
+            $output = "ERROR $errorCode: " . $msg;
+        }
 
         // XML Output
         // $xml = new \SimpleXMLElement('<root/>');
@@ -126,6 +117,50 @@ class ErrorHandler
     }
 
     /**
+     * Register error in log file
+     *
+     * @author Marcello Costa
+     *
+     * @package Modules\InsiderFramework\Core\Error\ErrorHandler
+     *
+     * @param string $message Error message
+     *
+     * @return string Returns the uniqid of the error
+     */
+    protected static function registerErrorInLogFile(string $message)
+    {
+        // Generates and unique ID for this error
+        $id = uniqid();
+
+        // Creates a new log in case of the file already exists
+        $logfilepath = INSTALL_DIR . DIRECTORY_SEPARATOR .
+                       "Framework" . DIRECTORY_SEPARATOR .
+                       "Cache" . DIRECTORY_SEPARATOR .
+                       "logs" . DIRECTORY_SEPARATOR .
+                       "logfile-" . $id;
+
+        while (file_exists($logfilepath . ".lock")) {
+            $id = uniqid();
+            $logfilepath = INSTALL_DIR . DIRECTORY_SEPARATOR .
+                           "Framework" . DIRECTORY_SEPARATOR .
+                           "Cache" . DIRECTORY_SEPARATOR .
+                           "logs" . DIRECTORY_SEPARATOR .
+                           "logfile-" . $id;
+        }
+
+        // Inserts and prefix in the message (for now, hard-coded)
+        $date = new \DateTime('NOW');
+        $dataFormat = $date->format('Y-m-d H:i:s');
+        $message = $dataFormat . "    " . $message;
+
+        // Writing in the log file
+        \Modules\InsiderFramework\Core\FileTree::fileWriteContent($logfilepath, $message);
+
+        // Returning the error ID
+        return $id;
+    }
+
+    /**
      * Register/Show errors
      *
      * @author Marcello Costa
@@ -152,37 +187,29 @@ class ErrorHandler
         }
 
         switch (strtoupper(trim($type))) {
-                // This type of error just writes in the log file
-            case "LOG":
-                // Generates and unique ID for this error
-                $id = uniqid();
-
-                // Creates a new log in case of the file already exists
-                $logfilepath = INSTALL_DIR . DIRECTORY_SEPARATOR .
-                               "Framework" . DIRECTORY_SEPARATOR .
-                               "Cache" . DIRECTORY_SEPARATOR .
-                               "logs" . DIRECTORY_SEPARATOR .
-                               "logfile-" . $id;
-
-                while (file_exists($logfilepath . ".lock")) {
-                    $id = uniqid();
-                    $logfilepath = INSTALL_DIR . DIRECTORY_SEPARATOR .
-                                   "Framework" . DIRECTORY_SEPARATOR .
-                                   "Cache" . DIRECTORY_SEPARATOR .
-                                   "logs" . DIRECTORY_SEPARATOR .
-                                   "logfile-" . $id;
+            // This is just a warning error and will be displayed in debug_bar and
+            // registered in the log file
+            case "WARNING":
+                if (DEBUG_BAR) {
+                    $error = new \Modules\InsiderFramework\Core\Error\ErrorMessage(array(
+                        'type' => $type,
+                        'text' => $message,
+                        'file' => $file,
+                        'line' => $line,
+                        'fatal' => false,
+                        'subject' => 'Warning Error - Insider Framework report agent'
+                    ));
+                    $debug = new \Modules\InsiderFramework\Core\Debug();
+                    $debug->debugBar("logWarningError", $error);
                 }
+                
+                return ErrorHandler::registerErrorInLogFile($message);
 
-                // Inserts and prefix in the message (for now, hard-coded)
-                $date = new \DateTime('NOW');
-                $dataFormat = $date->format('Y-m-d H:i:s');
-                $message = $dataFormat . "    " . $message;
+                break;
 
-                // Writing in the log file
-                \Modules\InsiderFramework\Core\FileTree::fileWriteContent($logfilepath, $message);
-
-                // Returning the error ID
-                return $id;
+            // This type of error just writes in the log file
+            case "LOG":
+                return ErrorHandler::registerErrorInLogFile($message);
                 break;
 
             // Ataque to the system
@@ -214,7 +241,7 @@ class ErrorHandler
                     'file' => $file,
                     'line' => $line,
                     'fatal' => true,
-                    'subject' => 'Attack Error - Report Agent InsiderFramework'
+                    'subject' => 'Attack Error - Insider Framework report agent'
                 ));
 
                 // Setting the global variable
@@ -224,7 +251,6 @@ class ErrorHandler
                     ),
                     'insiderFrameworkSystem'
                 );
-
 
                 // Managing the error
                 \Modules\InsiderFramework\Core\Error\ErrorHandler::manageError($error);
@@ -289,7 +315,7 @@ class ErrorHandler
                     'file' => $file,
                     'line' => $line,
                     'fatal' => true,
-                    'subject' => 'Critical Error - Report Agent InsiderFramework'
+                    'subject' => $subject
                 ));
 
                 // Setting the global variable
@@ -406,9 +432,20 @@ class ErrorHandler
             \Modules\InsiderFramework\Core\KernelSpace::setVariable(array('registeredErrors' => $registeredErrors));
         }
 
-        // The first thing to be done it's write the error in the web server log
-        if (!$consoleRequest) {
-            error_log(\Modules\InsiderFramework\Core\Json::jsonEncodePrivateObject($error), 0);
+        // Recovering the fatal error variable
+        $fatal = $error->getFatal();
+
+        if (!$fatal) {
+            die("Stopped in: Why it's not registering in debug bar this kind of error ?");
+            $message = \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister(
+                $error->getMessageOrText(),
+                'WARNING'
+            );
+        } else {
+            if (!$consoleRequest) {
+                // The first thing to be done it's write the error in the web server log
+                error_log(\Modules\InsiderFramework\Core\Json::jsonEncodePrivateObject($error), 0);
+            }
         }
 
         $responseFormat = \Modules\InsiderFramework\Core\KernelSpace::getVariable(
@@ -416,7 +453,7 @@ class ErrorHandler
             'insiderFrameworkSystem'
         );
 
-        if ($responseFormat === "") {
+        if ($responseFormat . "" === "") {
             $responseFormat = DEFAULT_RESPONSE_FORMAT;
             \Modules\InsiderFramework\Core\KernelSpace::setVariable(
                 array(
@@ -440,9 +477,6 @@ class ErrorHandler
                 'insiderFrameworkSystem'
             );
         }
-
-        // Recovering the fatal error variable
-        $fatal = \Modules\InsiderFramework\Core\KernelSpace::getVariable('fatalError', 'insiderFrameworkSystem');
 
         // Recovering the error counter
         $errorCount = \Modules\InsiderFramework\Core\KernelSpace::getVariable('errorCount', 'insiderFrameworkSystem');
@@ -480,14 +514,46 @@ class ErrorHandler
 
         // If more than 10 errors as mappeded
         if ($errorCount > 10) {
-            $finalErrorMsg = "Max log errors on framework";
+            // Backup logic
+            // This is something ugly to write directly with
+            // string, but if nothing more works, prints
+            // the HTML directly in the screen (if DEBUG enable).
+            if ($errorCount > 11) {
+                error_log(json_encode($error));
+                $systemicErrorFilePath = INSTALL_DIR . DIRECTORY_SEPARATOR .
+                                            "Apps" . DIRECTORY_SEPARATOR .
+                                            "Sys" . DIRECTORY_SEPARATOR .
+                                            "Views" . DIRECTORY_SEPARATOR .
+                                            "error" . DIRECTORY_SEPARATOR .
+                                            "primarySystemicError.html";
+
+                if (file_exists($systemicErrorFilePath)) {
+                    $originalSystemicErrorContent = file_get_contents($systemicErrorFilePath);
+                    
+                    if (DEBUG) {
+                        ob_start();
+                        print_r($error);
+                        $userMessage = ob_get_contents();
+                        ob_end_clean();
+                    } else {
+                        $userMessage = " Please consult your web administrator";
+                    }
+                    
+                    $systemicErrorContent = str_replace('{errorContent}', $userMessage, $originalSystemicErrorContent);
+
+                    echo $systemicErrorContent;
+                    die();
+                }
+                die('Internal Server Error - Primary systemic error');
+            }
+
+            $finalErrorMsg = "Internal Server Error - Max errors on framework reached. Consult your web administrator.";
 
             // Setting the reponse code as 500
             http_response_code(500);
 
             // Writing the error details in the log
             error_log(json_encode($debugbacktrace));
-
             
             // If the debug it's not enable
             if (!DEBUG) {
@@ -496,14 +562,18 @@ class ErrorHandler
                 }
                 // Stopping the execution with a default message
                 \Modules\InsiderFramework\Core\Request::clearAndRestartBuffer();
-                \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError($finalErrorMsg);
+                \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError($finalErrorMsg, 500, $responseFormat);
             } else {
                 // Stopping the execution and displaying the error object
                 \Modules\InsiderFramework\Core\Request::clearAndRestartBuffer();
 
-                echo '<< DEBUG ERROR DISPLAY >>';
-                \Modules\InsiderFramework\Core\Manipulation\Development::PrintDump($debugbacktrace);
-                die("FILE: " . __FILE__ . "<br/>LINE: " . __LINE__);
+                if ($responseFormat === 'HTML') {
+                    echo '<hr/><b>DEBUG ERROR DISPLAY</b>';
+                    $C = new \Apps\Sys\Controllers\DebugController();
+                    $debugBarHtml = $C->debugBarRender();
+                    echo $debugBarHtml;
+                    die();
+                }
             }
         }
 
@@ -543,7 +613,7 @@ class ErrorHandler
             );
         }
 
-        // If DEBUG is not defined, is some error inside the framework
+        // If DEBUG is not defined, it's some error inside the framework
         if (DEBUG === null) {
             define('DEBUG', \Modules\InsiderFramework\Core\Error\ErrorHandler::getFrameworkDebugStatus());
         }
@@ -551,6 +621,7 @@ class ErrorHandler
         // Data of error (for admin)
         $msgToAdmin = array(
             'jsonMessage' => \Modules\InsiderFramework\Core\Json::jsonEncodePrivateObject($error),
+            'subject' => $error->getSubject(),
             'errfile' => str_replace($relativePath, "", $error->getFile()),
             'errline' => $error->getLine(),
             'msgError' => str_replace($relativePath, "", $error->getMessageOrText())
@@ -606,20 +677,13 @@ class ErrorHandler
 
                 default:
                     // Recovering the admin message to be handled
-                    \Modules\InsiderFramework\Core\FileTree::requireOnceFile(
-                        INSTALL_DIR . DIRECTORY_SEPARATOR .
-                        'Apps' . DIRECTORY_SEPARATOR .
-                        'sys' . DIRECTORY_SEPARATOR .
-                        'controllers' . DIRECTORY_SEPARATOR .
-                        'error_controller.php'
-                    );
-                    $C = new \Controllers\sys\ErrorController('\\Controllers\\sys\\sys', null, false);
+                    $errorController = new \Apps\Sys\Controllers\ErrorController();
 
                     $registeredErrors = \Modules\InsiderFramework\Core\KernelSpace::getVariable(
                         'registeredErrors',
                         'insiderFrameworkSystem'
                     );
-                    $C->adminMessageError();
+                    $errorController->adminMessageError();
                     break;
             }
         } else {
@@ -686,12 +750,7 @@ class ErrorHandler
             }
 
             // Displaying the default error message
-            \Modules\InsiderFramework\Core\FileTree::requireOnceFile(
-                INSTALL_DIR . DIRECTORY_SEPARATOR . 'Apps' . DIRECTORY_SEPARATOR . 'sys' .
-                    DIRECTORY_SEPARATOR . 'controllers' . DIRECTORY_SEPARATOR . 'error_controller.php'
-            );
-            $C = new \Controllers\sys\ErrorController('\\Controllers\\sys\\sys', null, false);
-            \Modules\InsiderFramework\Core\Request::clearAndRestartBuffer();
+            $C = new \Apps\Sys\Controllers\ErrorController();
             $C->genericError();
         }
 

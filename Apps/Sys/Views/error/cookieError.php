@@ -1,3 +1,5 @@
+{template src='Sys::blank'}
+{block id = 'content'}
 <!DOCTYPE html>
 <html lang='pt-br'>
 <head>
@@ -20,3 +22,4 @@
         </div>
     </body>
 </html>
+{/block}

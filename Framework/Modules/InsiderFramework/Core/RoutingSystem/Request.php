@@ -37,10 +37,11 @@ class Request
                 $url = "/";
             } else {
                 if (!isset($routeFromGet['url'])) {
-                    \Modules\InsiderFramework\Core\Error\ErrorHandler::i10nErrorRegister(
+                    $url = "/";
+                    /*\Modules\InsiderFramework\Core\Error\ErrorHandler::i10nErrorRegister(
                         "Cannot found url element when getting route from get",
                         "app/sys"
-                    );
+                    );*/
                 }
                 $url = $routeFromGet['url'];
             }

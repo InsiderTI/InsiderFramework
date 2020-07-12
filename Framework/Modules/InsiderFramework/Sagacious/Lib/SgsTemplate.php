@@ -111,15 +111,22 @@ class SgsTemplate
         $renderCode = $viewconverted['renderCode'];
         $viewComponents = $viewconverted['components'];
 
-        $vname = md5($this->getApp() . $this->SgsView->getViewFileName());
+        $viewName = $this->getApp() . $this->SgsView->getViewFileName();
+        $viewEncryptedName = md5($viewName);
 
         // For each component found, assemble an array containing the properties
         // that will be used in the cached file
         // Serializing detected components to be sent to the cached file
-        if ($viewComponents !== null) {
-            $structuredArrayOfComponents = [];
-
+        if ($viewComponents !== null && !empty($viewComponents)) {
             $componentsIds = [];
+
+            $viewComponentsInKernelSpace = \Modules\InsiderFramework\Core\Manipulation\KernelSpace::getVariable(
+                'viewComponents',
+                'sagacious'
+            );
+            if ($viewComponentsInKernelSpace === null) {
+                $viewComponentsInKernelSpace = [];
+            }
 
             foreach ($viewComponents as $component) {
                 $app = $SgsView->getApp();
@@ -127,25 +134,19 @@ class SgsTemplate
                 $componentId = uniqid();
                 $componentsIds[] = $componentId;
 
-                $structuredArrayOfComponents[$componentId] = array(
-                    'viewComponentsInfo' . $componentId => array(
-                        'id' => $component,
-                        'app' => $app,
-                        'viewName' => $vname
-                    )
-                );
-
-                \Modules\InsiderFramework\Core\Manipulation\KernelSpace::setVariable(
-                    $structuredArrayOfComponents[$componentId],
-                    'sagacious'
+                $viewComponentsArray[$componentId] = array(
+                    'id' => $component,
+                    'app' => $app,
+                    'viewName' => $viewName,
+                    'viewEncryptedName' => $viewEncryptedName
                 );
             }
 
             if (!empty($componentsIds)) {
-                $componentsIds = json_encode($componentsIds);
+                $componentsData = json_encode($viewComponentsArray);
                 $declarationComponent =
                     "<?php
-                        \\Modules\\InsiderFramework\\Sagacious\\Lib\\SgsView::InitializeViewCode('$componentsIds');
+                        \\Modules\\InsiderFramework\\Sagacious\\Lib\\SgsView::InitializeViewCode('$componentsData');
                     ?>";
 
                 // Placing this code at the beginning of the file
@@ -193,16 +194,18 @@ class SgsTemplate
     public function convertSGV2PHPAux(SgsView $SgsView): array
     {
         $componentsFound = array();
-        $codeView = \Modules\InsiderFramework\Core\FileTree::fileReadContent(
-            INSTALL_DIR . DIRECTORY_SEPARATOR . $SgsView->getViewFilename(),
-            true
-        );
-        if ($codeView === false) {
+        $viewPath = INSTALL_DIR . DIRECTORY_SEPARATOR . $SgsView->getViewFilename();
+
+        if (!file_exists($viewPath)) {
             \Modules\InsiderFramework\Core\Error\ErrorHandler::i10nErrorRegister(
                 'Could not find a view %' . $SgsView->getViewFilename() . '%',
                 "app/sys"
             );
         }
+        $codeView = \Modules\InsiderFramework\Core\FileTree::fileReadContent(
+            INSTALL_DIR . DIRECTORY_SEPARATOR . $SgsView->getViewFilename(),
+            true
+        );
 
         $countTemplates = 0;
         $templateCode = "";

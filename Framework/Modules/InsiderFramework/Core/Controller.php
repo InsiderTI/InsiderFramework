@@ -3,7 +3,6 @@
 namespace Modules\InsiderFramework\Core;
 
 /**
-
 * Controller class
 *
 * @author Marcello Costa

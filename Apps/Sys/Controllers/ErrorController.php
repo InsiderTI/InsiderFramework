@@ -37,19 +37,19 @@ class ErrorController extends \Modules\InsiderFramework\Core\Controller
             'insiderFrameworkSystem'
         );
 
-        $msgError = 'Oops, something strange happened on this page.';
+        $genericMsgError = 'Oops, something strange happened on this page.';
 
         if ($consoleRequest) {
-            ConsoleError::errorRegister($msgError);
+            ConsoleError::errorRegister($genericMsgError);
         }
         
         if (Request::isResponseFormat('JSON') || Request::isResponseFormat('XML')) {
             $errorData = [];
-            $errorData['error'] = $msgError;
+            $errorData['error'] = $genericMsgError;
             $this->responseAPI($errorData);
         } else {
-            SgsViewsBag::set($msgError, 'msgError');
-            $this->renderView('sys::error/generic.sgv');
+            SgsViewsBag::set('genericMsgError', $genericMsgError);
+            $this->renderView('Sys::error/generic.sgv');
         }
     }
 
@@ -98,7 +98,7 @@ class ErrorController extends \Modules\InsiderFramework\Core\Controller
                 \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError('Unknow error: ' . json_encode($msg));
             }
         }
-        $this->renderView('sys::error/sysErrorMsg.sgv');
+        $this->renderView('Sys::error/adminMessageError.sgv');
     }
 
     /**

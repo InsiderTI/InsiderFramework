@@ -36,6 +36,8 @@ $debugbacktrace = \Modules\InsiderFramework\Core\KernelSpace::getVariable('debug
 
 $POST = \Modules\InsiderFramework\Core\KernelSpace::getVariable('POST', 'insiderFrameworkSystem');
 $GET = \Modules\InsiderFramework\Core\KernelSpace::getVariable('GET', 'insiderFrameworkSystem');
+$PUT = \Modules\InsiderFramework\Core\KernelSpace::getVariable('PUT', 'insiderFrameworkSystem');
+$DELETE = \Modules\InsiderFramework\Core\KernelSpace::getVariable('DELETE', 'insiderFrameworkSystem');
 
 if ($fatal === true) {
     $bordercolorerr = $borderfatal;
@@ -49,14 +51,15 @@ if ($fatal === true) {
 $styleerroradmin = "<style>
             body{
                 font-family: 'Verdana';
-                font-size: 0.9em;
-              }
+                font-size: 0.8em;
+                margin-top: 20px;
+            }
 
               #all{
                 width: 100%;
               }
 
-              #titlewarning{
+              #titleWarning{
                 margin: 0 auto;
                 width: 80%;
                 border-top: 2px solid #000;
@@ -70,22 +73,30 @@ $styleerroradmin = "<style>
                 overflow: auto;
                 font-weight: bold;
                 background-color: #C0C0C0;
-                -moz-box-shadow: 10px 10px 5px #888;
-                -webkit-box-shadow: 10px 10px 5px #888;
-                box-shadow: 10px 10px 5px #888;
                 text-shadow: 0.1em 0.1em #d9d9d9;
               }
 
-              #erro{
-                -moz-box-shadow: 10px 10px 5px #888;
-                -webkit-box-shadow: 10px 10px 5px #888;
-                box-shadow: 10px 10px 5px #888;
+              #titleError{
                 margin: 0 auto;
-                width: 80%;
+                width: 90%;
                 border: 2px solid " . $bordercolorerr . ";
                 padding: 20px;
                 overflow: auto;
                 " . $backgroundgradient . "
+              }
+
+
+              #errorDetails{
+                margin: 0 auto;
+                width: 90%;
+                border-color: " . $bordercolorerr . ";
+                border-width: 0 2px 2px 2px;
+                border-style: solid;
+                padding: 20px;
+                overflow: auto;
+                height: 60%;
+                line-height: 20px;
+                background: #f6eaec;
               }
               </style>";
 
@@ -94,41 +105,62 @@ if (isset(\Modules\InsiderFramework\Core\Request::getRequest('server')['REMOTE_A
     $REMOTE_ADDR = \Modules\InsiderFramework\Core\Request::getRequest('server')['REMOTE_ADDR'];
 }
 ?>
-
-<!DOCTYPE html>
-<html lang='en'>
+<html>
     <head>
-        <meta http-equiv="content-type" content="application/xhtml+xml; charset=<?php echo ENCODE; ?>" />
+        <style>
+            * {
+                font-family: 'Verdana';
+            }
+        </style>
+
+        {* Favicon *}
+        <link rel="apple-touch-icon" sizes="180x180" href="<?php
+
+        echo REQUESTED_URL; ?>/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="<?php echo REQUESTED_URL; ?>/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="<?php echo REQUESTED_URL; ?>/favicon-16x16.png">
+        <link rel="manifest" href="<?php echo REQUESTED_URL; ?>/site.webmanifest">
+        <link rel="mask-icon" href="<?php echo REQUESTED_URL; ?>/safari-pinned-tab.svg" color="#5bbad5">
+        <meta name="msapplication-TileColor" content="#da532c">
+        <meta name="theme-color" content="#ffffff">
+        
+        {* Framework charset *}
+        <meta charset="<?php echo ENCODE; ?>"/>
+        {component id='title'}
+
+        {* Scripts of framework *}
+        <script type='text/javascript' src='<?php echo REQUESTED_URL; ?>/Apps/Sys/assets/js/js_only_insiderframework.js'></script>
+
+        {injected_js}
+        {injected_css}
+        <?php
+        if (DEBUG) {
+            ?>
+            {* Framework debugging CSS *}
+            <link rel="stylesheet" href='<?php echo REQUESTED_URL; ?>/Apps/Sys/assets/css/debug.css' />
+            <?php
+        }
+        ?>
+        <meta http-equiv="content-type" content="application/xhtml+xml; charset=<?php
+
+        echo ENCODE; ?>" />
         <?php echo $cssInjected . $styleerroradmin ?>
     </head>
     <body>
-        <div id='all'>
-            <?php
-                $error = \Modules\InsiderFramework\Sagacious\Lib\SgsBags\SgsViewsBag::get('msgError');
-            ?>
-            <p>
-                <b>Error:</b>&nbsp;
-                &nbsp;
-                <?php echo $error['msgError']; ?>
-            </p>
-
-            <p><b>File:</b>&nbsp;&nbsp;<?php echo $error['errfile']; ?></p>
-
-            <p><b>Line:</b>&nbsp;&nbsp;<?php echo $error['errline'];
-            ; ?></p>
-
-            <p><b>GET:</b>&nbsp;&nbsp;<?php print_r($GET); ?></p>
-
-            <p><b>POST:</b>&nbsp;&nbsp;<?php print_r($POST); ?></p>
-
-            <p><b>IP:</b>&nbsp;&nbsp;<?php print_r($REMOTE_ADDR); ?></p>
-
-            <p><b>Date/Time:</b>&nbsp;&nbsp;"<?php echo date('Y-m-d H:i:s'); ?>"</p>
-
-            <p><b>Debugbacktrace:</b><br/>
-                <?php \Modules\InsiderFramework\Core\Manipulation\Development::printDump($debugbacktrace); ?>
-            </p>
-            <hr/>
-        </div>
+        {block id='error'}{/block}
+        
+        {* Injection object of additional HTML of the framework *}
+        {injected_html}
     </body>
+    <script>
+        warningImg = document.getElementById('warningImg');
+        warningImg.onclick = function(e){
+            warningItemList = document.getElementById('warningItemList');
+            if (warningItemList.style.display !== "block")
+                warningItemList.style.display = "block";
+            else
+                warningItemList.style.display = "none";
+        }
+        
+    </script>
 </html>

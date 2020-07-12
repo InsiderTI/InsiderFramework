@@ -19,13 +19,13 @@
         {component id='titletest'}
 
         {* Scripts of framework *}
-        <script type='text/javascript' src='<?php echo REQUESTED_URL; ?>/apps/sys/assets/js/js_only_insiderframework.js'></script>
+        <script type='text/javascript' src='<?php echo REQUESTED_URL; ?>/Apps/Sys/assets/js/js_only_insiderframework.js'></script>
 
         <?php
         if (DEBUG) {
             ?>
             {* Framework debugging CSS *}
-            <link rel="stylesheet" href='<?php echo REQUESTED_URL; ?>/apps/sys/assets/css/debug.css' />
+            <link rel="stylesheet" href='<?php echo REQUESTED_URL; ?>/Apps/Sys/assets/css/debug.css' />
             <?php
         }
         ?>

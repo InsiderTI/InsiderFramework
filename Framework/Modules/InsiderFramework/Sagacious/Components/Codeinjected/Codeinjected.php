@@ -31,9 +31,13 @@ class Codeinjected extends SgsComponent
         if (isset($props['code'])) {
             $this->code = $props['code'];
         } elseif (isset($props['injectedVariable'])) {
+            $scope = 'sagacious';
+            if (isset($props['injectedVariableScope'])) {
+                $scope = $props['injectedVariableScope'];
+            }
             $this->code = KernelSpace::getVariable(
                 $props['injectedVariable'],
-                'sagacious'
+                $scope
             );
         }
     }

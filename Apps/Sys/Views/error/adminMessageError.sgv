@@ -1,0 +1,39 @@
+{template src = 'Sys::adminMessageError'}
+{block id='error'}
+    <div id='errorContent'>
+        <?php
+
+            $error = \Modules\InsiderFramework\Sagacious\Lib\SgsBags\SgsViewsBag::get('msgError');
+        ?>
+        <div id='titleError'>
+            <h2><?php echo $error['subject']; ?></h2>
+        </div>
+
+        <div id="errorDetails">
+            <p><b>Error:</b>&nbsp;&nbsp;<?php echo $error['msgError']; ?></p>
+
+            <p><b>File:</b>&nbsp;&nbsp;<?php echo $error['errfile']; ?></p>
+
+            <p><b>Line:</b>&nbsp;&nbsp;<?php echo $error['errline'];
+            ; ?></p>
+
+            <p><b>Request data:</b>&nbsp;&nbsp;</p>
+            <div style='margin-left: 10px;'>
+            <p><b>GET:</b>&nbsp;&nbsp;<?php print_r($GET); ?></p>
+
+            <p><b>POST:</b>&nbsp;&nbsp;<?php print_r($POST); ?></p>
+
+            <p><b>PUT:</b>&nbsp;&nbsp;<?php empty($PUT) ? "" : print_r($PUT); ?></p>
+
+            <p><b>DELETE:</b>&nbsp;&nbsp;<?php empty($DELETE) ? "" : print_r($DELETE); ?></p>
+        </div>
+        <p><b>IP:</b>&nbsp;&nbsp;<?php print_r($REMOTE_ADDR); ?></p>
+
+        <p><b>Date/Time:</b>&nbsp;&nbsp;"<?php echo date('Y-m-d H:i:s'); ?>"</p>
+
+        <p><b>Debugbacktrace:</b><br/>
+            <?php \Modules\InsiderFramework\Core\Manipulation\Development::printDump($debugbacktrace); ?>
+        </p>
+        </div>
+    </div>
+{/block}

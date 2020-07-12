@@ -381,7 +381,7 @@ class ConfigLoader
          *
          * @package Modules\InsiderFramework\Loaders\ConfigLoader
          */
-        define('DEBUG', $coreData['DEBUG']);
+        $debug = $coreData['DEBUG'];
 
         if (!isset($coreData['DEBUG_BAR'])) {
             \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError(
@@ -399,13 +399,30 @@ class ConfigLoader
 
         // If the debug bar is enabled, add the debug styles in the default css
         if (DEBUG_BAR === true) {
+            if ($debug === false) {
+                \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister(
+                    'You cannot <b>enable DEBUG_BAR</b> core config without enable DEBUG. ' .
+                    'Automatically enabling DEBUG.',
+                    'WARNING'
+                );
+                $debug = true;
+            }
+            define('DEBUG', $debug);
+
             global $injectedCss;
-            $filename = "Web" . DIRECTORY_SEPARATOR . "Apps" . DIRECTORY_SEPARATOR . "sys" . DIRECTORY_SEPARATOR .
-                        "assets" . DIRECTORY_SEPARATOR . "css" . DIRECTORY_SEPARATOR . "debug.css";
+            $filename = "Web" . DIRECTORY_SEPARATOR .
+                        "Apps" . DIRECTORY_SEPARATOR .
+                        "Sys" . DIRECTORY_SEPARATOR .
+                        "assets" . DIRECTORY_SEPARATOR .
+                        "css" . DIRECTORY_SEPARATOR .
+                        "debug.css";
+
             $cssDebugBar = file_get_contents($filename);
             $injectedCss = $injectedCss . "<style>" . $cssDebugBar . "</style>";
             unset($filename);
             unset($cssDebugBar);
+        } else {
+            define('DEBUG', $debug);
         }
 
         if (!isset($coreData['LOAD_AVG_ACTION'])) {

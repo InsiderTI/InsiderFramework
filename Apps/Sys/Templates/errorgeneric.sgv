@@ -1,5 +1,11 @@
 <html>
     <head>
+        <style>
+            * {
+                font-family: 'Verdana';
+            }
+        </style>
+
         {* Favicon *}
         <link rel="apple-touch-icon" sizes="180x180" href="<?php
 
@@ -16,16 +22,9 @@
         {component id='title'}
 
         {* Scripts of framework *}
-        <script type='text/javascript' src='<?php echo REQUESTED_URL; ?>/apps/sys/assets/js/js_only_insiderframework.js'></script>
+        <script type='text/javascript' src='<?php echo REQUESTED_URL; ?>/Apps/Sys/assets/js/js_only_insiderframework.js'></script>
 
-        <?php
-        if (DEBUG) {
-            ?>
-            {* Framework debugging CSS *}
-            <link rel="stylesheet" href='<?php echo REQUESTED_URL; ?>/apps/sys/assets/css/debug.css' />
-            <?php
-        }
-        ?>
+        {block id='scripts'}{/block}
     </head>
     <body style="overflow: hidden;">
         <div style='text-align: center; z-index: 999; background: #fff; position: absolute; height: 100%; width: 100%;'>

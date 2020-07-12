@@ -5,7 +5,7 @@
   "DEFAULT_RESPONSE_FORMAT": "HTML",
   "ACL_METHOD": "custom",
   "DEBUG": true,
-  "DEBUG_BAR": false,
+  "DEBUG_BAR": true,
   "MAX_TOLERANCE_LOOPS": 1000,
   "LOAD_AVG_MAX_USE_CPU": 0,
   "LOAD_AVG_TIME": 1,

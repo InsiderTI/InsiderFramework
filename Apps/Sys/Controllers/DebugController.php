@@ -1,0 +1,38 @@
+<?php
+
+namespace Apps\Sys\Controllers;
+
+use Modules\InsiderFramework\Sagacious\Lib\SgsBags\SgsViewsBag;
+
+/**
+ * Class responsible for rendering debug bar
+ *
+ * @author Marcello Costa
+ *
+ * @package Apps\Sys\Controllers\DebugController
+ */
+class DebugController extends \Modules\InsiderFramework\Core\Controller
+{
+    /**
+     * Render the debug bar
+     *
+     * @author Marcello Costa
+     *
+     * @package Apps\Sys\Controllers\DebugController
+     *
+     * @return string HTML code of debug bar
+    */
+    public function debugBarRender(): string
+    {
+        $debugBarData = \Modules\InsiderFramework\Core\KernelSpace::getVariable(
+            'debugbar',
+            'insiderFrameworkSystem'
+        );
+
+        SgsViewsBag::set('elapsedTime', $debugBarData['elapsedTime']);
+        SgsViewsBag::set('memoryUsage', $debugBarData['memoryUsage']);
+
+        $debugBarHtml = $this->renderViewToString('Sys::debugBar/index.sgv');
+        return $debugBarHtml;
+    }
+}

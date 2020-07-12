@@ -1,10 +1,12 @@
 {template src='Sys::errorgeneric'}
 {block id='error'}
-<div id="all" unselectable='on' onselectstart='return false;' onmousedown='return false;'>
-    <br><br><br>
-    <h1 style='font-weight:bold;text-shadow: 4px -4rpx grey;'>Error !</h1>
-    <h2><?php
-
-    echo $viewsBag['msgError']; ?></h2>
-</div>
+    <div id="all" unselectable='on' onselectstart='return false;' onmousedown='return false;'>
+        <br><br><br>
+        <h1 style='font-weight:bold;text-shadow: 4px -4rpx grey;'>
+            {component id='genericMsgError'}
+        </h1>
+        <img src="/Apps/Sys/assets/img/500_user_error.png" alt='error-generic-image' />
+    </div>
 {/block}
+
+{block id='scripts'}{/block}

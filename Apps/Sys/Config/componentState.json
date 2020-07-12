@@ -1,13 +1,46 @@
 {
-    "titletest": {
-        "states": {
-            "0": {
-                "class": "Title",
-                "properties": {
-                    "fixedtitle": "Error"
-                }
-            }
-        },
-        "defaultstateid": "0"
-    }
+  "title": {
+    "states": {
+      "0": {
+        "class": "Title",
+        "props": {
+          "fixedtitle": "Error"
+        }
+      }
+    },
+    "defaultstateid": "0"
+  },
+  "elapsedtime": {
+    "states": {
+      "0": {
+        "class": "ViewsBag",
+        "props": {
+          "field": "elapsedTime"
+        }
+      }
+    },
+    "defaultstateid": "0"
+  },
+  "memoryUsage": {
+    "states": {
+      "0": {
+        "class": "ViewsBag",
+        "props": {
+          "field": "memoryUsage"
+        }
+      }
+    },
+    "defaultstateid": "0"
+  },
+  "genericMsgError": {
+    "states": {
+      "0": {
+        "class": "ViewsBag",
+        "props": {
+          "field": "genericMsgError"
+        }
+      }
+    },
+    "defaultstateid": "0"
+  }
 }

@@ -117,33 +117,21 @@ class SgsView
     *
     * @package Modules\InsiderFramework\Sagacious\Lib\SgsView
     *
-    * @param string $componentId Id of components of view
+    * @param string $componentData Data of components of view
     *
     * @return void
     */
-    public static function initializeViewCode(string $componentsId): void
+    public static function initializeViewCode(string $componentsData): void
     {
-        if (DEBUG_BAR == true) {
-            $timer = KernelSpace::getVariable('timer', 'insiderFrameworkSystem');
-            $timer->debugBar('render');
-        }
+        $componentsTempArray = json_decode($componentsData, true);
 
-        $componentsTemporaryIdArray = json_decode($componentsId);
+        $viewComponentsInKernelSpace = \Modules\InsiderFramework\Core\Manipulation\KernelSpace::getVariable(
+            'viewComponents',
+            'sagacious'
+        );
 
-        foreach ($componentsTemporaryIdArray as $componentTemporaryId) {
-            $componentDataRequestedFromView = KernelSpace::getVariable(
-                'viewComponentsInfo' . $componentTemporaryId,
-                'sagacious'
-            );
-
-            if (empty($componentDataRequestedFromView)) {
-                \Modules\InsiderFramework\Core\Error\ErrorHandler::i10nErrorRegister(
-                    'Unable to recover component data from componentsbag ' . $componentTemporaryId,
-                    "app/sys"
-                );
-            }
-
-            SgsComponentsBag::initializeComponentComponentsBag($componentDataRequestedFromView);
+        foreach ($componentsTempArray as $componentTempData) {
+            SgsComponentsBag::initializeComponentComponentsBag($componentTempData);
         }
     }
 

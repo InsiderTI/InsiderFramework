@@ -1,0 +1,4 @@
+{template src='Sys::blank'}
+{block id='content'}
+    
+{/block}

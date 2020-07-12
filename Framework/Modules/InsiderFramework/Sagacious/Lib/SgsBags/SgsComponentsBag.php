@@ -47,6 +47,13 @@ class SgsComponentsBag
             $defaultState['class']
         );
 
+        if (empty($registryData)) {
+            \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister(
+                'Registry of component not found: ' . $defaultState['class'] . '. ' .
+                'Please check if the component correctly is registered.'
+            );
+        }
+
         $SagaciousComponentsDirectory = KernelSpace::getVariable(
             'SagaciousComponentsDirectory',
             'sagacious'
@@ -61,6 +68,12 @@ class SgsComponentsBag
         );
 
         if (is_null($componentsBagObj->get($componentId))) {
+            if (!class_exists($completeComponentPath)) {
+                \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister(
+                    'Class of component not found: ' . $defaultState['class'] . '. ' .
+                    'Please check if the component did exists and is registered.'
+                );
+            }
             $componentObj = new $completeComponentPath($componentId, $componentApp);
             $componentsBagObj->set(
                 $componentId,

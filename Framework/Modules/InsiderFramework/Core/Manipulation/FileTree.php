@@ -448,14 +448,14 @@ trait FileTree
      * @param int|float $delaytry          Time (in seconds) between the read attempts
      * @param int       $maxToleranceLoops Maximum loop number waiting the $delaytry time
      *
-     * @return string Content of the file
+     * @return string|array Content of the file
      */
     public static function fileReadContent(
         string $filepath,
         bool $returnstring = true,
         $delaytry = 0.15,
         int $maxToleranceLoops = null
-    ): string {
+    ) {
         if (!is_numeric($delaytry)) {
             \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError('Variable delaytry is not numeric');
         }

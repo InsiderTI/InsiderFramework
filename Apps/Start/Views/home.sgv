@@ -1,6 +1,6 @@
 {template src='Start::default'}
 {block id='style'}
-<style>
+<style><?phpasdasdas?>
     * {
         color: #333;
     }

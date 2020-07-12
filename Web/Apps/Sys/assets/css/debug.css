@@ -2,10 +2,6 @@
   margin: 0;
   padding: 0;
 }
-html,
-body {
-  height: 100%;
-}
 
 #debugbarinsiderframe {
   font-family: "Arial";
@@ -14,21 +10,65 @@ body {
   position: fixed;
   bottom: 0;
   border-top: #ddd 1px inset;
-  background-color: #333;
   padding: 10px;
   font-size: 0.8em;
-  float: left;
   line-height: 30px;
   background: #070707;
   z-index: 99999;
   width: 100%;
 }
 
-#debugbarinsiderframeimg {
+#debugBarLogo {
   position: relative;
   top: 0em;
   width: 32px;
   height: auto;
   float: left;
   margin-right: 15px;
+}
+
+.warningItems {
+  align-items: flex-start;
+  float: right;
+  margin-right: 32px;
+}
+
+.warningItem {
+  border-bottom: 1px solid #222;
+}
+.warningItem:last-child {
+  border-bottom: none;
+}
+
+#warningImg {
+  width: 24px;
+  height: 24px;
+  background-repeat: no-repeat;
+  background-size: contain;
+  position: relative;
+  top: 5px;
+  cursor: pointer;
+}
+.warningImgOff {
+  background-image: url("/Apps/Sys/assets/img/warning_icon_debugbar_off.png");
+}
+.warningImgOn {
+  background-image: url("/Apps/Sys/assets/img/warning_icon_debugbar_on.png");
+}
+#warningItemList {
+  color: #acae02;
+  width: 600px;
+  max-height: 200px;
+  border: 1px solid #fff;
+  border-radius: 3px;
+  display: none;
+  position: absolute;
+  bottom: 60px;
+  background: #111;
+  right: 25px;
+  font-size: 11px;
+  font-family: "Verdana";
+  padding: 10px 0 0 10px;
+  overflow: auto;
+  font-weight: 100;
 }

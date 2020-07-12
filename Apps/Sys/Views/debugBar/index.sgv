@@ -1,0 +1,47 @@
+{template src='Sys::blank'}
+{block id='content'}
+<div id="debugbarinsiderframe">
+    <img src="/favicon.png" id="debugBarLogo"/>
+    Processing time: <span style="color:#2C89A0;">{component id='elapsedtime'}s</span>
+    Memory Usage: <span style="color:#FF0000;">{component id='memoryUsage'}Mb</span>
+
+    <div class='warningItems'>
+        <?php
+
+            $debug = new \Modules\InsiderFramework\Core\Debug();
+            $warnings = $debug->getWarnings();
+
+        if (empty($warnings)) {
+            ?>
+                <div id="warningImg" class="warningImgOff"></div>
+            <?php
+        } else {
+            ?>
+            <div id='warningImg' class="warningImgOn"></div>
+            <?php
+        }
+        ?>
+        <div id="warningItemList">
+            <p style='font-size: 14px; margin-bottom: 8px;'><u>Warning List: (<?php echo count($warnings); ?>)</u></p>
+            <?php
+            foreach ($warnings as $warning) {
+                $relativePath = str_replace(INSTALL_DIR, '', $warning->getFile());
+                ?>
+                    <div class='warningItem'>
+                        <div class='warningMessage'>
+                            <?php echo $warning->getMessageOrText(); ?>
+                        </div>
+                        <div class='warningFile'>
+                            <?php echo "File: " . $relativePath; ?>
+                        </div>
+                        <div class='warningLine'>
+                            <?php echo "Line: " . $warning->getLine(); ?>
+                        </div>
+                    </div>
+                    <?php
+            }
+            ?>
+        </div>
+    </div>
+</div>
+{/block}

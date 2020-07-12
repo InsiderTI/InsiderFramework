@@ -101,6 +101,35 @@ trait Request
     }
 
     /**
+     * Function that takes put information from global array and request
+     *
+     * @author Marcello Costa
+     *
+     * @package Modules\InsiderFramework\Core\Manipulation\Request
+     *
+     * @return array|null Put information
+     */
+    public static function getPut(): ?array
+    {
+        return (\Modules\InsiderFramework\Core\Request::getRequest('put'));
+    }
+
+
+    /**
+     * Function that takes delete information from global array and request
+     *
+     * @author Marcello Costa
+     *
+     * @package Modules\InsiderFramework\Core\Manipulation\Request
+     *
+     * @return array|null Delete information
+     */
+    public static function getDelete(): ?array
+    {
+        return (\Modules\InsiderFramework\Core\Request::getRequest('delete'));
+    }
+
+    /**
      * Gets filtered value of request variables
      *
      * @author Marcello Costa
@@ -120,6 +149,21 @@ trait Request
 
             case "post":
                 return filter_input_array(INPUT_POST);
+                break;
+
+            case "put":
+            case "delete":
+                $putdeletedata = file_get_contents('php://input', 'r');
+                if (!is_array($putdeletedata)) {
+                    if ($putdeletedata !== '') {
+                        $putdeletedata = array (
+                            $putdeletedata
+                        );
+                    } else {
+                        return [];
+                    }
+                }
+                return $putdeletedata;
                 break;
 
             case "cookie":

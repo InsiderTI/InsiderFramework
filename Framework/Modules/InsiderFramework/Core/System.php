@@ -49,11 +49,14 @@ class System
         \Modules\InsiderFramework\Core\Loaders\ModuleLoader::loadModulesFromJsonConfigFile();
 
         \Modules\InsiderFramework\Core\Error\ErrorMonitor::initialize();
-        
-        \Modules\InsiderFramework\Core\RoutingSystem\Bootstrap::initialize();
 
-        // Modifying charset
-        header('Content-type: text/html; charset=' . ENCODE);
+        // If the debug bar is active, start the "counter"
+        if (DEBUG_BAR == true) {
+            // Initializing debug timer
+            $timer = new \Modules\InsiderFramework\Core\Debug();
+            $timer->debugBar("startCount");
+            unset($timer);
+        }
         
         // Initializing global object variables in each
         // page. Leave them blank.
@@ -66,21 +69,12 @@ class System
             'insiderFrameworkSystem'
         );
 
-        // If the debug bar is active, start the "counter"
-        if (DEBUG_BAR == true) {
-            // Initializing debug timer
-            $timer = new \Modules\InsiderFramework\Core\Debug();
-            $timer->debugBar("count");
-            \Modules\InsiderFramework\Core\KernelSpace::setVariable(array(
-                'timer' => $timer
-            ), 'insiderFrameworkSystem');
-            unset($timer);
-        }
-
-        // Setting global POST and GET variables
+        // Setting global POST, GET, PUT and DELETE variables
         \Modules\InsiderFramework\Core\KernelSpace::setVariable(array(
             'POST' => \Modules\InsiderFramework\Core\Request::getPost(),
             'GET' => \Modules\InsiderFramework\Core\Request::getGet(),
+            'PUT' => \Modules\InsiderFramework\Core\Request::getPut(),
+            'DELETE' => \Modules\InsiderFramework\Core\Request::getDelete(),
             'SERVER' => \Modules\InsiderFramework\Core\Request::getRequest("SERVER")
         ), 'insiderFrameworkSystem');
 
@@ -99,6 +93,11 @@ class System
             'insiderFrameworkSystem'
         );
         unset($UserAgent);
+
+        \Modules\InsiderFramework\Core\RoutingSystem\Bootstrap::initialize();
+
+        // Modifying charset
+        header('Content-type: text/html; charset=' . ENCODE);
 
         // Starting session
         if (session_status() == PHP_SESSION_NONE) {
