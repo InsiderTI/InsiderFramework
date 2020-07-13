@@ -42,5 +42,16 @@
       }
     },
     "defaultstateid": "0"
+  },
+  "warnings": {
+    "states": {
+      "0": {
+        "class": "ViewsBag",
+        "props": {
+          "field": "warnings"
+        }
+      }
+    },
+    "defaultstateid": "0"
   }
 }

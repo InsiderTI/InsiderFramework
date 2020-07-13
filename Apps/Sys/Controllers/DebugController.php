@@ -3,6 +3,7 @@
 namespace Apps\Sys\Controllers;
 
 use Modules\InsiderFramework\Sagacious\Lib\SgsBags\SgsViewsBag;
+use Modules\InsiderFramework\Sagacious\Lib\SgsVirtualDom;
 
 /**
  * Class responsible for rendering debug bar
@@ -34,5 +35,26 @@ class DebugController extends \Modules\InsiderFramework\Core\Controller
 
         $debugBarHtml = $this->renderViewToString('Sys::debugBar/index.sgv');
         return $debugBarHtml;
+    }
+
+    /**
+    * Send a warning to the frontend
+    *
+    * @author Marcello Costa
+    *
+    * @package Apps\Sys\Controllers\DebugController
+    *
+    * @return void
+    */
+    public function flushWarning()
+    {
+        $virtualDom = SgsVirtualDom::getVirtualDom();
+        $virtualDom->send('teste');
+        $virtualDom->send('teste2');
+        
+        $warnings = \Modules\InsiderFramework\Core\KernelSpace::getVariable(
+            'warnings',
+            'insiderFrameworkSystem'
+        );
     }
 }

@@ -199,6 +199,7 @@ class ErrorHandler
                         'fatal' => false,
                         'subject' => 'Warning Error - Insider Framework report agent'
                     ));
+
                     $debug = new \Modules\InsiderFramework\Core\Debug();
                     $debug->debugBar("logWarningError", $error);
                 }
@@ -315,7 +316,7 @@ class ErrorHandler
                     'file' => $file,
                     'line' => $line,
                     'fatal' => true,
-                    'subject' => $subject
+                    'subject' => isset($subject) ? $subject : 'Critical Error - Insider Framework report agent'
                 ));
 
                 // Setting the global variable
@@ -436,11 +437,14 @@ class ErrorHandler
         $fatal = $error->getFatal();
 
         if (!$fatal) {
-            die("Stopped in: Why it's not registering in debug bar this kind of error ?");
             $message = \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister(
                 $error->getMessageOrText(),
                 'WARNING'
             );
+
+            // Or get warning AFTER page loads (from a post request)
+            $debugController = new \Apps\Sys\Controllers\DebugController();
+            $debugBarHtml = $debugController->flushWarning();
         } else {
             if (!$consoleRequest) {
                 // The first thing to be done it's write the error in the web server log
@@ -569,8 +573,8 @@ class ErrorHandler
 
                 if ($responseFormat === 'HTML') {
                     echo '<hr/><b>DEBUG ERROR DISPLAY</b>';
-                    $C = new \Apps\Sys\Controllers\DebugController();
-                    $debugBarHtml = $C->debugBarRender();
+                    $debugController = new \Apps\Sys\Controllers\DebugController();
+                    $debugBarHtml = $debugController->debugBarRender();
                     echo $debugBarHtml;
                     die();
                 }

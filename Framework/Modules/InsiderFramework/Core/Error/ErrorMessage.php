@@ -83,7 +83,7 @@ class ErrorMessage
      */
     public function getType(): string
     {
-        return $this->type;
+        return $this->type ? $this->type : "NULL";
     }
 
     /**
@@ -97,7 +97,7 @@ class ErrorMessage
      */
     public function getMessage(): ?string
     {
-        return $this->message;
+        return $this->message ? $this->message : "";
     }
 
     /**
@@ -129,7 +129,7 @@ class ErrorMessage
      */
     public function getFile(): string
     {
-        return $this->file;
+        return $this->file ? $this->file : "NULL";
     }
 
     /**
@@ -143,7 +143,7 @@ class ErrorMessage
      */
     public function getLine(): int
     {
-        return $this->line;
+        return $this->line ? $this->line : 0;
     }
 
     /**
@@ -157,7 +157,7 @@ class ErrorMessage
      */
     public function getFatal(): bool
     {
-        return $this->fatal;
+        return $this->fatal ? $this->fatal : false;
     }
 
     /**
@@ -171,7 +171,7 @@ class ErrorMessage
      */
     public function getSubject(): string
     {
-        return $this->subject;
+        return $this->subject ? $this->subject : "";
     }
 
     /**
@@ -185,7 +185,7 @@ class ErrorMessage
      */
     public function getText(): ?string
     {
-        return $this->text;
+        return $this->text ? $this->text : "";
     }
 
     /**

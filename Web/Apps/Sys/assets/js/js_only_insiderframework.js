@@ -1,8 +1,8 @@
-document.addEventListener("DOMContentLoaded", function(event) {
+document.addEventListener("DOMContentLoaded", function (event) {
   laststatehistory = null
 })
 
-window.onpopstate = function(event) {
+window.onpopstate = function (event) {
   if (JSON.stringify(event.state) !== laststatehistory) {
     laststatehistory = JSON.stringify(event.state)
     location.reload()

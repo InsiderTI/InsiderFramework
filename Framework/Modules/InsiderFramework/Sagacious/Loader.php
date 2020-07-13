@@ -20,6 +20,13 @@ require_once 'ConfigSagacious.php';
     'sagacious'
 );
 
+\Modules\InsiderFramework\Core\KernelSpace::setVariable(
+    array(
+        'virtualDom' => new \Modules\InsiderFramework\Sagacious\Lib\SgsVirtualDom()
+    ),
+    'sagacious'
+);
+
 $class = \Modules\InsiderFramework\Sagacious\Lib\SgsController::loadControllerClass();
 
 $anonymousClass = get_class($class);

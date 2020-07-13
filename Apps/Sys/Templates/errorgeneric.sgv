@@ -23,6 +23,7 @@
 
         {* Scripts of framework *}
         <script type='text/javascript' src='<?php echo REQUESTED_URL; ?>/Apps/Sys/assets/js/js_only_insiderframework.js'></script>
+        <script type='text/javascript' src='<?php echo REQUESTED_URL; ?>/Apps/Sys/assets/js/vdom.js'></script>
 
         {block id='scripts'}{/block}
     </head>

@@ -130,6 +130,7 @@ if (isset(\Modules\InsiderFramework\Core\Request::getRequest('server')['REMOTE_A
 
         {* Scripts of framework *}
         <script type='text/javascript' src='<?php echo REQUESTED_URL; ?>/Apps/Sys/assets/js/js_only_insiderframework.js'></script>
+        <script type='text/javascript' src='<?php echo REQUESTED_URL; ?>/Apps/Sys/assets/js/vdom.js'></script>
 
         {injected_js}
         {injected_css}
