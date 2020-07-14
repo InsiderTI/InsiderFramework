@@ -30,8 +30,6 @@
                 <img id='logo' src='android-chrome-192x192.png' /><br/>
                 <h1>Welcome to your site</h1>
             </div>
-            <br/><br/>
-
             <br/>
             <span class="grey">This place is being built with the <b class='blue'>Insider Framework</b></span>
         <br/><br/>
