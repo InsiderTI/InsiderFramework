@@ -1,12 +1,6 @@
 {template src='Start::default'}
 {block id='style'}
-<style><?php
-
-        teste(phpasdasdas);
-?>
-    * {
-        color: #333;
-    }
+<style>
     .grey{
         color: #777;
     }

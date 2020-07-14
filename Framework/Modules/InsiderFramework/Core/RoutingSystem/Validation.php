@@ -149,8 +149,14 @@ class Validation
     {
         $parsedUrl = parse_url($url);
 
-        if ($parsedUrl['path'][0] !== '/') {
-            $parsedUrl['path'] = "/" . $parsedUrl['path'];
+        if (isset($parsedUrl['path'][0])) {
+            if ($parsedUrl['path'][0] !== '/') {
+                $parsedUrl['path'] = "/" . $parsedUrl['path'];
+            }
+        } else {
+            if ($parsedUrl['path'] === '') {
+                return '/';
+            }
         }
 
         return $parsedUrl['path'];

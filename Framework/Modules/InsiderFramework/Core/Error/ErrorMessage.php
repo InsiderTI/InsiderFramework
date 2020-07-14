@@ -233,7 +233,8 @@ class ErrorMessage
      */
     public function setFile(string $file): void
     {
-        $this->file = $file;
+        $relativePath = str_replace(INSTALL_DIR, '', $file);
+        $this->file = $relativePath;
     }
 
     /**

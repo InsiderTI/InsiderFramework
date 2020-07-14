@@ -42,8 +42,9 @@ class Request
                         "Cannot found url element when getting route from get",
                         "app/sys"
                     );*/
+                } else {
+                    $url = $routeFromGet['url'];
                 }
-                $url = $routeFromGet['url'];
             }
         }
 

@@ -437,10 +437,17 @@ class ErrorHandler
         $fatal = $error->getFatal();
 
         if (!$fatal) {
-            $message = \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister(
-                $error->getMessageOrText(),
-                'WARNING'
-            );
+            $error = new \Modules\InsiderFramework\Core\Error\ErrorMessage(array(
+                'type' => $error->getType(),
+                'text' => $error->getMessageOrText(),
+                'file' => $error->getFile(),
+                'line' => $error->getLine(),
+                'fatal' => false,
+                'subject' => 'Warning Error - Insider Framework report agent'
+            ));
+
+            $debug = new \Modules\InsiderFramework\Core\Debug();
+            $debug->debugBar("logWarningError", $error);
 
             $debugController = new \Apps\Sys\Controllers\DebugController();
             $debugBarHtml = $debugController->flushWarning();

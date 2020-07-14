@@ -19,6 +19,7 @@
         {component id='titletest'}
 
         {* CSS of framework *}
+        <link rel="stylesheet" href='<?php echo REQUESTED_URL; ?>/Apps/Sys/assets/css/reset.css' />
         <link rel="stylesheet" href='<?php echo REQUESTED_URL; ?>/Apps/Sys/assets/css/standard.css' />
 
         {* Scripts of framework *}
