@@ -1,1 +1,2 @@
 {block id='content'}{/block}
+{block id='scripts'}{/block}

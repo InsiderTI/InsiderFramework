@@ -402,7 +402,7 @@ class ConfigLoader
             if ($debug === false) {
                 \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister(
                     'You cannot <b>enable DEBUG_BAR</b> core config without enable DEBUG. ' .
-                    'Automatically enabling DEBUG.',
+                    'Automatically activating DEBUG.',
                     'WARNING'
                 );
                 $debug = true;
