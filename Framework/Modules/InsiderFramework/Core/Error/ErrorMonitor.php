@@ -83,8 +83,6 @@ class ErrorMonitor
                     $fatal = false;
                 }
 
-                \Modules\InsiderFramework\Core\Request::clearAndRestartBuffer();
-
                 switch ($errno) {
                     case 1:
                         $errorType = 'E_ERROR';

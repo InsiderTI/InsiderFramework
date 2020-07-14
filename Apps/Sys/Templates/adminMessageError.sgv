@@ -128,6 +128,9 @@ if (isset(\Modules\InsiderFramework\Core\Request::getRequest('server')['REMOTE_A
         <meta charset="<?php echo ENCODE; ?>"/>
         {component id='title'}
 
+        {* CSS of framework *}
+        <link rel="stylesheet" href='<?php echo REQUESTED_URL; ?>/Apps/Sys/assets/css/standard.css' />
+
         {* Scripts of framework *}
         <script type='text/javascript' src='<?php echo REQUESTED_URL; ?>/Apps/Sys/assets/js/js_only_insiderframework.js'></script>
         <script type='text/javascript' src='<?php echo REQUESTED_URL; ?>/Apps/Sys/assets/js/vdom.js'></script>
@@ -153,15 +156,12 @@ if (isset(\Modules\InsiderFramework\Core\Request::getRequest('server')['REMOTE_A
         {* Injection object of additional HTML of the framework *}
         {injected_html}
     </body>
-    <script>
-        warningImg = document.getElementById('warningImg');
-        warningImg.onclick = function(e){
-            warningItemList = document.getElementById('warningItemList');
-            if (warningItemList.style.display !== "block")
-                warningItemList.style.display = "block";
-            else
-                warningItemList.style.display = "none";
-        }
-        
-    </script>
+    <?php
+    if (DEBUG) {
+        ?>
+            {* Framework debug lib *}
+            <script type='text/javascript' src='<?php echo REQUESTED_URL; ?>/Apps/Sys/assets/js/debug.js'></script>
+        <?php
+    }
+    ?>
 </html>

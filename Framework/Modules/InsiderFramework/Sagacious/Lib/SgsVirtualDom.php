@@ -45,7 +45,7 @@ class SgsVirtualDom
     */
     public function send($data): void
     {
-        echo '<vdomdata>' . json_encode($data) . '</vdomdata>';
+        echo '<vdomdata class="vdomdata">' . json_encode($data) . '</vdomdata>';
         ob_flush();
         \Modules\InsiderFramework\Core\Request::clearAndRestartBuffer();
     }

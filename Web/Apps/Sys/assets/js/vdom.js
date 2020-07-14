@@ -1,11 +1,10 @@
 document.addEventListener("DOMContentLoaded", function (event) {
   var vdomelements = document.getElementsByTagName("vdomdata")
-  for (i = 0; i < vdomelements.length; i++) {
-    vdome = vdomelements[i]
-    console.log(vdome)
-  }
-  for (i = 0; i < vdomelements.length; i++) {
-    vdome = vdomelements[i]
+  while (vdomelements.length != 0) {
+    vdome = vdomelements[0]
+    var VDomContent = JSON.parse(vdome.innerHTML)
+    eval(VDomContent)
     vdome.remove()
+    vdomelements = document.getElementsByTagName("vdomdata")
   }
 })

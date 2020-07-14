@@ -18,6 +18,9 @@
         {* Title of page *}
         {component id='titletest'}
 
+        {* CSS of framework *}
+        <link rel="stylesheet" href='<?php echo REQUESTED_URL; ?>/Apps/Sys/assets/css/standard.css' />
+
         {* Scripts of framework *}
         <script type='text/javascript' src='<?php echo REQUESTED_URL; ?>/Apps/Sys/assets/js/js_only_insiderframework.js'></script>
         <script type='text/javascript' src='<?php echo REQUESTED_URL; ?>/Apps/Sys/assets/js/vdom.js'></script>
@@ -66,4 +69,12 @@
         {* Injection block of view scripts *}
         {block id='scripts'}{/block}
     </body>
+    <?php
+    if (DEBUG) {
+        ?>
+            {* Framework debug lib *}
+            <script type='text/javascript' src='<?php echo REQUESTED_URL; ?>/Apps/Sys/assets/js/debug.js'></script>
+        <?php
+    }
+    ?>
 </html>

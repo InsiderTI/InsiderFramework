@@ -442,9 +442,9 @@ class ErrorHandler
                 'WARNING'
             );
 
-            // Or get warning AFTER page loads (from a post request)
             $debugController = new \Apps\Sys\Controllers\DebugController();
             $debugBarHtml = $debugController->flushWarning();
+            return;
         } else {
             if (!$consoleRequest) {
                 // The first thing to be done it's write the error in the web server log
@@ -559,25 +559,16 @@ class ErrorHandler
             // Writing the error details in the log
             error_log(json_encode($debugbacktrace));
             
+            \Modules\InsiderFramework\Core\Request::clearAndRestartBuffer();
+
             // If the debug it's not enable
             if (!DEBUG) {
                 if (is_array($debugbacktrace)) {
                     $debugbacktrace = json_encode($debugbacktrace);
                 }
                 // Stopping the execution with a default message
-                \Modules\InsiderFramework\Core\Request::clearAndRestartBuffer();
+                
                 \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError($finalErrorMsg, 500, $responseFormat);
-            } else {
-                // Stopping the execution and displaying the error object
-                \Modules\InsiderFramework\Core\Request::clearAndRestartBuffer();
-
-                if ($responseFormat === 'HTML') {
-                    echo '<hr/><b>DEBUG ERROR DISPLAY</b>';
-                    $debugController = new \Apps\Sys\Controllers\DebugController();
-                    $debugBarHtml = $debugController->debugBarRender();
-                    echo $debugBarHtml;
-                    die();
-                }
             }
         }
 
@@ -688,6 +679,10 @@ class ErrorHandler
                         'insiderFrameworkSystem'
                     );
                     $errorController->adminMessageError();
+
+                    $debugController = new \Apps\Sys\Controllers\DebugController();
+                    $debugBarHtml = $debugController->debugBarRender();
+                    echo $debugBarHtml;
                     break;
             }
         } else {

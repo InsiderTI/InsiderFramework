@@ -48,13 +48,15 @@ class DebugController extends \Modules\InsiderFramework\Core\Controller
     */
     public function flushWarning()
     {
-        $virtualDom = SgsVirtualDom::getVirtualDom();
-        $virtualDom->send('teste');
-        $virtualDom->send('teste2');
-        
         $warnings = \Modules\InsiderFramework\Core\KernelSpace::getVariable(
             'warnings',
             'insiderFrameworkSystem'
         );
+
+        $virtualDom = SgsVirtualDom::getVirtualDom();
+        foreach ($warnings as $warning) {
+            $warningJson = \Modules\InsiderFramework\Core\Json::jsonEncodePrivateObject($warning);
+            $virtualDom->send("registerWarning('" . base64_encode($warningJson) . "');");
+        }
     }
 }

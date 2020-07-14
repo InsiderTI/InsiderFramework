@@ -1,6 +1,9 @@
 {template src='Start::default'}
 {block id='style'}
-<style><?phpasdasdas?>
+<style><?php
+
+        teste(phpasdasdas);
+?>
     * {
         color: #333;
     }
@@ -37,11 +40,11 @@
 
             <br/>
             <span class="grey">This place is being built with the <b class='blue'>Insider Framework</b></span>
-	    <br/><br/>
+        <br/><br/>
             <span id='moreinfo'>
                 Access 
-		<a href="https://github.com/marcelloti/InsiderFramework">the official repository</a> 
-		for more information
+        <a href="https://github.com/marcelloti/InsiderFramework">the official repository</a> 
+        for more information
             <span>
         </div>
     </span>
