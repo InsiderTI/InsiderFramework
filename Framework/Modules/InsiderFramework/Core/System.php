@@ -357,8 +357,9 @@ class System
                         break;
 
                     case 'block-screen':
-                        $KcRoute = new \Modules\InsiderFramework\Core\Route();
-                        $KcRoute->RequestRoute("/error/loadAvg");
+                        \Modules\InsiderFramework\Core\RoutingSystem\Request::requestRoute(
+                            "/error/loadAvg"
+                        );
                         die();
                         break;
 

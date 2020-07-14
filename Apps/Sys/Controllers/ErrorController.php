@@ -7,6 +7,8 @@ use Modules\InsiderFramework\Core\Validation\Request;
 use Modules\InsiderFramework\Sagacious\Lib\SgsBags\SgsViewsBag;
 use Modules\InsiderFramework\Console\ConsoleError;
 use Modules\InsiderFramework\Core\Error\ErrorMessage;
+use Modules\InsiderFramework\Core\KernelSpace;
+use Modules\InsiderFramework\Core\Error\ErrorHandler;
 
 /**
  * Class responsible for rendering non-fatal errors (such as 404 error)
@@ -32,7 +34,7 @@ class ErrorController extends \Modules\InsiderFramework\Core\Controller
     */
     public function genericError(): void
     {
-        $consoleRequest = \Modules\InsiderFramework\Core\KernelSpace::getVariable(
+        $consoleRequest = KernelSpace::getVariable(
             'consoleRequest',
             'insiderFrameworkSystem'
         );
@@ -64,12 +66,12 @@ class ErrorController extends \Modules\InsiderFramework\Core\Controller
     */
     public function adminMessageError(): void
     {
-        $consoleRequest = \Modules\InsiderFramework\Core\KernelSpace::getVariable(
+        $consoleRequest = KernelSpace::getVariable(
             'consoleRequest',
             'insiderFrameworkSystem'
         );
 
-        $registeredErrors = \Modules\InsiderFramework\Core\KernelSpace::getVariable(
+        $registeredErrors = KernelSpace::getVariable(
             'registeredErrors',
             'insiderFrameworkSystem'
         );
@@ -95,7 +97,7 @@ class ErrorController extends \Modules\InsiderFramework\Core\Controller
                 ));
                 ConsoleError::errorRegister($error);
             } else {
-                \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError('Unknow error: ' . json_encode($msg));
+                ErrorHandler::primaryError('Unknow error: ' . json_encode($msg));
             }
         }
         $this->renderView('Sys::error/adminMessageError.sgv');
@@ -114,7 +116,7 @@ class ErrorController extends \Modules\InsiderFramework\Core\Controller
     */
     public function loadAvg(): void
     {
-        $this->renderView('sys::error/loadAvg.sgv');
+        $this->renderView('Sys::error/loadAvg.sgv');
     }
 
     /**
@@ -130,21 +132,40 @@ class ErrorController extends \Modules\InsiderFramework\Core\Controller
     */
     public function notFound(): void
     {
-        $originalUrlRequested = \Modules\InsiderFramework\Core\KernelSpace::getVariable(
-            'routeObject',
-            'RoutingSystem'
-        )->getOriginalUrlRequested();
-
-        $responseFormat = \Modules\InsiderFramework\Core\KernelSpace::getVariable(
+        $responseFormat = KernelSpace::getVariable(
             'responseFormat',
             'insiderFrameworkSystem'
         );
         if ($responseFormat === 'HTML') {
-            \Modules\InsiderFramework\Sagacious\Lib\SgsViewsBag::set($originalUrlRequested, 'originalUrlRequested');
-            $this->renderView('sys::error/404.sgv');
+            $this->renderView('Sys::error/404.sgv');
         } else {
             http_response_code(404);
-            \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError('Route not found');
+            ErrorHandler::primaryError('Page or resource not found');
+        }
+    }
+
+    /**
+     * Render the template "NoJavascript"
+     *
+     * @author Marcello Costa
+     *
+     * @package Apps\Sys\Controllers\ErrorController
+     *
+     * @Route (path="nojavascript")
+     *
+     * @return void
+    */
+    public function noJavascript(): void
+    {
+        $responseFormat = KernelSpace::getVariable(
+            'responseFormat',
+            'insiderFrameworkSystem'
+        );
+        if ($responseFormat === 'HTML') {
+            $this->renderView('Sys::error/noJavascript.sgv');
+        } else {
+            http_response_code(404);
+            ErrorHandler::primaryError('No javascript detected');
         }
     }
 }

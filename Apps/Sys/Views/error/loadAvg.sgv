@@ -1,12 +1,23 @@
 {template src='Sys::blank'}
-{block id = 'content'}
+{block id='content'}
 <!DOCTYPE html>
 <html lang='pt-br'>
 <head>
-    <meta http-equiv='content-type' content='text/html; charset=<?php
+        {* CSS of framework *}
+        <link rel="stylesheet"
+              href='<?php
 
-    echo ENCODE; ?>'>
+              echo REQUESTED_URL; ?>/Apps/Sys/assets/css/reset.css' />
+
+        <link rel="stylesheet" 
+              href='<?php echo REQUESTED_URL; ?>/Apps/Sys/assets/css/standard.css' />
+
+        <meta http-equiv='content-type' 
+              content='text/html; charset=<?php echo ENCODE; ?>'>
     <style>
+        * {
+            font-family: 'Verdana';
+        }
         <?php
             global $css_injected;
             echo $css_injected;
@@ -15,12 +26,11 @@
 </head>
     <body>
         <div style='text-align: center; padding-top: 50px;' id="all" unselectable='on' onselectstart='return false;' onmousedown='return false;'>
-            <h1 style='font-weight:bold;text-shadow: 4px -4rpx grey;'>Wow ! How many people!</h1>
+            <h2>Wow ! How many people!</h1>
             <br/>
-            <h2 style='font-size: 1.5em;'>
-                We are currently experiencing excess traffic.<br/>
-                Please try again in a few minutes.
-            </h2>
+            <p>We are currently experiencing excess traffic.</p>
+            <p>Please try again in a few minutes.</p>
+            <br/>
             <img src='/Apps/Sys/assets/img/503.png' />
         </div>
     </body>
@@ -30,3 +40,4 @@
     header('Retry-After: 3600');
 ?>
 {/block}
+{block id='scripts'}{/block}

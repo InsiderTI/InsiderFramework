@@ -29,7 +29,17 @@ class MainController extends \Modules\InsiderFramework\Core\Controller
      */
     public function home(): void
     {
-        SgsViewsBag::set('test', 123);
-        $this->renderView('Start::home.sgv');
+        echo '
+        javascriptError -> Quando isto deve ser disparado?
+        cookieError/
+        friendlyAttackErrorMsg/
+        friendlyCriticalErrorMsg/
+        friendlyStandardErrorMsg/
+        ';
+        die();
+        \Modules\InsiderFramework\Core\RoutingSystem\Request::requestRoute("/error/nojavascript");
+
+        //SgsViewsBag::set('test', 123);
+        //$this->renderView('Start::home.sgv');
     }
 }
