@@ -145,7 +145,7 @@ class ErrorController extends \Modules\InsiderFramework\Core\Controller
     }
 
     /**
-     * Render the template "NoJavascript"
+     * Render the view "NoJavascript"
      *
      * @author Marcello Costa
      *
@@ -166,6 +166,31 @@ class ErrorController extends \Modules\InsiderFramework\Core\Controller
         } else {
             http_response_code(404);
             ErrorHandler::primaryError('No javascript detected');
+        }
+    }
+
+    /**
+     * Render the view "cookieError"
+     *
+     * @author Marcello Costa
+     *
+     * @package Apps\Sys\Controllers\ErrorController
+     *
+     * @Route (path="cookieError")
+     *
+     * @return void
+    */
+    public function cookieError(): void
+    {
+        $responseFormat = KernelSpace::getVariable(
+            'responseFormat',
+            'insiderFrameworkSystem'
+        );
+        if ($responseFormat === 'HTML') {
+            $this->renderView('Sys::error/cookieError.sgv');
+        } else {
+            http_response_code(404);
+            ErrorHandler::primaryError('Required cookie not detected');
         }
     }
 }

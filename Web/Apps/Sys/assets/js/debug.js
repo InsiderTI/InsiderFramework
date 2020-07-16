@@ -1,9 +1,11 @@
 warningImg = document.getElementById("warningImg")
-warningImg.onclick = function (e) {
-  warningItemList = document.getElementById("warningItemList")
-  if (warningItemList.style.display !== "block")
-    warningItemList.style.display = "block"
-  else warningItemList.style.display = "none"
+if (warningImg !== null) {
+  warningImg.onclick = function (e) {
+    warningItemList = document.getElementById("warningItemList")
+    if (warningItemList.style.display !== "block")
+      warningItemList.style.display = "block"
+    else warningItemList.style.display = "none"
+  }
 }
 
 function getWarningItemHtml(warningObj) {

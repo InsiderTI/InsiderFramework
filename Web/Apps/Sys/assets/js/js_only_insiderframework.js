@@ -146,6 +146,17 @@ function getDataCookieJS(cookieName) {
 /**
  *   @author Marcello Costa
  *
+ *   Checks if cookies are enable in the browser
+ *
+ *   @returns  {Bool}  True if cookie are enable
+ */
+function cookiesEnabled() {
+  return navigator.cookieEnabled
+}
+
+/**
+ *   @author Marcello Costa
+ *
  *   Convert data to be sent via URL
  *
  *   @param  {String}  data    Cookie name

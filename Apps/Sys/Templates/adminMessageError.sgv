@@ -107,6 +107,11 @@ if (isset(\Modules\InsiderFramework\Core\Request::getRequest('server')['REMOTE_A
 ?>
 <html>
     <head>
+        {* Javascript disabled error *}
+        <noscript>
+            <style>html{display:none;}</style>
+            <meta http-equiv="refresh" content="0.0;url=/error/nojavascript">
+        </noscript>
         <style>
             * {
                 font-family: 'Verdana';

@@ -1,6 +1,12 @@
 <!DOCTYPE HTML>
 <html>
     <head>
+        {* Javascript disabled error *}
+        <noscript>
+            <style>html{display:none;}</style>
+            <meta http-equiv="refresh" content="0.0;url=/error/nojavascript">
+        </noscript>
+
         {* Favicon *}
         <link rel="apple-touch-icon" sizes="180x180" href="<?php
 
@@ -25,6 +31,12 @@
         {* Scripts of framework *}
         <script type='text/javascript' src='<?php echo REQUESTED_URL; ?>/Apps/Sys/assets/js/js_only_insiderframework.js'></script>
         <script type='text/javascript' src='<?php echo REQUESTED_URL; ?>/Apps/Sys/assets/js/vdom.js'></script>
+
+        <script>
+            if (!cookiesEnabled()){
+                window.location.href = '/error/cookieError';
+            }
+        </script>
 
         <?php
         if (DEBUG) {

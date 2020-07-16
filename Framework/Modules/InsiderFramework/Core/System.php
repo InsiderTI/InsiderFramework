@@ -217,20 +217,6 @@ class System
         $server = \Modules\InsiderFramework\Core\Request::getRequest('SERVER');
         \Modules\InsiderFramework\Core\KernelSpace::setVariable(array('SERVER' => $server), 'insiderFrameworkSystem');
 
-        // If it is a special request
-        if ($consoleRequest) {
-            // If the URL contains the user's idsession cookie
-            if (isset($server['QUERY_STRING']) && (strpos($server['QUERY_STRING'], 'cookieframeidsession') !== false)) {
-                // Getting the value of the cookie
-                preg_match("/cookieframeidsession=([^&]*)/", $server['QUERY_STRING'], $matches);
-
-                // Setting the cookie value manually
-                \Modules\InsiderFramework\Core\Manipulation\Cookie::setCookie("idsession", $matches[1]);
-            }
-        }
-        unset($server);
-        unset($consoleRequest);
-
         // Initializes global status of fatal error
         \Modules\InsiderFramework\Core\KernelSpace::setVariable(array('fatalError' => false), 'insiderFrameworkSystem');
 

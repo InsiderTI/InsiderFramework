@@ -213,7 +213,7 @@ class ErrorHandler
                 return ErrorHandler::registerErrorInLogFile($message);
                 break;
 
-            // Ataque to the system
+            // Attack to the system
             case "ATTACK_DETECTED":
                 if ($responseCode === null) {
                     $responseCode = 405;
@@ -222,28 +222,17 @@ class ErrorHandler
                 // HTTP 405 response
                 http_response_code($responseCode);
 
-                // Name of identify cookie
-                $cookie1Name = md5('user_identify_cookie_insider');
-
-                // IDSession cookie
-                $cookie2Name = htmlspecialchars("idsession");
-
-                // Getting the cookies values
-                $cookie1Value = \Modules\InsiderFramework\Core\Manipulation\Cookie::getCookie($cookie1Name);
-                $cookie2Value = \Modules\InsiderFramework\Core\Manipulation\Cookie::getCookie($cookie2Name);
-
-                // Building the message
-                $message .= '- Cookies: (1)' . $cookie1Value . ' (2)' . $cookie2Value;
-
                 // Building the error array
-                $error = new \Modules\InsiderFramework\Core\Error\ErrorMessage(array(
-                    'type' => $type,
-                    'text' => $message,
-                    'file' => $file,
-                    'line' => $line,
-                    'fatal' => true,
-                    'subject' => 'Attack Error - Insider Framework report agent'
-                ));
+                $error = new \Modules\InsiderFramework\Core\Error\ErrorMessage(
+                    array(
+                        'type' => $type,
+                        'text' => 'Something strange happened',
+                        'file' => $file,
+                        'line' => $line,
+                        'fatal' => true,
+                        'subject' => 'Attack Error - Insider Framework report agent'
+                    )
+                );
 
                 // Setting the global variable
                 \Modules\InsiderFramework\Core\KernelSpace::setVariable(
@@ -405,6 +394,141 @@ class ErrorHandler
     }
 
     /**
+    * Stops throwing errors on framework and kills the execution
+    *
+    * @author Marcello Costa
+    *
+    * @package Modules\InsiderFramework\Core\Error\ErrorHandler
+    *
+    * @return void
+    */
+    protected static function stopThrowingErrors(): void
+    {
+        $debugbacktrace = \Modules\InsiderFramework\Core\KernelSpace::getVariable(
+            'debugbacktrace',
+            'insiderFrameworkSystem'
+        );
+
+        $finalErrorMsg = "Internal Server Error - Max errors on framework reached. Consult your web administrator.";
+
+        // Setting the reponse code as 500
+        http_response_code(500);
+
+        // Writing the error details in the log
+        error_log(json_encode($debugbacktrace));
+        
+        \Modules\InsiderFramework\Core\Request::clearAndRestartBuffer();
+
+        // If the debug it's not enable
+        if (!DEBUG) {
+            if (is_array($debugbacktrace)) {
+                $debugbacktrace = json_encode($debugbacktrace);
+            }
+            // Stopping the execution with a default message
+            
+            \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError($finalErrorMsg, 500, $responseFormat);
+        }
+    }
+
+    /**
+    * Force stops throwing errors on framework and kills the execution
+    *
+    * @author Marcello Costa
+    *
+    * @package Modules\InsiderFramework\Core\Error\ErrorHandler
+    *
+    * @return void
+    */
+    protected static function forceStopThrowingErrors(): void
+    {
+        error_log(
+            json_encode($error)
+        );
+
+        $systemicErrorFilePath = INSTALL_DIR . DIRECTORY_SEPARATOR .
+                                    "Apps" . DIRECTORY_SEPARATOR .
+                                    "Sys" . DIRECTORY_SEPARATOR .
+                                    "Views" . DIRECTORY_SEPARATOR .
+                                    "error" . DIRECTORY_SEPARATOR .
+                                    "primarySystemicError.html";
+
+        if (file_exists($systemicErrorFilePath)) {
+            $originalSystemicErrorContent = file_get_contents($systemicErrorFilePath);
+                    
+            if (DEBUG) {
+                ob_start();
+                print_r($error);
+                $userMessage = ob_get_contents();
+                ob_end_clean();
+            } else {
+                $userMessage = " Please consult your web administrator";
+            }
+                    
+            $systemicErrorContent = str_replace('{errorContent}', $userMessage, $originalSystemicErrorContent);
+
+            echo $systemicErrorContent;
+            die();
+        }
+
+        die('Internal Server Error - Primary systemic error');
+    }
+
+    /**
+    * Validate the max error number and register the current error in KernelSpace
+    *
+    * @author Marcello Costa
+    *
+    * @package Modules\InsiderFramework\Core\Error\ErrorHandler
+    *
+    * @param \Modules\InsiderFramework\Core\Error\ErrorMessage $error Object with error information
+    *
+    * @return void
+    */
+    protected static function validateMaxErrorNumberAndRegisterInKernelSpace(
+        \Modules\InsiderFramework\Core\Error\ErrorMessage $error
+    ): void {
+        $errorCount = \Modules\InsiderFramework\Core\KernelSpace::getVariable(
+            'errorCount',
+            'insiderFrameworkSystem'
+        );
+
+        if ($errorCount === null) {
+            $errorCount = 0;
+        } else {
+            $errorCount++;
+        }
+
+        \Modules\InsiderFramework\Core\KernelSpace::setVariable(
+            array(
+                'errorCount' => $errorCount
+            ),
+            'insiderFrameworkSystem'
+        );
+
+        if ($errorCount > 10) {
+            if ($errorCount > 11) {
+                ErrorHander::forceStopThrowingErrors();
+            }
+
+            ErrorHander::stopThrowingErrors();
+        }
+
+        $registeredErrors = \Modules\InsiderFramework\Core\KernelSpace::getVariable(
+            'registeredErrors',
+            'insiderFrameworkSystem'
+        );
+
+        if (!is_array($registeredErrors)) {
+            $registeredErrors = [];
+            \Modules\InsiderFramework\Core\KernelSpace::setVariable(
+                array(
+                    'registeredErrors' => $registeredErrors
+                )
+            );
+        }
+    }
+
+    /**
      * Function that manage an error
      *
      * @author Marcello Costa
@@ -417,46 +541,27 @@ class ErrorHandler
      */
     public static function manageError(\Modules\InsiderFramework\Core\Error\ErrorMessage $error): void
     {
+        ErrorHandler::validateMaxErrorNumberAndRegisterInKernelSpace($error);
+
+        die('Refactoring manageError function to be more simple to read');
+
         $consoleRequest = \Modules\InsiderFramework\Core\KernelSpace::getVariable(
             'consoleRequest',
             'insiderFrameworkSystem'
         );
 
-        // Registered errors
-        $registeredErrors = \Modules\InsiderFramework\Core\KernelSpace::getVariable(
-            'registeredErrors',
-            'insiderFrameworkSystem'
-        );
-
-        if (!is_array($registeredErrors)) {
-            $registeredErrors = [];
-            \Modules\InsiderFramework\Core\KernelSpace::setVariable(array('registeredErrors' => $registeredErrors));
-        }
-
         // Recovering the fatal error variable
         $fatal = $error->getFatal();
 
         if (!$fatal) {
-            $error = new \Modules\InsiderFramework\Core\Error\ErrorMessage(array(
-                'type' => $error->getType(),
-                'text' => $error->getMessageOrText(),
-                'file' => $error->getFile(),
-                'line' => $error->getLine(),
-                'fatal' => false,
-                'subject' => 'Warning Error - Insider Framework report agent'
-            ));
-
             $debug = new \Modules\InsiderFramework\Core\Debug();
             $debug->debugBar("logWarningError", $error);
 
             $debugController = new \Apps\Sys\Controllers\DebugController();
             $debugBarHtml = $debugController->flushWarning();
             return;
-        } else {
-            if (!$consoleRequest) {
-                // The first thing to be done it's write the error in the web server log
-                error_log(\Modules\InsiderFramework\Core\Json::jsonEncodePrivateObject($error), 0);
-            }
+        } elseif (!$consoleRequest) {
+            error_log(\Modules\InsiderFramework\Core\Json::jsonEncodePrivateObject($error), 0);
         }
 
         $responseFormat = \Modules\InsiderFramework\Core\KernelSpace::getVariable(
@@ -474,10 +579,8 @@ class ErrorHandler
             );
         }
 
-        // The first part it's displayed if the processing has not successful in the next lines
         \Modules\InsiderFramework\Core\Request::clearAndRestartBuffer();
 
-        // Writing the default message to the user
         $defaultMsg = 'Oops, something is wrong with this URL. See the error_log for details';
         if (!isset($registeredErrors['messageToUser']) || !in_array($defaultMsg, $registeredErrors['messageToUser'])) {
             $registeredErrors['messageToUser'][] = $defaultMsg;
@@ -488,9 +591,6 @@ class ErrorHandler
                 'insiderFrameworkSystem'
             );
         }
-
-        // Recovering the error counter
-        $errorCount = \Modules\InsiderFramework\Core\KernelSpace::getVariable('errorCount', 'insiderFrameworkSystem');
 
         $debugbacktrace = \Modules\InsiderFramework\Core\KernelSpace::getVariable(
             'debugbacktrace',
@@ -508,75 +608,6 @@ class ErrorHandler
                 ),
                 'insiderFrameworkSystem'
             );
-        }
-
-        // If there is not an error
-        if ($errorCount === null) {
-            $errorCount = 0;
-        } else {
-            $errorCount++;
-        }
-        \Modules\InsiderFramework\Core\KernelSpace::setVariable(
-            array(
-                'errorCount' => $errorCount
-            ),
-            'insiderFrameworkSystem'
-        );
-
-        // If more than 10 errors as mappeded
-        if ($errorCount > 10) {
-            // Backup logic
-            // This is something ugly to write directly with
-            // string, but if nothing more works, prints
-            // the HTML directly in the screen (if DEBUG enable).
-            if ($errorCount > 11) {
-                error_log(json_encode($error));
-                $systemicErrorFilePath = INSTALL_DIR . DIRECTORY_SEPARATOR .
-                                            "Apps" . DIRECTORY_SEPARATOR .
-                                            "Sys" . DIRECTORY_SEPARATOR .
-                                            "Views" . DIRECTORY_SEPARATOR .
-                                            "error" . DIRECTORY_SEPARATOR .
-                                            "primarySystemicError.html";
-
-                if (file_exists($systemicErrorFilePath)) {
-                    $originalSystemicErrorContent = file_get_contents($systemicErrorFilePath);
-                    
-                    if (DEBUG) {
-                        ob_start();
-                        print_r($error);
-                        $userMessage = ob_get_contents();
-                        ob_end_clean();
-                    } else {
-                        $userMessage = " Please consult your web administrator";
-                    }
-                    
-                    $systemicErrorContent = str_replace('{errorContent}', $userMessage, $originalSystemicErrorContent);
-
-                    echo $systemicErrorContent;
-                    die();
-                }
-                die('Internal Server Error - Primary systemic error');
-            }
-
-            $finalErrorMsg = "Internal Server Error - Max errors on framework reached. Consult your web administrator.";
-
-            // Setting the reponse code as 500
-            http_response_code(500);
-
-            // Writing the error details in the log
-            error_log(json_encode($debugbacktrace));
-            
-            \Modules\InsiderFramework\Core\Request::clearAndRestartBuffer();
-
-            // If the debug it's not enable
-            if (!DEBUG) {
-                if (is_array($debugbacktrace)) {
-                    $debugbacktrace = json_encode($debugbacktrace);
-                }
-                // Stopping the execution with a default message
-                
-                \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError($finalErrorMsg, 500, $responseFormat);
-            }
         }
 
         if ($consoleRequest) {
