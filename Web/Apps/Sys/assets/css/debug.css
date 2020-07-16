@@ -50,7 +50,7 @@
 .warningImgOn {
   background-image: url("/Apps/Sys/assets/img/warning_icon_debugbar_on.png") !important;
 }
-#warningItemList {
+#warningItemContainer {
   color: #acae02 !important;
   width: 600px !important;
   max-height: 200px !important;

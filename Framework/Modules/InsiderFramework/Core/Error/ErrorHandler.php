@@ -226,7 +226,7 @@ class ErrorHandler
                 $error = new \Modules\InsiderFramework\Core\Error\ErrorMessage(
                     array(
                         'type' => $type,
-                        'text' => 'Something strange happened',
+                        'text' => 'Attack detected',
                         'file' => $file,
                         'line' => $line,
                         'fatal' => true,
@@ -555,6 +555,280 @@ class ErrorHandler
     }
 
     /**
+     * Function that renders a warning to the debug bar
+     *
+     * @author Marcello Costa
+     *
+     * @package Modules\InsiderFramework\Core\Error\ErrorHandler
+     *
+     * @param \Modules\InsiderFramework\Core\Error\ErrorMessage $error Object with error information
+     *
+     * @return void
+     */
+    public static function flushWarningToDebugBar(\Modules\InsiderFramework\Core\Error\ErrorMessage $error): void
+    {
+        $debug = new \Modules\InsiderFramework\Core\Debug();
+        $debug->debugBar("logWarningError", $error);
+
+        $debugController = new \Apps\Sys\Controllers\DebugController();
+        $debugBarHtml = $debugController->flushWarning();
+    }
+
+    /**
+    * Initialize global variable debugbacktrace
+    *
+    * @author Marcello Costa
+    *
+    * @package Modules\InsiderFramework\Core\Error\ErrorHandler
+    *
+    * @return array Array of debug back trace native function
+    */
+    public static function initializeDebugBackTrace(): array
+    {
+        $debugbacktrace = \Modules\InsiderFramework\Core\KernelSpace::getVariable(
+            'debugbacktrace',
+            'insiderFrameworkSystem'
+        );
+
+        // In here the framework checks if this piece of code already been executed
+        // with some fatal error. If so, they will display a message with the error
+        // directly for the user and write a log with the detais.
+        if ($debugbacktrace === null) {
+            $debugbacktrace = debug_backtrace();
+            \Modules\InsiderFramework\Core\KernelSpace::setVariable(
+                array(
+                    'debugbacktrace' => $debugbacktrace
+                ),
+                'insiderFrameworkSystem'
+            );
+        }
+            
+        return $debugbacktrace;
+    }
+
+    /**
+    * Get relative execution php script path
+    *
+    * @author Marcello Costa
+    *
+    * @package Modules\InsiderFramework\Core\Error\ErrorHandler
+    *
+    * @return string Relative execution path
+    */
+    public static function getRelativeScriptPath(): string
+    {
+        $relativePath = "";
+        $path = __DIR__;
+        $path = explode(DIRECTORY_SEPARATOR, $path);
+        if (count($path) === 0) {
+            \Modules\InsiderFramework\Core\Request::clearAndRestartBuffer();
+            \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError(
+                "Unable to recover installation directory when trigger error"
+            );
+        }
+
+        try {
+            $relativePath = implode(
+                DIRECTORY_SEPARATOR,
+                array_slice($path, 0, count($path) - 3)
+            );
+        } catch (\Exception $e) {
+            \Modules\InsiderFramework\Core\Request::clearAndRestartBuffer();
+            \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError(
+                "Unable to translate the relative installation directory when triggering error"
+            );
+        }
+
+        return $relativePath;
+    }
+
+    /**
+    * Send a message to user
+    *
+    * @author Marcello Costa
+    *
+    * @package Modules\InsiderFramework\Core\Error\ErrorHandler
+    *
+    * @param \Modules\InsiderFramework\Core\Error\ErrorMessage $error Object with error information
+    *
+    * @return void
+    */
+    public static function sendMessageToUser(\Modules\InsiderFramework\Core\Error\ErrorMessage $error): void
+    {
+        $defaultMsg = 'Oops, something is wrong with this URL. See the error_log for details';
+        $registeredErrors = \Modules\InsiderFramework\Core\KernelSpace::getVariable(
+            'registeredErrors',
+            'insiderFrameworkSystem'
+        );
+
+        if (!isset($registeredErrors['messageToUser']) || !in_array($defaultMsg, $registeredErrors['messageToUser'])) {
+            $registeredErrors['messageToUser'][] = $defaultMsg;
+            \Modules\InsiderFramework\Core\KernelSpace::setVariable(
+                array(
+                    'registeredErrors' => $registeredErrors
+                ),
+                'insiderFrameworkSystem'
+            );
+        }
+
+        // Getting the send mail policy
+        $contentConfig = \Modules\InsiderFramework\Core\KernelSpace::getVariable(
+            'contentConfig',
+            'insiderFrameworkSystem'
+        );
+
+        if ($contentConfig === null) {
+            \Modules\InsiderFramework\Core\Error\ErrorHandler::getFrameworkDebugStatus();
+            $contentConfig = \Modules\InsiderFramework\Core\KernelSpace::getVariable(
+                'contentConfig',
+                'insiderFrameworkSystem'
+            );
+        }
+
+        if (!property_exists($contentConfig, 'ERROR_MAIL_SENDING_POLICY')) {
+            \Modules\InsiderFramework\Core\Request::clearAndRestartBuffer();
+            \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError(
+                "Unable to read email sending policy when trigger error"
+            );
+        }
+
+        switch (strtolower(trim($contentConfig->ERROR_MAIL_SENDING_POLICY))) {
+            case "debug-off-only":
+                // Sending the e-mail
+                // If cannot be able to send the e-mail
+                if (
+                    !(\Modules\InsiderFramework\Core\Manipulation\Mail::sendMail(
+                        MAILBOX,
+                        MAILBOX,
+                        MAILBOX_PASS,
+                        $error->getSubject(),
+                        $error->getText(),
+                        $error->getText(),
+                        MAILBOX_SMTP,
+                        MAILBOX_SMTP_PORT,
+                        MAILBOX_SMTP_AUTH,
+                        MAILBOX_SMTP_SECURE
+                    ))
+                ) {
+                    \Modules\InsiderFramework\Core\Request::clearAndRestartBuffer();
+                    // Record a message in the web server log
+                    \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError(
+                        "Unable to send an error message via email to 
+                        the default mailbox when triggering an error!"
+                    );
+                }
+                break;
+
+            case "never":
+                break;
+
+            default:
+                \Modules\InsiderFramework\Core\Request::clearAndRestartBuffer();
+                $msg = 'Email sending policy \'' .
+                        $contentConfig->ERROR_MAIL_SENDING_POLICY .
+                        '\' not identified when trigger error';
+
+                error_log($msg);
+                \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError($msg);
+                break;
+        }
+
+        // Displaying the default error message
+        $C = new \Apps\Sys\Controllers\ErrorController();
+        $C->genericError();
+    }
+
+    /**
+    * Send a message to admin
+    *
+    * @author Marcello Costa
+    *
+    * @package Modules\InsiderFramework\Core\Error\ErrorHandler
+    *
+    * @param \Modules\InsiderFramework\Core\Error\ErrorMessage $error Object with error information
+    *
+    * @return void
+    */
+    public static function sendMessageToAdmin(\Modules\InsiderFramework\Core\Error\ErrorMessage $error): void
+    {
+        // Handling the error path (to display the relative path)
+        $relativePath = ErrorHandler::getRelativeScriptPath();
+        
+        // Data of error (for admin)
+        $msgToAdmin = array(
+            'jsonMessage' => \Modules\InsiderFramework\Core\Json::jsonEncodePrivateObject($error),
+            'subject' => $error->getSubject(),
+            'errfile' => str_replace($relativePath, "", $error->getFile()),
+            'errline' => $error->getLine(),
+            'msgError' => str_replace($relativePath, "", $error->getMessageOrText())
+        );
+
+        $registeredErrors = \Modules\InsiderFramework\Core\KernelSpace::getVariable(
+            'registeredErrors',
+            'insiderFrameworkSystem'
+        );
+
+        // Recording the error in the kernelspace (to be accessed by the View)
+        if (
+            !isset($registeredErrors['messagesToAdmin']) ||
+            !array_key_exists(
+                $msgToAdmin['jsonMessage'],
+                $registeredErrors['messagesToAdmin']
+            )
+        ) {
+            $registeredErrors['messagesToAdmin'][$msgToAdmin['jsonMessage']] = $msgToAdmin;
+            \Modules\InsiderFramework\Core\KernelSpace::setVariable(
+                array(
+                    'registeredErrors' => $registeredErrors
+                ),
+                'insiderFrameworkSystem'
+            );
+        }
+
+        $responseFormat = \Modules\InsiderFramework\Core\Response::getCurrentResponseFormat();
+        switch ($responseFormat) {
+            case 'XML':
+                $xml = new \SimpleXMLElement('<error/>');
+                unset($msgToAdmin['jsonMessage']);
+
+                // Flipping the key and values of the array
+                $msgToAdmin = array_flip($msgToAdmin);
+                array_walk_recursive($msgToAdmin, array($xml, 'addChild'));
+                \Modules\InsiderFramework\Core\Request::clearAndRestartBuffer();
+
+                // All the XML errors must be displayed alone
+                // (without any interferences). Otherwise the XML
+                // will not be a valid one.
+                exit($xml->asXML());
+                break;
+
+            case 'JSON':
+                $msgError = array(
+                    'error' => json_decode($msgToAdmin['jsonMessage'])
+                );
+
+                \Modules\InsiderFramework\Core\Request::clearAndRestartBuffer();
+
+                // All the JSON errors must be displayed alone
+                // (without any interferences). Otherwise the JSON
+                // will not be a valid one.
+                exit(json_encode($msgError));
+                break;
+
+            default:
+                // Recovering the admin message to be handled
+                $errorController = new \Apps\Sys\Controllers\ErrorController();
+
+                $errorController->adminMessageError();
+
+                $debugController = new \Apps\Sys\Controllers\DebugController();
+                $debugBarHtml = $debugController->debugBarRender();
+                echo $debugBarHtml;
+                break;
+        }
+    }
+
+    /**
      * Function that manage an error
      *
      * @author Marcello Costa
@@ -579,220 +853,30 @@ class ErrorHandler
             return;
         }
 
+        error_log(\Modules\InsiderFramework\Core\Json::jsonEncodePrivateObject($error), 0);
+
         $responseFormat = \Modules\InsiderFramework\Core\Response::getCurrentResponseFormat();
 
-        // Recovering the fatal error variable
         $fatal = $error->getFatal();
 
         if (!$fatal && $responseFormat === "HTML") {
-            $debug = new \Modules\InsiderFramework\Core\Debug();
-            $debug->debugBar("logWarningError", $error);
-
-            $debugController = new \Apps\Sys\Controllers\DebugController();
-            $debugBarHtml = $debugController->flushWarning();
+            ErrorHandler::flushWarningToDebugBar($error);
             return;
         }
 
-        error_log(\Modules\InsiderFramework\Core\Json::jsonEncodePrivateObject($error), 0);
-
         \Modules\InsiderFramework\Core\Request::clearAndRestartBuffer();
 
-        $defaultMsg = 'Oops, something is wrong with this URL. See the error_log for details';
-        if (!isset($registeredErrors['messageToUser']) || !in_array($defaultMsg, $registeredErrors['messageToUser'])) {
-            $registeredErrors['messageToUser'][] = $defaultMsg;
-            \Modules\InsiderFramework\Core\KernelSpace::setVariable(
-                array(
-                    'registeredErrors' => $registeredErrors
-                ),
-                'insiderFrameworkSystem'
-            );
-        }
-
-        $debugbacktrace = \Modules\InsiderFramework\Core\KernelSpace::getVariable(
-            'debugbacktrace',
-            'insiderFrameworkSystem'
-        );
-
-        // In here the framework checks if this piece of code already been executed
-        // with some fatal error. If so, they will display a message with the error
-        // directly for the user and write a log with the detais.
-        if ($debugbacktrace === null) {
-            $debugbacktrace = debug_backtrace();
-            \Modules\InsiderFramework\Core\KernelSpace::setVariable(
-                array(
-                    'debugbacktrace' => $debugbacktrace
-                ),
-                'insiderFrameworkSystem'
-            );
-        }
-
-
-
-        // Handling the error path (to display the relative path)
-        $path = __DIR__;
-        $path = explode(DIRECTORY_SEPARATOR, $path);
-        if (count($path) === 0) {
-            \Modules\InsiderFramework\Core\Request::clearAndRestartBuffer();
-            \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError(
-                "Unable to recover installation directory when trigger error"
-            );
-        }
-
-        try {
-            $relativePath = implode(
-                DIRECTORY_SEPARATOR,
-                array_slice($path, 0, count($path) - 3)
-            );
-        } catch (\Exception $e) {
-            \Modules\InsiderFramework\Core\Request::clearAndRestartBuffer();
-            \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError(
-                "Unable to translate the relative installation directory when triggering error"
-            );
-        }
+        $debugbacktrace = ErrorHandler::initializeDebugBackTrace();
 
         // If DEBUG is not defined, it's some error inside the framework
         if (DEBUG === null) {
             define('DEBUG', \Modules\InsiderFramework\Core\Error\ErrorHandler::getFrameworkDebugStatus());
         }
-        
-        // Data of error (for admin)
-        $msgToAdmin = array(
-            'jsonMessage' => \Modules\InsiderFramework\Core\Json::jsonEncodePrivateObject($error),
-            'subject' => $error->getSubject(),
-            'errfile' => str_replace($relativePath, "", $error->getFile()),
-            'errline' => $error->getLine(),
-            'msgError' => str_replace($relativePath, "", $error->getMessageOrText())
-        );
 
-        // Recording the error in the kernelspace (to be accessed by the View)
-        if (
-            !isset($registeredErrors['messagesToAdmin']) ||
-            !array_key_exists(
-                $msgToAdmin['jsonMessage'],
-                $registeredErrors['messagesToAdmin']
-            )
-        ) {
-            $registeredErrors['messagesToAdmin'][$msgToAdmin['jsonMessage']] = $msgToAdmin;
-            \Modules\InsiderFramework\Core\KernelSpace::setVariable(
-                array(
-                    'registeredErrors' => $registeredErrors
-                ),
-                'insiderFrameworkSystem'
-            );
-        }
-
-        // If the DEBUG it's enable
         if (DEBUG) {
-            switch ($responseFormat) {
-                case 'XML':
-                    $xml = new \SimpleXMLElement('<error/>');
-                    unset($msgToAdmin['jsonMessage']);
-
-                    // Flipping the key and values of the array
-                    $msgToAdmin = array_flip($msgToAdmin);
-                    array_walk_recursive($msgToAdmin, array($xml, 'addChild'));
-                    \Modules\InsiderFramework\Core\Request::clearAndRestartBuffer();
-
-                    // All the XML errors must be displayed alone
-                    // (without any interferences). Otherwise the XML
-                    // will not be a valid one.
-                    exit($xml->asXML());
-                    break;
-
-                case 'JSON':
-                    $msgError = array(
-                        'error' => json_decode($msgToAdmin['jsonMessage'])
-                    );
-
-                    \Modules\InsiderFramework\Core\Request::clearAndRestartBuffer();
-
-                    // All the JSON errors must be displayed alone
-                    // (without any interferences). Otherwise the JSON
-                    // will not be a valid one.
-                    exit(json_encode($msgError));
-                    break;
-
-                default:
-                    // Recovering the admin message to be handled
-                    $errorController = new \Apps\Sys\Controllers\ErrorController();
-
-                    $registeredErrors = \Modules\InsiderFramework\Core\KernelSpace::getVariable(
-                        'registeredErrors',
-                        'insiderFrameworkSystem'
-                    );
-                    $errorController->adminMessageError();
-
-                    $debugController = new \Apps\Sys\Controllers\DebugController();
-                    $debugBarHtml = $debugController->debugBarRender();
-                    echo $debugBarHtml;
-                    break;
-            }
+            ErrorHandler::sendMessageToAdmin($error);
         } else {
-            // Getting the send mail policy
-            $contentConfig = \Modules\InsiderFramework\Core\KernelSpace::getVariable(
-                'contentConfig',
-                'insiderFrameworkSystem'
-            );
-
-            if ($contentConfig === null) {
-                \Modules\InsiderFramework\Core\Error\ErrorHandler::getFrameworkDebugStatus();
-                $contentConfig = \Modules\InsiderFramework\Core\KernelSpace::getVariable(
-                    'contentConfig',
-                    'insiderFrameworkSystem'
-                );
-            }
-
-            if (!property_exists($contentConfig, 'ERROR_MAIL_SENDING_POLICY')) {
-                \Modules\InsiderFramework\Core\Request::clearAndRestartBuffer();
-                \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError(
-                    "Unable to read email sending policy when trigger error"
-                );
-            }
-
-            switch (strtolower(trim($contentConfig->ERROR_MAIL_SENDING_POLICY))) {
-                case "debug-off-only":
-                    // Sending the e-mail
-                    // If cannot be able to send the e-mail
-                    if (
-                        !(\Modules\InsiderFramework\Core\Manipulation\Mail::sendMail(
-                            MAILBOX,
-                            MAILBOX,
-                            MAILBOX_PASS,
-                            $error->getSubject(),
-                            $error->getText(),
-                            $error->getText(),
-                            MAILBOX_SMTP,
-                            MAILBOX_SMTP_PORT,
-                            MAILBOX_SMTP_AUTH,
-                            MAILBOX_SMTP_SECURE
-                        ))
-                    ) {
-                        \Modules\InsiderFramework\Core\Request::clearAndRestartBuffer();
-                        // Record a message in the web server log
-                        \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError(
-                            "Unable to send an error message via email to 
-                            the default mailbox when triggering an error!"
-                        );
-                    }
-                    break;
-
-                case "never":
-                    break;
-
-                default:
-                    \Modules\InsiderFramework\Core\Request::clearAndRestartBuffer();
-                    $msg = 'Email sending policy \'' .
-                            $contentConfig->ERROR_MAIL_SENDING_POLICY .
-                            '\' not identified when trigger error';
-
-                    error_log($msg);
-                    \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError($msg);
-                    break;
-            }
-
-            // Displaying the default error message
-            $C = new \Apps\Sys\Controllers\ErrorController();
-            $C->genericError();
+            ErrorHandler::sendMessageToUser($error);
         }
 
         // Killing the processing if it's a fatal error

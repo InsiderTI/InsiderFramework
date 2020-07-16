@@ -21,8 +21,9 @@
             <?php
         }
         ?>
-        <div id="warningItemList">
+        <div id="warningItemContainer">
             <p style='font-size: 14px; margin-bottom: 8px;'><u>Warning List: (<span id='warningCounter'><?php echo count($warnings); ?></span>)</u></p>
+            <div id="warningList"></div>
         </div>
     </div>
 </div>

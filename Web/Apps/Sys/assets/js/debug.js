@@ -1,10 +1,11 @@
 warningImg = document.getElementById("warningImg")
 if (warningImg !== null) {
   warningImg.onclick = function (e) {
-    warningItemList = document.getElementById("warningItemList")
-    if (warningItemList.style.display !== "block")
-      warningItemList.style.display = "block"
-    else warningItemList.style.display = "none"
+    console.log(warningImg)
+    warningItemContainer = document.getElementById("warningItemContainer")
+    if (warningItemContainer.style.display !== "block")
+      warningItemContainer.style.display = "block"
+    else warningItemContainer.style.display = "none"
   }
 }
 
@@ -32,6 +33,7 @@ function getWarningItemHtml(warningObj) {
 }
 
 function registerWarning(base64Warning) {
+  alert("Stopped in: Error while register warning error")
   var warningImg = document.getElementById("warningImg")
   if (warningImg.className == "warningImgOff") {
     warningImg.className = "warningImgOn"
@@ -40,12 +42,13 @@ function registerWarning(base64Warning) {
   var warningCounter = parseInt(
     document.getElementById("warningCounter").innerHTML
   )
+
   warningCounter++
   document.getElementById("warningCounter").innerHTML = warningCounter
 
   var warningObj = JSON.parse(atob(base64Warning))
   var htmlItem = getWarningItemHtml(warningObj)
-  var warningItemList = document.getElementById("warningItemList")
 
+  var warningItemList = document.getElementById("warningList")
   warningItemList.innerHTML += htmlItem
 }
