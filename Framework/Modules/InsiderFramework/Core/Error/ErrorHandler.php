@@ -529,6 +529,32 @@ class ErrorHandler
     }
 
     /**
+     * Function that manage an error if it's a console request
+     *
+     * @author Marcello Costa
+     *
+     * @package Modules\InsiderFramework\Core\Error\ErrorHandler
+     *
+     * @param \Modules\InsiderFramework\Core\Error\ErrorMessage $error Object with error information
+     *
+     * @return void
+     */
+    public static function manageErrorConsoleRequest(\Modules\InsiderFramework\Core\Error\ErrorMessage $error): void
+    {
+        $climate = \Modules\InsiderFramework\Core\KernelSpace::getVariable('climate', 'insiderFrameworkSystem');
+        $climate->br();
+        $climate->to('error')->red($error->getSubject())->br();
+        $climate->to('error')->red("Type: " . $error->getType())->br();
+        $climate->to('error')->red("Message: " . $error->getMessageOrText())->br();
+        $climate->to('error')->red("File: " . $error->getFile())->br();
+        $climate->to('error')->red("Line: " . $error->getLine())->br();
+        $climate->to('error')->red("Fatal: " . $error->getFatal())->br();
+        if ($error->getFatal()) {
+            die();
+        }
+    }
+
+    /**
      * Function that manage an error
      *
      * @author Marcello Costa
@@ -543,41 +569,31 @@ class ErrorHandler
     {
         ErrorHandler::validateMaxErrorNumberAndRegisterInKernelSpace($error);
 
-        die('Refactoring manageError function to be more simple to read');
-
         $consoleRequest = \Modules\InsiderFramework\Core\KernelSpace::getVariable(
             'consoleRequest',
             'insiderFrameworkSystem'
         );
 
+        if ($consoleRequest) {
+            ErrorHandler::manageErrorConsoleRequest($error);
+            return;
+        }
+
+        $responseFormat = \Modules\InsiderFramework\Core\Response::getCurrentResponseFormat();
+
         // Recovering the fatal error variable
         $fatal = $error->getFatal();
 
-        if (!$fatal) {
+        if (!$fatal && $responseFormat === "HTML") {
             $debug = new \Modules\InsiderFramework\Core\Debug();
             $debug->debugBar("logWarningError", $error);
 
             $debugController = new \Apps\Sys\Controllers\DebugController();
             $debugBarHtml = $debugController->flushWarning();
             return;
-        } elseif (!$consoleRequest) {
-            error_log(\Modules\InsiderFramework\Core\Json::jsonEncodePrivateObject($error), 0);
         }
 
-        $responseFormat = \Modules\InsiderFramework\Core\KernelSpace::getVariable(
-            'responseFormat',
-            'insiderFrameworkSystem'
-        );
-
-        if ($responseFormat . "" === "") {
-            $responseFormat = DEFAULT_RESPONSE_FORMAT;
-            \Modules\InsiderFramework\Core\KernelSpace::setVariable(
-                array(
-                    'responseFormat' => $responseFormat
-                ),
-                'insiderFrameworkSystem'
-            );
-        }
+        error_log(\Modules\InsiderFramework\Core\Json::jsonEncodePrivateObject($error), 0);
 
         \Modules\InsiderFramework\Core\Request::clearAndRestartBuffer();
 
@@ -610,19 +626,7 @@ class ErrorHandler
             );
         }
 
-        if ($consoleRequest) {
-            $climate = \Modules\InsiderFramework\Core\KernelSpace::getVariable('climate', 'insiderFrameworkSystem');
-            $climate->br();
-            $climate->to('error')->red($error->getSubject())->br();
-            $climate->to('error')->red("Type: " . $error->getType())->br();
-            $climate->to('error')->red("Message: " . $error->getMessageOrText())->br();
-            $climate->to('error')->red("File: " . $error->getFile())->br();
-            $climate->to('error')->red("Line: " . $error->getLine())->br();
-            $climate->to('error')->red("Fatal: " . $error->getFatal())->br();
-            if ($error->getFatal()) {
-                die();
-            }
-        }
+
 
         // Handling the error path (to display the relative path)
         $path = __DIR__;

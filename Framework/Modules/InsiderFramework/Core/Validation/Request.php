@@ -37,10 +37,7 @@ trait Request
     */
     public static function isResponseFormat($responseFormatExpected): bool
     {
-        $responseFormatNow = \Modules\InsiderFramework\Core\KernelSpace::getVariable(
-            'responseFormat',
-            'insiderFrameworkSystem'
-        );
+        $responseFormatNow = \Modules\InsiderFramework\Core\Response::getCurrentResponseFormat();
         
         if (strtoupper($responseFormatExpected) === strtoupper($responseFormatNow)) {
             return true;

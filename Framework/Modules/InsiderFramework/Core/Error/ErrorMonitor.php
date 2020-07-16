@@ -167,15 +167,7 @@ class ErrorMonitor
 
                 $error['subject'] = $subject;
 
-                $responseFormat = \Modules\InsiderFramework\Core\KernelSpace::getVariable(
-                    'responseFormat',
-                    'insiderFrameworkSystem'
-                );
-                if ($responseFormat === "") {
-                    $responseFormat = DEFAULT_RESPONSE_FORMAT;
-                } else {
-                    $responseFormat = $responseFormat;
-                }
+                $responseFormat = \Modules\InsiderFramework\Core\Response::getCurrentResponseFormat();
 
                 $ErrorMessage = new \Modules\InsiderFramework\Core\Error\ErrorMessage(array(
                     'type' => $errorType,

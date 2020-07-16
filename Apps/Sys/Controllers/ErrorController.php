@@ -132,10 +132,7 @@ class ErrorController extends \Modules\InsiderFramework\Core\Controller
     */
     public function notFound(): void
     {
-        $responseFormat = KernelSpace::getVariable(
-            'responseFormat',
-            'insiderFrameworkSystem'
-        );
+        $responseFormat = \Modules\InsiderFramework\Core\Response::getCurrentResponseFormat();
         if ($responseFormat === 'HTML') {
             $this->renderView('Sys::error/404.sgv');
         } else {
@@ -157,10 +154,7 @@ class ErrorController extends \Modules\InsiderFramework\Core\Controller
     */
     public function noJavascript(): void
     {
-        $responseFormat = KernelSpace::getVariable(
-            'responseFormat',
-            'insiderFrameworkSystem'
-        );
+        $responseFormat = \Modules\InsiderFramework\Core\Response::getCurrentResponseFormat();
         if ($responseFormat === 'HTML') {
             $this->renderView('Sys::error/noJavascript.sgv');
         } else {
@@ -182,10 +176,7 @@ class ErrorController extends \Modules\InsiderFramework\Core\Controller
     */
     public function cookieError(): void
     {
-        $responseFormat = KernelSpace::getVariable(
-            'responseFormat',
-            'insiderFrameworkSystem'
-        );
+        $responseFormat = \Modules\InsiderFramework\Core\Response::getCurrentResponseFormat();
         if ($responseFormat === 'HTML') {
             $this->renderView('Sys::error/cookieError.sgv');
         } else {

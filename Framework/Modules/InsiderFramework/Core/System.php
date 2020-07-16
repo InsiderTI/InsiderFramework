@@ -224,12 +224,7 @@ class System
         \Modules\InsiderFramework\Core\KernelSpace::setVariable(array('registeredErrors' => []));
 
         // Initializes global return format value
-        \Modules\InsiderFramework\Core\KernelSpace::setVariable(
-            array(
-                'responseFormat' => DEFAULT_RESPONSE_FORMAT
-            ),
-            'insiderFrameworkSystem'
-        );
+        $responseFormat = \Modules\InsiderFramework\Core\Response::setCurrentResponseFormat(DEFAULT_RESPONSE_FORMAT);
     }
 
     /**

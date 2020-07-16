@@ -26,6 +26,58 @@ trait Response
     }
 
     /**
+    * Get the correct response format
+    *
+    * @author Marcello Costa
+    *
+    * @package Modules\InsiderFramework\Core\Manipulation\Response
+    *
+    * @return string Response format
+    */
+    public static function getCurrentResponseFormat(): string
+    {
+        $responseFormat = \Modules\InsiderFramework\Core\KernelSpace::getVariable(
+            'responseFormat',
+            'insiderFrameworkSystem'
+        );
+
+        if ($responseFormat . "" === "") {
+            $responseFormat = DEFAULT_RESPONSE_FORMAT;
+            \Modules\InsiderFramework\Core\KernelSpace::setVariable(
+                array(
+                    'responseFormat' => $responseFormat
+                ),
+                'insiderFrameworkSystem'
+            );
+        }
+
+        return $responseFormat;
+    }
+
+    /**
+    * Set the correct response format
+    *
+    * @author Marcello Costa
+    *
+    * @package Modules\InsiderFramework\Core\Manipulation\Response
+    *
+    * @return void
+    */
+    public static function setCurrentResponseFormat(string $response = null): void
+    {
+        $currentResponseFormat = $response;
+        if ($currentResponseFormat === null) {
+            $currentResponseFormat = DEFAULT_RESPONSE_FORMAT;
+        }
+        \Modules\InsiderFramework\Core\KernelSpace::setVariable(
+            array(
+                'responseFormat' => $currentResponseFormat
+            ),
+            'insiderFrameworkSystem'
+        );
+    }
+
+    /**
      * Return an XML as an response of Response (method)
      *
      * @author Marcello Costa
@@ -114,19 +166,7 @@ trait Response
         if (\Modules\InsiderFramework\Core\Validation\Aggregation::existAndIsNotEmpty($arrayArgs, 'responseFormat')) {
             $responseFormat = $arrayArgs['responseFormat'];
         } else {
-            $responseFormat = KernelSpace::getVariable(
-                'responseFormat',
-                'insiderFrameworkSystem'
-            );
-            if ($responseFormat === "") {
-                $responseFormat = DEFAULT_RESPONSE_FORMAT;
-                KernelSpace::setVariable(
-                    array(
-                        'responseFormat' => $responseFormat
-                    ),
-                    'insiderFrameworkSystem'
-                );
-            }
+            $responseFormat = \Modules\InsiderFramework\Core\Response::getCurrentResponseFormat();
         }
 
         switch ($responseFormat) {

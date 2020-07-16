@@ -58,11 +58,7 @@ trait SgsController
         $view = $this->processViewCode($viewFilename);
 
         // Displaying the view
-        $responseFormat = KernelSpace::getVariable(
-            'responseFormat',
-            'insiderFrameworkSystem'
-        );
-        
+        $responseFormat = \Modules\InsiderFramework\Core\Response::getCurrentResponseFormat();
 
         switch ($responseFormat) {
             case 'JSON':
