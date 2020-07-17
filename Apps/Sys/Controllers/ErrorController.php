@@ -184,4 +184,26 @@ class ErrorController extends \Modules\InsiderFramework\Core\Controller
             ErrorHandler::primaryError('Required cookie not detected');
         }
     }
+
+    /**
+     * Render the view "attackError"
+     *
+     * @author Marcello Costa
+     *
+     * @package Apps\Sys\Controllers\ErrorController
+     *
+     * @Route (path="attackError")
+     *
+     * @return void
+    */
+    public function attackError(): void
+    {
+        $responseFormat = \Modules\InsiderFramework\Core\Response::getCurrentResponseFormat();
+        if ($responseFormat === 'HTML') {
+            $this->renderView('Sys::error/attackError.sgv');
+        } else {
+            http_response_code(404);
+            ErrorHandler::primaryError('Attack detected');
+        }
+    }
 }

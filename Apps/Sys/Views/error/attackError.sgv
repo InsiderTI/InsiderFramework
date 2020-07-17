@@ -1,0 +1,43 @@
+{template src='Sys::blank'}
+{block id = 'content'}
+<!DOCTYPE html>
+<html lang='pt-br'>
+<head>
+    {* Javascript disabled error *}
+    <noscript>
+        <style>html{display:none;}</style>
+        <meta http-equiv="refresh" content="0.0;url=/error/nojavascript">
+    </noscript>
+    
+    <meta http-equiv='content-type' content='text/html; charset=<?php
+
+    echo ENCODE; ?>'>
+    
+    {* CSS of framework *}
+    <link rel="stylesheet" href='<?php echo REQUESTED_URL; ?>/Apps/Sys/assets/css/reset.css' />
+    <link rel="stylesheet" href='<?php echo REQUESTED_URL; ?>/Apps/Sys/assets/css/standard.css' />
+
+    {* Scripts of framework *}
+    <script type='text/javascript' src='<?php echo REQUESTED_URL; ?>/Apps/Sys/assets/js/js_only_insiderframework.js'></script>
+    <script type='text/javascript' src='<?php echo REQUESTED_URL; ?>/Apps/Sys/assets/js/vdom.js'></script>
+</head>
+    <body>
+        <div style='text-align: center; font-family: Verdana;' unselectable='on' onselectstart='return false;' onmousedown='return false;'>
+            <h2>What are you doing there ?</h2><br/>
+            <p>Some information that your browser sent to the site is not in the way we expected.</p>
+            <p>Perhaps an installed program has modified something on your page ...</p>
+            <br/>
+            <img style='width: 15em;' src='<?php echo REQUESTED_URL . "/Apps/Sys/assets/img/error_attack.png"; ?>' />
+        </div>
+    </body>
+    <?php
+    if (DEBUG) {
+        ?>
+            {* Framework debug lib *}
+            <script type='text/javascript' src='<?php echo REQUESTED_URL; ?>/Apps/Sys/assets/js/debug.js'></script>
+        <?php
+    }
+    ?>
+</html>
+{/block}
+{block id='scripts'}{/block}

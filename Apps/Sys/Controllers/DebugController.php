@@ -48,6 +48,7 @@ class DebugController extends \Modules\InsiderFramework\Core\Controller
     */
     public function flushWarning()
     {
+        /*
         $warnings = \Modules\InsiderFramework\Core\KernelSpace::getVariable(
             'warnings',
             'insiderFrameworkSystem'
@@ -58,5 +59,6 @@ class DebugController extends \Modules\InsiderFramework\Core\Controller
             $warningJson = \Modules\InsiderFramework\Core\Json::jsonEncodePrivateObject($warning);
             $virtualDom->send("registerWarning('" . base64_encode($warningJson) . "');");
         }
+        */
     }
 }

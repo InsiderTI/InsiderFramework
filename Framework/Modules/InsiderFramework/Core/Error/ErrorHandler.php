@@ -555,26 +555,6 @@ class ErrorHandler
     }
 
     /**
-     * Function that renders a warning to the debug bar
-     *
-     * @author Marcello Costa
-     *
-     * @package Modules\InsiderFramework\Core\Error\ErrorHandler
-     *
-     * @param \Modules\InsiderFramework\Core\Error\ErrorMessage $error Object with error information
-     *
-     * @return void
-     */
-    public static function flushWarningToDebugBar(\Modules\InsiderFramework\Core\Error\ErrorMessage $error): void
-    {
-        $debug = new \Modules\InsiderFramework\Core\Debug();
-        $debug->debugBar("logWarningError", $error);
-
-        $debugController = new \Apps\Sys\Controllers\DebugController();
-        $debugBarHtml = $debugController->flushWarning();
-    }
-
-    /**
     * Initialize global variable debugbacktrace
     *
     * @author Marcello Costa
@@ -734,8 +714,15 @@ class ErrorHandler
         }
 
         // Displaying the default error message
-        $C = new \Apps\Sys\Controllers\ErrorController();
-        $C->genericError();
+        $errorController = new \Apps\Sys\Controllers\ErrorController();
+        switch ($error->getType()) {
+            case 'ATTACK_DETECTED':
+                $errorController->attackError();
+                break;
+            default:
+                $errorController->genericError();
+                break;
+        }
     }
 
     /**
@@ -820,10 +807,6 @@ class ErrorHandler
                 $errorController = new \Apps\Sys\Controllers\ErrorController();
 
                 $errorController->adminMessageError();
-
-                $debugController = new \Apps\Sys\Controllers\DebugController();
-                $debugBarHtml = $debugController->debugBarRender();
-                echo $debugBarHtml;
                 break;
         }
     }
@@ -860,7 +843,6 @@ class ErrorHandler
         $fatal = $error->getFatal();
 
         if (!$fatal && $responseFormat === "HTML") {
-            ErrorHandler::flushWarningToDebugBar($error);
             return;
         }
 

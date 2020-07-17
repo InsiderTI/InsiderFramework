@@ -29,18 +29,6 @@ class MainController extends \Modules\InsiderFramework\Core\Controller
      */
     public function home(): void
     {
-        \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister(
-            'Teste',
-            "ATTACK_DETECTED"
-        );
-
-        /*
-        friendlyAttackErrorMsg/
-        friendlyCriticalErrorMsg/
-        friendlyStandardErrorMsg/
-        */
-        //\Modules\InsiderFramework\Core\RoutingSystem\Request::requestRoute("/error/cookieError");
-        
         SgsViewsBag::set('test', 123);
         $this->renderView('Start::home.sgv');
     }

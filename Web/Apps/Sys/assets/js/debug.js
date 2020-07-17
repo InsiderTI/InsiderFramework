@@ -1,14 +1,3 @@
-warningImg = document.getElementById("warningImg")
-if (warningImg !== null) {
-  warningImg.onclick = function (e) {
-    console.log(warningImg)
-    warningItemContainer = document.getElementById("warningItemContainer")
-    if (warningItemContainer.style.display !== "block")
-      warningItemContainer.style.display = "block"
-    else warningItemContainer.style.display = "none"
-  }
-}
-
 function getWarningItemHtml(warningObj) {
   var messageOrText = warningObj.message ? warningObj.message : warningObj.text
   var relativePath = warningObj.file
@@ -33,7 +22,6 @@ function getWarningItemHtml(warningObj) {
 }
 
 function registerWarning(base64Warning) {
-  alert("Stopped in: Error while register warning error")
   var warningImg = document.getElementById("warningImg")
   if (warningImg.className == "warningImgOff") {
     warningImg.className = "warningImgOn"
@@ -51,4 +39,11 @@ function registerWarning(base64Warning) {
 
   var warningItemList = document.getElementById("warningList")
   warningItemList.innerHTML += htmlItem
+}
+
+function toggleWarningList() {
+  warningItemContainer = document.getElementById("warningItemContainer")
+  if (warningItemContainer.style.display !== "block")
+    warningItemContainer.style.display = "block"
+  else warningItemContainer.style.display = "none"
 }
