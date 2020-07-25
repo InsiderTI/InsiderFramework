@@ -6,6 +6,8 @@ The Insider Framework is a web framework, initially written in the PHP language,
 
 ## Roadmap
 
+This is the first public release of the code and is based on code that was first written in (probably) 2010. Since then my knowledge about several things was improved but a lot of refactoring will be done before merge this release to the main tree.
+
 You can follow the roadmap development in
 https://quire.io/w/insider-framework/35/Implement_progres...?board=PhpVersion
 
