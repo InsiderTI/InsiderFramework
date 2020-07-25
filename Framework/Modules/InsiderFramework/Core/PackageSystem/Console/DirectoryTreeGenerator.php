@@ -18,57 +18,69 @@ class DirectoryTreeGenerator
      *
      * @package Modules\InsiderFramework\Core\PackageSystem\Console\DirectoryTreeGenerator
      *
-     * @param object $climate Climate object
+     * @param object $console Modules\InsiderFramework\Console\Adapter object
      *
      * @return void
     */
     public static function generate(
-        $climate
+        $console
     ): void {
-        $package = $climate->arguments->get('package');
-        $destinationDirectory = $climate->arguments->get('destinationDirectory');
-        $version = $climate->arguments->get('version');
-        $authors = $climate->arguments->get('authors');
-        $description = $climate->arguments->get('description');
-        $section = $climate->arguments->get('section');
+        $package = $console->arguments->get('package');
+        $destinationDirectory = $console->arguments->get('destinationDirectory');
+        $version = $console->arguments->get('version');
+        $authors = $console->arguments->get('authors');
+        $description = $console->arguments->get('description');
+        $section = $console->arguments->get('section');
 
         // Data of control file
         $controlData = [];
         
         if ($package . "" === "") {
-            $input = $climate->input("Package name:");
+            $input = $console->input("Package name:");
             $package = $input->prompt();
             
             if (trim($package) === "") {
-                $climate->br()->to('error')->write("Package must have a name")->br();
+                $console->br();
+                $console->setOutput('error');
+                $console->write("Package must have a name");
+                $console->br();
                 die();
             }
         } else {
-            $climate->br()->write("Package name: $package")->br();
+            $console->br();
+            $console->write("Package name: $package");
+            $console->br();
         }
         $controlData['package'] = $package;
 
         if ($destinationDirectory . "" === "") {
-            $input = $climate->input("Destination directory:");
+            $input = $console->input("Destination directory:");
             $destinationDirectory = $input->prompt();
             
             if (trim($destinationDirectory) === "") {
-                $climate->br()->to('error')->write("Destination directory must be specified")->br();
+                $console->br();
+                $console->setOutput('error');
+                $console->write("Destination directory must be specified");
+                $console->br();
                 die();
             }
         }
 
         $finalDestinationDirectory = INSTALL_DIR . DIRECTORY_SEPARATOR . $destinationDirectory;
-        $climate->br()->write("Destination directory: $finalDestinationDirectory")->br();
+        $console->br();
+        $console->write("Destination directory: $finalDestinationDirectory");
+        $console->br();
 
         if ($version . "" === "") {
-            $input = $climate->input("Version [1.0.0]:");
+            $input = $console->input("Version [1.0.0]:");
             $version = $input->prompt();
             if (trim($version) === "") {
                 $version = "1.0.0";
             }
         } else {
-            $climate->br()->write("Version: $version")->br();
+            $console->br();
+            $console->write("Version: $version");
+            $console->br();
         }
 
         // If typed version is not valid
@@ -76,49 +88,65 @@ class DirectoryTreeGenerator
 
         // Error
         if (!$validation) {
-            $climate->br()->to('error')->write(
+            $console->br();
+            $console->setOutput('error');
+            $console->write(
                 "Invalid version. Must be Semantic Versioning (MAJOR.MINOR.PATCH-OPTIONAL)"
-            )->br();
+            );
+            $console->br();
             die();
         }
 
         $controlData['version'] = $version;
 
         if ($authors . "" === "") {
-            $input = $climate->input("Authors:");
+            $input = $console->input("Authors:");
             $authors = $input->prompt();
             if (trim($authors) === "") {
-                $climate->br()->to('error')->write("Authors must be specified")->br();
+                $console->br();
+                $console->setOutput('error');
+                $console->write("Authors must be specified");
+                $console->br();
                 die();
             }
         } else {
-            $climate->br()->write("Authors: $authors")->br();
+            $console->br();
+            $console->write("Authors: $authors");
+            $console->br();
         }
 
         $controlData['authors'] = $authors;
 
         if ($description . "" === "") {
-            $input = $climate->input("Description:");
+            $input = $console->input("Description:");
             $description = $input->prompt();
             if (trim($description) === "") {
-                $climate->br()->to('error')->write("Description must be specified")->br();
+                $console->br();
+                $console->setOutput('error');
+                $console->write("Description must be specified");
+                $console->br();
                 die();
             }
         } else {
-            $climate->br()->write("Description: $description")->br();
+            $console->br();
+            $console->write("Description: $description");
+            $console->br();
         }
         $controlData['description'] = $description;
 
         $sectionOptions = ['Guild', 'Module', 'App', 'SagaciousComponent'];
         if ($section . "" === "") {
-            $input = $climate->radio('Choose section of package:', $sectionOptions);
+            $input = $console->radio('Choose section of package:', $sectionOptions);
             $section = $input->prompt();
             $controlData['section'] = strtolower($section);
         } else {
             if (!in_array(ucwords($section), $sectionOptions)) {
-                $climate->br()->to('error')->write(
+                $console->br();
+                $console->setOutput('error');
+                $console->write(
                     "Cannot recognize section $section. Valid sections are: " . implode(", ", $sectionOptions)
-                )->br();
+                );
+                $console->br();
                 die();
             }
             $controlData['section'] = strtolower($section);
@@ -134,7 +162,7 @@ class DirectoryTreeGenerator
             $controlData
         );
 
-        $climate->out("\nPackage directory tree created. After making all changes, run build command\n");
+        $console->write("\nPackage directory tree created. After making all changes, run build command\n");
     }
     
     /**

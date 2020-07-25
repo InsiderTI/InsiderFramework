@@ -17,7 +17,7 @@
         "framework is considered a package by itself",
         ""
       ],
-      "class": "Modules\\InsiderFramework\\Core\\PackageSystem\\Console\\InstallUpdateRemove",
+      "class": "Modules\\InsiderFramework\\PackageSystem\\Console\\Operations",
       "function": "installOrUpdate"
     },
     "remove": {
@@ -29,7 +29,7 @@
         "        Action 'remove' is an alias to uninstall",
         ""
       ],
-      "class": "Modules\\InsiderFramework\\Core\\PackageSystem\\Console\\InstallUpdateRemove",
+      "class": "Modules\\InsiderFramework\\PackageSystem\\Console\\Operations",
       "function": "remove"
     },
     "create": {
@@ -39,7 +39,7 @@
         "        Create a new app:",
         ""
       ],
-      "class": "Modules\\InsiderFramework\\Console\\Application",
+      "class": "Modules\\InsiderFramework\\PackageSystem\\Console\\Operations",
       "function": "create"
     },
     "generate": {
@@ -72,11 +72,11 @@
     "test": {
       "aliases": [],
       "description": [
-        "-a test --class sys/basic",
-        "        Run tests of a class",
+        "-a test [--target sys/example]",
+        "        Run tests of a class OR for a entire directory.",
         ""
       ],
-      "class": "Modules\\InsiderFramework\\Console\\Test",
+      "class": "\\Modules\\InsiderFramework\\Console\\Test",
       "function": "run"
     }
   }

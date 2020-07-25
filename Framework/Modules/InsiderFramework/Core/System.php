@@ -138,32 +138,59 @@ class System
         );
 
         // Flag that marks whether it is a request via token
-        // If the consoleRequest does not exist (since it can come from the update console)
-        if (!isset($consoleRequest)) {
-            $consoleRequest = false;
-        }
+        $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+        $originFile = basename(end($backtrace)['file']);
 
-        $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
-        if (isset($backtrace[1])) {
-            if (isset($backtrace[1]['file']) && basename($backtrace[1]['file']) === 'console.php') {
-                $consoleRequest = true;
-            }
-        }
+        switch ($originFile) {
+            case 'index.php':
+                \Modules\InsiderFramework\Core\KernelSpace::setVariable(
+                    array(
+                        'requestSource' => 'http'
+                    ),
+                    'insiderFrameworkSystem'
+                );
+                break;
 
-        \Modules\InsiderFramework\Core\KernelSpace::setVariable(
-            array(
-                'consoleRequest' => $consoleRequest
-            ),
+            case 'console.php':
+                \Modules\InsiderFramework\Core\KernelSpace::setVariable(
+                    array(
+                        'requestSource' => 'console'
+                    ),
+                    'insiderFrameworkSystem'
+                );
+                break;
+
+            case 'phpunit':
+                \Modules\InsiderFramework\Core\KernelSpace::setVariable(
+                    array(
+                        'requestSource' => 'phpunit'
+                    ),
+                    'insiderFrameworkSystem'
+                );
+                break;
+
+            default:
+                \Modules\InsiderFramework\Core\KernelSpace::setVariable(
+                    array(
+                        'requestSource' => 'unknown'
+                    ),
+                    'insiderFrameworkSystem'
+                );
+                break;
+        }
+        unset($originFile);
+
+        $requestSource = \Modules\InsiderFramework\Core\KernelSpace::getVariable(
+            'requestSource',
             'insiderFrameworkSystem'
         );
 
         unset($headersRequest);
 
-        // Difficulty slightly "Session Hijacking"
-        // If the User Agent exists
-        if (array_key_exists('HTTP_USER_AGENT', \Modules\InsiderFramework\Core\Request::getRequest('session'))) {
-            // If it is not a request for api
-            if (!$consoleRequest) {
+        if ($requestSource === 'http') {
+            // Difficulty slightly "Session Hijacking"
+            // If the User Agent exists
+            if (array_key_exists('HTTP_USER_AGENT', \Modules\InsiderFramework\Core\Request::getRequest('session'))) {
                 // If the User-Agent header has changed and IE is not being used
                 if (
                     (
@@ -190,10 +217,7 @@ class System
                         "ATTACK_DETECTED"
                     );
                 }
-            }
-        } else {
-            // If it is not a special request
-            if (!$consoleRequest) {
+            } else {
                 // Retrieving the requisition data
                 $server = \Modules\InsiderFramework\Core\Request::getRequest('SERVER');
 

@@ -1,9 +1,27 @@
 <?php
 
-namespace Modules\InsiderFramework\Core\PackageSystem\Console;
+namespace Modules\InsiderFramework\PackageSystem\Console;
 
-class InstallUpdateRemove
+/**
+ * Console opertions Package System class
+ *
+ * @author Marcello Costa
+ */
+class Operations
 {
+    /**
+    * Create a section inside the framework
+    *
+    * @author Marcello Costa
+    *
+    * @package Modules\InsiderFramework\PackageSystem\Console\Operations
+    *
+    * @return void
+    */
+    public static function create(): void
+    {
+        \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister('Not implemented yet');
+    }
 
     /**
     * Install or Update a package
@@ -12,22 +30,22 @@ class InstallUpdateRemove
     *
     * @package Modules\InsiderFramework\Core\PackageSystem\Console\InstallUpdateRemove
     *
-    * @param object $climate Climate object
+    * @param object $console ClimModules\InsiderFramework\Console\Adapterate object
     *
     * @return void
     */
-    public static function installOrUpdate($climate)
+    public static function installOrUpdate($console): void
     {
-        $remote = $climate->arguments->get('remote');
-        $file = $climate->arguments->get('file');
+        $remote = $console->arguments->get('remote');
+        $file = $console->arguments->get('file');
 
         if (
             ($remote === "" || $remote === null) &&
             ($file === "" || $file === null)
         ) {
-            $climate->br();
-            $climate->to('error')->red("Syntax error: target (remote or file) must be specified")->br();
-            $climate->to('error')->write("Type <light_blue>console.php --help</light_blue> for help")->br();
+            $console->br();
+            $console->setTextColor('red')->write("Syntax error: target (remote or file) must be specified")->br();
+            $console->setOutput('error')->write("Type <light_blue>console.php --help</light_blue> for help")->br();
             die();
         }
         
@@ -45,30 +63,30 @@ class InstallUpdateRemove
         switch ($completePkgPath) {
             // If can't get the file
             case "false":
-                $climate->br();
-                $climate->to('error')->red("Package cannot be found or downloaded!")->br();
+                $console->br();
+                $console->setTextColor('red')->write("Package cannot be found or downloaded!")->br();
                 die();
             break;
             // If local package is on the latest version
             case "up-to-date":
-                $climate->br();
-                $climate->to('error')->blue("Package already up-to-date")->br();
+                $console->br();
+                $console->setOutput('error')->setTextColor('blue')->write("Package already up-to-date")->br();
                 die();
             break;
         }
         
         // Checking if package is already storage on local file system
         if (!file_exists($completePkgPath) || !is_readable($completePkgPath)) {
-            $climate->br();
-            $climate->to('error')->red("File not found or not readable: " . $completePkgPath)->br();
+            $console->br();
+            $console->setTextColor('red')->write("File not found or not readable: " . $completePkgPath)->br();
             die();
         }
 
         // Checking extension of package
         $extension = strtolower(pathinfo($completePkgPath)['extension']);
         if ($extension !== "pkg") {
-            $climate->br();
-            $climate->to('error')->red("The file not seems to be a valid package: " . $completePkgPath)->br();
+            $console->br();
+            $console->setTextColor('red')->write("The file not seems to be a valid package: " . $completePkgPath)->br();
             die();
         }
 
@@ -88,8 +106,8 @@ class InstallUpdateRemove
         try {
             \Modules\InsiderFramework\Core\Filetree::decompressFile($completePkgPath, $tmpDir, "zip");
         } catch (Exception $e) {
-            $climate->br();
-            $climate->to('error')->red("The file seems to be corrupted: " . $completePkgPath)->br();
+            $console->br();
+            $console->setTextColor('red')->write("The file seems to be corrupted: " . $completePkgPath)->br();
             die();
         }
 
@@ -111,7 +129,7 @@ class InstallUpdateRemove
                 $installedItemInfo['version']
             );
             if ($installedVersionParts === false) {
-                \Modules\InsiderFramework\Core\PackageSystem\Console\InstallUpdateRemove::stopInstallUpdate(
+                \Modules\InsiderFramework\PackageSystem\Console\Operations::stopInstallUpdate(
                     $tmpDir,
                     "Wrong version of installed package " . $newPackage . ": " . $installedItemInfo['version']
                 );
@@ -119,7 +137,7 @@ class InstallUpdateRemove
 
             $newPackageVersionParts = \Modules\InsiderFramework\Core\Registry::getVersionParts($newPackageVersion);
             if ($newPackageVersionParts === false) {
-                \Modules\InsiderFramework\Core\PackageSystem\Console\InstallUpdateRemove::stopInstallUpdate(
+                \Modules\InsiderFramework\PackageSystem\Console\Operations::stopInstallUpdate(
                     "Wrong version of new package " . $newPackage . ": " . $newPackageVersion
                 );
             }
@@ -132,8 +150,8 @@ class InstallUpdateRemove
                 case $state < 0:
                     break;
                 case $state === 0:
-                    $climate->br();
-                    $input = $climate
+                    $console->br();
+                    $input = $console
                              ->to('out')
                              ->input('Installed package version equal to the new package. ' .
                              'Do you want to overwrite (y / N)?')
@@ -146,7 +164,7 @@ class InstallUpdateRemove
                             break;
 
                         case 'n':
-                            \Modules\InsiderFramework\Core\PackageSystem\Console\InstallUpdateRemove::stopInstallUpdate(
+                            \Modules\InsiderFramework\PackageSystem\Console\Operations::stopInstallUpdate(
                                 $tmpDir,
                                 "Aborting install"
                             );
@@ -154,8 +172,8 @@ class InstallUpdateRemove
                     }
                     break;
                 case $state > 0:
-                    $climate->br();
-                    $input = $climate
+                    $console->br();
+                    $input = $console
                              ->to('out')
                              ->input('Version of installed package greater than new package. ' .
                                      'Do you wish to continue (y/N) ?')
@@ -168,7 +186,7 @@ class InstallUpdateRemove
                             break;
 
                         case 'n':
-                            \Modules\InsiderFramework\Core\PackageSystem\Console\InstallUpdateRemove::stopInstallUpdate(
+                            \Modules\InsiderFramework\PackageSystem\Console\Operations::stopInstallUpdate(
                                 $tmpDir,
                                 ""
                             );
@@ -176,10 +194,10 @@ class InstallUpdateRemove
                     }
                     break;
                 default:
-                    \Modules\InsiderFramework\Core\PackageSystem\Console\InstallUpdateRemove::stopInstallUpdate(
-                        $tmpDir,
-                        "Error verifying package version " . $newPackage . ": " . $newPackageVersion
-                    );
+                        \Modules\InsiderFramework\PackageSystem\Console\Operations::stopInstallUpdate(
+                            $tmpDir,
+                            "Error verifying package version " . $newPackage . ": " . $newPackageVersion
+                        );
                     break;
             }
         }
@@ -219,8 +237,8 @@ class InstallUpdateRemove
         // Erasing temporary directory
         \Modules\InsiderFramework\Core\FileTree::deleteDirectory($tmpDir);
         
-        $climate->br();
-        $climate->to('error')->blue("Package installed succefully: " . basename($completePkgPath))->br();
+        $console->br();
+        $console->setOutput('error')->setTextColor('blue')->write("Package installed succefully: " . basename($completePkgPath))->br();
         die();
     }
 
@@ -231,25 +249,25 @@ class InstallUpdateRemove
     *
     * @package Modules\InsiderFramework\Core\PackageSystem\Console\InstallUpdateRemove
     *
-    * @param object $climate Climate object
+    * @param object $console Modules\InsiderFramework\Console\Adapter object
     *
     * @return void
     */
-    public static function remove($climate): void
+    public static function remove($console): void
     {
-        $package = $climate->arguments->get('package');
+        $package = $console->arguments->get('package');
         if ($package === "") {
-            $climate->br();
-            $climate->to('error')->red("Syntax error: package must be specified")->br();
-            $climate->to('error')->write("Type <light_blue>console.php --help</light_blue> for help")->br();
+            $console->br();
+            $console->setTextColor('red')->write("Syntax error: package must be specified")->br();
+            $console->setOutput('error')->write("Type <light_blue>console.php --help</light_blue> for help")->br();
             die();
         }
 
         $localVersion = \Modules\InsiderFramework\Core\Registry\Manipulation\Registry::getItemInfo($package);
 
         if ($localVersion['version'] === '0.0.0') {
-            $climate->br();
-            $climate->to('error')->red("The $package is not installed")->br();
+            $console->br();
+            $console->setTextColor('red')->write("The $package is not installed")->br();
             die();
         }
 
@@ -333,14 +351,17 @@ class InstallUpdateRemove
     */
     protected static function stopInstallUpdate($tmpDir, $message): void
     {
-        $climate = \Modules\InsiderFramework\Core\KernelSpace::getVariable('climate', 'insiderFrameworkSystem');
+        $console = \Modules\InsiderFramework\Core\KernelSpace::getVariable(
+            'console',
+            'insiderFrameworkSystem'
+        );
 
         // Erasing temporary directory
         \Modules\InsiderFramework\Core\FileTree::deleteDirectory($tmpDir);
 
         // Showing the error
-        $climate->br();
-        $climate->to('error')->red($message)->br();
+        $console->br();
+        $console->setTextColor('red')->write($message)->br();
 
         // Stopping script
         die();

@@ -34,14 +34,14 @@ class ErrorController extends \Modules\InsiderFramework\Core\Controller
     */
     public function genericError(): void
     {
-        $consoleRequest = KernelSpace::getVariable(
-            'consoleRequest',
+        $requestSource = KernelSpace::getVariable(
+            'requestSource',
             'insiderFrameworkSystem'
         );
 
         $genericMsgError = 'Oops, something strange happened on this page.';
 
-        if ($consoleRequest) {
+        if ($requestSource === 'console') {
             ConsoleError::errorRegister($genericMsgError);
         }
         
@@ -66,8 +66,8 @@ class ErrorController extends \Modules\InsiderFramework\Core\Controller
     */
     public function adminMessageError(): void
     {
-        $consoleRequest = KernelSpace::getVariable(
-            'consoleRequest',
+        $requestSource = KernelSpace::getVariable(
+            'requestSource',
             'insiderFrameworkSystem'
         );
 
@@ -83,7 +83,7 @@ class ErrorController extends \Modules\InsiderFramework\Core\Controller
             SgsViewsBag::set('msgError', "Unknown error");
         }
 
-        if ($consoleRequest) {
+        if ($requestSource === 'console') {
             $msg = SgsViewsBag::get('msgError');
             if (is_array($msg) && isset($msg['jsonMessage'])) {
                 $errorArray = json_decode($msg['jsonMessage'], true);

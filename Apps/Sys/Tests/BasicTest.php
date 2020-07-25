@@ -1,26 +1,30 @@
 <?php
 
-namespace Controllers\sys;
+namespace Apps\Sys\Tests;
 
 /**
-* Class responsible for basic testing of the sys app
+* Class responsible for testing of the sys app
 *
 * @author Marcello Costa
 *
-* @package Controllers\sys\tests\BasicTest
+* @package Apps\Sys\Tests\BasicTest
 */
-class BasicTest extends \Modules\InsiderFramework\Core\Test
+class BasicTest extends \PHPUnit\Framework\TestCase
 {
     /**
-    * Init method
+    * Example method
     *
     * @author Marcello Costa
     *
-    * @package Controllers\sys\tests\BasicTest
+    * @package Apps\Sys\Tests\BasicTest
     *
     * @return void
     */
-    public function init()
+    public function testExample(): void
     {
+        $this->assertEquals(
+            1,
+            1
+        );
     }
 }

@@ -37,8 +37,11 @@ class PkgController extends \Modules\InsiderFramework\Core\Controller
         string $authorization = null,
         bool $requestCall = false
     ): ?string {
-        $POST = \Modules\InsiderFramework\Core\KernelSpace::getVariable('POST', 'insiderFrameworkSystem');
-        
+        $POST = \Modules\InsiderFramework\Core\KernelSpace::getVariable(
+            'POST',
+            'insiderFrameworkSystem'
+        );
+
         if ($item === null || $authorization === null) {
             if (!is_array($POST)) {
                 \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError('Wrong request body');
@@ -49,7 +52,6 @@ class PkgController extends \Modules\InsiderFramework\Core\Controller
             if (\Modules\InsiderFramework\Core\Validation\Aggregation::existAndIsNotEmpty($POST, 'authorization')) {
                 $authorization = $POST['authorization'];
             }
-
             if ($item === null || $authorization === null) {
                 if (!$requestCall) {
                     \Modules\InsiderFramework\Core\Error\ErrorHandler::ErrorRegister(
@@ -85,7 +87,7 @@ class PkgController extends \Modules\InsiderFramework\Core\Controller
             }
         }
     }
-    
+
     /**
      * Function that returns the formatted version of a package
      *
@@ -108,8 +110,7 @@ class PkgController extends \Modules\InsiderFramework\Core\Controller
         }
         return false;
     }
-    
-    
+
     /**
      * Download a package in any of the configured mirrors
      *
@@ -123,7 +124,10 @@ class PkgController extends \Modules\InsiderFramework\Core\Controller
     */
     public function downloadPackage(string $package): string
     {
-        $climate = \Modules\InsiderFramework\Core\KernelSpace::getVariable('climate', 'insiderFrameworkSystem');
+        $console = \Modules\InsiderFramework\Core\KernelSpace::getVariable(
+            'console',
+            'insiderFrameworkSystem'
+        );
 
         // Array of packages found
         $foundPackages = [];
@@ -144,7 +148,13 @@ class PkgController extends \Modules\InsiderFramework\Core\Controller
             die();
         }
 
-        $localVersion = json_decode($this->getInstalledItemInfo($package, $localAuthorization, false));
+        $localVersion = json_decode(
+            $this->getInstalledItemInfo(
+                $package,
+                $localAuthorization,
+                false
+            )
+        );
 
         // Variable that stores all mapped repositories
         $repoData = [];
@@ -189,8 +199,10 @@ class PkgController extends \Modules\InsiderFramework\Core\Controller
 
             if (curl_errno($ch)) {
                 $msg = "Could not send request to server. ERROR: " . curl_error($ch);
-                $climate->br();
-                $climate->to('error')->red($msg)->br();
+                $console->br();
+                $console->setTextColor('red');
+                $console->write($msg);
+                $console->br();
                 continue;
             } else {
                 $resultStatus = curl_getinfo($ch, CURLINFO_HTTP_CODE);
@@ -207,8 +219,10 @@ class PkgController extends \Modules\InsiderFramework\Core\Controller
                             );
                         } else {
                             $msg = "Request to server failed with content: '" . $content;
-                            $climate->br();
-                            $climate->to('error')->red($msg)->br();
+                            $console->br();
+                            $console->setTextColor('red');
+                            $console->write($msg);
+                            $console->br();
                             continue;
                         }
                     }
@@ -220,8 +234,10 @@ class PkgController extends \Modules\InsiderFramework\Core\Controller
                         $addMessError = " Details: " . $content;
                     }
                     $msg = "Request to server failed with status '" . $resultStatus . "'." . $addMessError;
-                    $climate->br();
-                    $climate->to('error')->red($msg)->br();
+                    $console->br();
+                    $console->setTextColor('red');
+                    $console->write($msg);
+                    $console->br();
                     continue;
                 }
             }
@@ -238,8 +254,10 @@ class PkgController extends \Modules\InsiderFramework\Core\Controller
             $remoteVersion = \Modules\InsiderFramework\Core\Registry::getVersionParts($version);
             if ($remoteVersion === false) {
                 $msg = "Wrong package version on remote server ($package): $version";
-                $climate->br();
-                $climate->to('error')->red($msg)->br();
+                $console->br();
+                $console->setTextColor('red');
+                $console->write($msg);
+                $console->br();
                 \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError($msg);
             }
 
@@ -247,8 +265,10 @@ class PkgController extends \Modules\InsiderFramework\Core\Controller
 
             if (!is_object($localVersion) || (!property_exists($localVersion, 'version'))) {
                 $msg = "Invalid local version registry: " . json_encode($localVersion);
-                $climate->br();
-                $climate->to('error')->red($msg)->br();
+                $console->br();
+                $console->setTextColor('red');
+                $console->write($msg);
+                $console->br();
                 \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError($msg);
             }
 
@@ -284,8 +304,10 @@ class PkgController extends \Modules\InsiderFramework\Core\Controller
             $fp = fopen($fileDestPath, 'w+');
             if (is_bool($fp)) {
                 $msg = "Cannot open package file %$fileDestPath%";
-                $climate->br();
-                $climate->to('error')->red($i10nMsg)->br();
+                $console->br();
+                $console->setTextColor('red');
+                $console->write($i10nMsg);
+                $console->br();
                 \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError($msg);
             }
             $ch = curl_init();
@@ -305,8 +327,10 @@ class PkgController extends \Modules\InsiderFramework\Core\Controller
             
             if ($pkgcontent[0] == "<" || $pkgcontent[0] == "{") {
                 $msg = "Error downloading package " . $pkgcontent;
-                $climate->br();
-                $climate->to('error')->red($msg)->br();
+                $console->br();
+                $console->setTextColor('red');
+                $console->write($msg);
+                $console->br();
                 \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError($msg);
             }
 
@@ -317,8 +341,10 @@ class PkgController extends \Modules\InsiderFramework\Core\Controller
 
             if (!file_exists($fileDestPath)) {
                 $msg = "Cannot create package on mirror directory ";
-                $climate->br();
-                $climate->to('error')->red($msg)->br();
+                $console->br();
+                $console->setTextColor('red');
+                $console->write($msg);
+                $console->br();
                 \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError($msg);
             }
             

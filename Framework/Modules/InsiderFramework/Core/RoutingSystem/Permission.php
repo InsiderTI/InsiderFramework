@@ -24,14 +24,14 @@ class Permission
     public static function getNativeAccessLevel()
     {
         $server = \Modules\InsiderFramework\Core\KernelSpace::getVariable('SERVER', 'insiderFrameworkSystem');
-        $consoleRequest = \Modules\InsiderFramework\Core\KernelSpace::getVariable(
-            'consoleRequest',
+        $requestSource = \Modules\InsiderFramework\Core\KernelSpace::getVariable(
+            'requestSource',
             'insiderFrameworkSystem'
         );
 
         $securitymodel = new \Modules\InsiderFramework\Core\Model();
 
-        if (isset($server['HTTP_USER_AGENT']) && $consoleRequest) {
+        if (isset($server['HTTP_USER_AGENT']) && $requestSource === 'console') {
             if (isset($server['QUERY_STRING']) && (strpos($server['QUERY_STRING'], 'cookieframeidsession') !== false)) {
                 preg_match("/cookieframeidsession=([^&]*)/", $server['QUERY_STRING'], $matches);
 

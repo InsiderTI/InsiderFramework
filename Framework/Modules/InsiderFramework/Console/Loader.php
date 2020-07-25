@@ -19,23 +19,16 @@ require_once(
 
 \Modules\InsiderFramework\Core\System::initializeFramework();
 
-/**
- * @global array Variable used by framework to control requests that are maked by console
- *
- * @package Core
-*/
+// Initializing Console
+$console = \Modules\InsiderFramework\Console\Application::createConsoleInstance();
+
+\Modules\InsiderFramework\Console\Application::initialize($console);
+
 \Modules\InsiderFramework\Core\KernelSpace::setVariable(
     array(
-        'consoleRequest' => "UpdateAgent"
+        'console' => $console
     ),
     'insiderFrameworkSystem'
 );
 
-// Initializing Climate
-$climate = new \League\CLImate\CLImate();
-
-\Modules\InsiderFramework\Console\Application::initialize($climate);
-
-\Modules\InsiderFramework\Core\KernelSpace::setVariable(array('climate' => $climate), 'insiderFrameworkSystem');
-
-\Modules\InsiderFramework\Console\Application::manageCommand($climate);
+\Modules\InsiderFramework\Console\Application::manageCommand($console);

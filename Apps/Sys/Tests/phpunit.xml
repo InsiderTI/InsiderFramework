@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Example configuration file for phpunit with Insider Framework -->
+<phpunit colors="true"
+         bootstrap="../../../Framework/Modules/InsiderFramework/Tests/bootstrap.default.php">
+    <testsuites>
+        <testsuite name="App/Sys test suite">
+            <directory>.</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>

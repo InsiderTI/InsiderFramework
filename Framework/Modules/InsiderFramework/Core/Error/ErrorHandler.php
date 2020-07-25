@@ -27,13 +27,13 @@ class ErrorHandler
      */
     public static function primaryError(string $msg, int $errorCode = 500, string $outputFormat = 'JSON'): array
     {
-        $consoleRequest = \Modules\InsiderFramework\Core\KernelSpace::getVariable(
-            'consoleRequest',
+        $requestSource = \Modules\InsiderFramework\Core\KernelSpace::getVariable(
+            'requestSource',
             'insiderFrameworkSystem'
         );
 
         // If it's an error inside a terminal (console)
-        if ($consoleRequest) {
+        if ($requestSource === 'console') {
             die();
         }
 
@@ -541,14 +541,24 @@ class ErrorHandler
      */
     public static function manageErrorConsoleRequest(\Modules\InsiderFramework\Core\Error\ErrorMessage $error): void
     {
-        $climate = \Modules\InsiderFramework\Core\KernelSpace::getVariable('climate', 'insiderFrameworkSystem');
-        $climate->br();
-        $climate->to('error')->red($error->getSubject())->br();
-        $climate->to('error')->red("Type: " . $error->getType())->br();
-        $climate->to('error')->red("Message: " . $error->getMessageOrText())->br();
-        $climate->to('error')->red("File: " . $error->getFile())->br();
-        $climate->to('error')->red("Line: " . $error->getLine())->br();
-        $climate->to('error')->red("Fatal: " . $error->getFatal())->br();
+        $console = \Modules\InsiderFramework\Core\KernelSpace::getVariable(
+            'console',
+            'insiderFrameworkSystem'
+        );
+        $console->br();
+        $console->setTextColor('red');
+        $console->write($error->getSubject());
+        $console->br();
+        $console->write("Type: " . $error->getType());
+        $console->br();
+        $console->write("Message: " . $error->getMessageOrText());
+        $console->br();
+        $console->write("File: " . $error->getFile());
+        $console->br();
+        $console->write("Line: " . $error->getLine());
+        $console->br();
+        $console->write("Fatal: " . ($error->getFatal() ? 'true' : 'false'));
+        $console->br();
         if ($error->getFatal()) {
             die();
         }
@@ -826,12 +836,12 @@ class ErrorHandler
     {
         ErrorHandler::validateMaxErrorNumberAndRegisterInKernelSpace($error);
 
-        $consoleRequest = \Modules\InsiderFramework\Core\KernelSpace::getVariable(
-            'consoleRequest',
+        $requestSource = \Modules\InsiderFramework\Core\KernelSpace::getVariable(
+            'requestSource',
             'insiderFrameworkSystem'
         );
 
-        if ($consoleRequest) {
+        if ($requestSource === 'console') {
             ErrorHandler::manageErrorConsoleRequest($error);
             return;
         }

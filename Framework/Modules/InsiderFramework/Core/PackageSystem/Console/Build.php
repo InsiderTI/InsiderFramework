@@ -18,28 +18,34 @@ class Build
      *
      * @package \Modules\InsiderFramework\Core\PackageSystem\Console\Build
      *
-     * @param object $climate Climate object
+     * @param object $console Modules\InsiderFramework\Console\Adapter object
      *
      * @return bool Return of operation
     */
-    public static function buildPackage($climate): bool
+    public static function buildPackage($console): bool
     {
-        $sourceDirectory = $climate->arguments->get('sourceDirectory');
+        $sourceDirectory = $console->getArgument('sourceDirectory');
         if (trim($sourceDirectory) === "") {
-            $input = $climate->input("Build Directory:");
+            $input = $console->input("Build Directory:");
             $sourceDirectory = $input->prompt();
             if (trim($sourceDirectory) === "") {
-                $climate->br()->to('error')->write("Action cancelled")->br();
+                $console->br();
+                $console->setOutput('error');
+                $console->write("Action cancelled");
+                $console->br();
                 die();
             }
         }
 
-        $packageFile = $climate->arguments->get('output');
+        $packageFile = $console->arguments->get('output');
         if (trim($packageFile) === "") {
-            $input = $climate->input("Output package file:");
+            $input = $console->input("Output package file:");
             $packageFile = $input->prompt();
             if (trim($packageFile) === "") {
-                $climate->br()->to('error')->write("Action cancelled")->br();
+                $console->br();
+                $console->setOutput('error');
+                $console->write("Action cancelled");
+                $console->br();
                 die();
             }
         }
@@ -100,7 +106,7 @@ class Build
             true
         );
 
-        $climate->br()->blue("Package file builded: " . $compressedPathFile)->br();
+        $console->br()->setTextColor('blue')->write("Package file builded: " . $compressedPathFile)->br();
         
         return true;
     }
