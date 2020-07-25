@@ -28,11 +28,9 @@ class Adapter
     *
     * @return void
     */
-    public function usage()
+    public function usage(): void
     {
         $this->consoleObj->usage();
-
-        return $this;
     }
 
     /**
@@ -44,11 +42,9 @@ class Adapter
     *
     * @return void
     */
-    public function br()
+    public function br(): void
     {
         $this->consoleObj->br();
-
-        return $this;
     }
 
     /**
@@ -60,11 +56,9 @@ class Adapter
     *
     * @return void
     */
-    public function setTextColor(string $color)
+    public function setTextColor(string $color): void
     {
         $this->currentTextColor = $color;
-
-        return $this;
     }
 
     /**
@@ -76,11 +70,9 @@ class Adapter
     *
     * @return void
     */
-    public function setBackgroundColor(string $color)
+    public function setBackgroundColor(string $color): void
     {
         $this->currentBackgroundColor = $color;
-
-        return $this;
     }
 
     /**
@@ -125,7 +117,7 @@ class Adapter
     *
     * @return void
     */
-    public function setOutput(string $output)
+    public function setOutput(string $output): void
     {
         switch (strtolower($output)) {
             case 'out':
@@ -142,8 +134,6 @@ class Adapter
         }
 
         $this->consoleObj->defaultTo(strtolower($output));
-
-        return $this;
     }
 
     /**
@@ -179,10 +169,8 @@ class Adapter
     *
     * @return void
     */
-    public function addArguments(array $arguments)
+    public function addArguments(array $arguments): void
     {
         $this->consoleObj->arguments->add($arguments);
-
-        return $this;
     }
 }
