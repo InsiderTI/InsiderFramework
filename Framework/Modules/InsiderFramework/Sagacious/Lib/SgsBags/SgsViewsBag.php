@@ -31,7 +31,9 @@ class SgsViewsBag
             'sagacious'
         );
 
-        $viewsBagArray = \Modules\InsiderFramework\Core\Manipulation\Aggregation::changeKeysToLowerCaseArray($viewsBagObj->viewsBagArray);
+        $viewsBagArray = \Modules\InsiderFramework\Core\Manipulation\Aggregation::changeKeysToLowerCaseArray(
+            $viewsBagObj->viewsBagArray
+        );
 
         if (isset($viewsBagObj->viewsBagArray[strtolower($key)])) {
             return $viewsBagObj->viewsBagArray[strtolower($key)];
