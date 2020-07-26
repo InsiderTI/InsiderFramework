@@ -829,7 +829,7 @@ class SgsTemplate
 
         $value = SgsViewsBag::get($viewsBagMatches[0]['value']);
 
-        return $value;
+        return $value ? $value : "";
     }
 
     /**

@@ -448,7 +448,7 @@ trait SgsController
             }
 
             if (!isset($viewConverted['templatesPath'][0])) {
-                \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister('Template file not specified in some of these views: ' . implode($viewConverted['viewsPath'], ','));
+                \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister('Template file not specified in some of these views: ' . implode(',', $viewConverted['viewsPath']));
             }
 
             $tP = $viewConverted['templatesPath'][0];
