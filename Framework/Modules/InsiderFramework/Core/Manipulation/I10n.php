@@ -12,6 +12,44 @@ namespace Modules\InsiderFramework\Core\Manipulation;
 trait I10n
 {
     /**
+    * Get current linguas configuration
+    *
+    * @author Marcello Costa
+    *
+    * @package Modules\InsiderFramework\Core\Manipulation\I10n
+    *
+    * @return string Current linguas configuration
+    */
+    public static function getCurrentLinguas(): string
+    {
+        $currentLinguas = \Modules\InsiderFramework\Core\KernelSpace::getVariable(
+            'linguas',
+            'insiderFrameworkSystem'
+        );
+
+        return $currentLinguas;
+    }
+
+    /**
+    * Set current linguas configuration
+    *
+    * @author Marcello Costa
+    *
+    * @package Modules\InsiderFramework\Core\Manipulation\I10n
+    *
+    * @param string $linguas Current linguas to be setted
+    *
+    * @return void
+    */
+    public static function setCurrentLinguas(string $linguas): void
+    {
+        \Modules\InsiderFramework\Core\KernelSpace::setVariable(
+            array('linguas' => $linguas),
+            'insiderFrameworkSystem'
+        );
+    }
+
+    /**
      * Gets a translation for a string
      *
      * @author Marcello Costa
@@ -24,9 +62,16 @@ trait I10n
      *
      * @return string Translated string
      */
-    public static function getTranslate(string $stringToTranslate, string $domain, string $linguas = LINGUAS): string
+    public static function getTranslate(string $stringToTranslate, string $domain, string $linguas = null): string
     {
-        $i10n = \Modules\InsiderFramework\Core\KernelSpace::getVariable('i10n', 'insiderFrameworkSystem');
+        if ($linguas === null) {
+            $linguas = \Modules\InsiderFramework\Core\I10n::getCurrentLinguas();
+        }
+
+        $i10n = \Modules\InsiderFramework\Core\KernelSpace::getVariable(
+            'i10n',
+            'insiderFrameworkSystem'
+        );
 
         if ($i10n === null) {
             return "";

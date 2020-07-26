@@ -223,6 +223,7 @@ class ConfigLoader
          * @package Modules\InsiderFramework\Loaders\ConfigLoader
          */
         define('LINGUAS', $coreData['LINGUAS']);
+        \Modules\InsiderFramework\Core\I10n::setCurrentLinguas(LINGUAS);
 
         if (!isset($coreData['ENCODE'])) {
             \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError(
