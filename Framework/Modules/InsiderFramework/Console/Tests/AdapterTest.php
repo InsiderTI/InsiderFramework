@@ -20,27 +20,10 @@ class AdapterTest extends \PHPUnit\Framework\TestCase
     *
     * @return void
     */
-    public function testConstruct(): void
+    public function testUsageMethod(): void
     {
-        $classname = '\Modules\InsiderFramework\Console\Adapter';
-
-        // Get mock, without the constructor being called
-        $mock = $this->getMockBuilder($classname)
-          ->disableOriginalConstructor()
-          ->getMock();
-
-        // Set expectations for constructor calls
-        $mock->expects($this->once())
-          ->method('usage')
-          ->with(
-              $this->equalTo(4)
-          );
-
-        // Now call the constructor
-        $reflectedClass = new \ReflectionClass($classname);
-        $constructor = $reflectedClass->getConstructor();
-        $constructor->invoke($mock, 4);
-      
-        $consoleAdapter = new \Modules\InsiderFramework\Console\Adapter();
+        $this->markTestIncomplete(
+            'This test has not been implemented yet.'
+        );
     }
 }
