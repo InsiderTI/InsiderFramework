@@ -60,11 +60,6 @@ trait Cookie
             $expiretime = time() + 3600 * 24;
         }
 
-        if ($domain == null) {
-            $domain = str_replace("http://", "", REQUESTED_URL);
-            $domain = str_replace("https://", "", $domain);
-        }
-
         setcookie($name, $cookievalue, $expiretime, $path, $domain, $https, $htmlOnly);
     }
 
