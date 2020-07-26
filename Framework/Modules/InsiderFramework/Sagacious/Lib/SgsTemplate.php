@@ -819,17 +819,56 @@ class SgsTemplate
     */
     private function processViewsBagCode(array &$gM): string
     {
-        $viewsbagPattern = "/" . "{viewsbag key=['\\\"](?P<value>.*)['\\\"]( {0,})?}" . "/";
+        $viewsbagPattern = "/" .
+                           "{viewsbag (.*)key( {0,})?=( {0,})?['|\"](?P<key>[^'|\"]*)['|\"](( {1,})? " .
+                           "((settings)?( {0,})?=( {0,})?(['|\"](?P<settings>.+?(?=['|\"]))))['|\"]( {0,})?\})?" .
+                           "/";
 
         preg_match_all($viewsbagPattern, strtolower($gM['allMatch']), $viewsBagMatches, PREG_SET_ORDER);
 
-        if (!isset($viewsBagMatches[0]['value'])) {
+        if (!isset($viewsBagMatches[0]['key'])) {
             return $gM['allMatch'];
         }
 
-        $value = SgsViewsBag::get($viewsBagMatches[0]['value']);
+        // Variable that informs that php tags should not be printed
+        $stripphptags = false;
+        $componentCode = false;
+        if (isset($viewsBagMatches[0]['settings'])) {
+            $settings = explode(';', $viewsBagMatches[0]['settings']);
 
-        return $value ? $value : "";
+            foreach ($settings as $setting) {
+                if (trim($setting) !== "") {
+                    switch (strtolower($setting)) {
+                        case 'strip-php-tags':
+                            $stripphptags = true;
+                            break;
+                        case 'raw':
+                            $componentCode = true;
+                            break;
+                    }
+                }
+            }
+        }
+
+        $replaceCode = "";
+        if (!$stripphptags) {
+            $replaceCode = "<?php ";
+        }
+
+        $cmd = "echo";
+        if ($componentCode) {
+            $cmd = "return";
+        }
+
+        $replaceCode .= $cmd . " \Modules\InsiderFramework\Sagacious\Lib\SgsBags\SgsViewsBag::get('" .
+                           $viewsBagMatches[0]['key'] .
+                        "');";
+
+        if (!$stripphptags) {
+            $replaceCode .= " ?>";
+        }
+
+        return $replaceCode;
     }
 
     /**
