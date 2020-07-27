@@ -366,7 +366,7 @@ class SgsTemplate
 
             $templateCode = preg_replace_callback(
                 $generalPattern,
-                function ($gMT) use ($srcPattern, &$templatesPath, &$viewsPath, &$componentsFound) {
+                function ($gMT) use ($srcPattern, &$templatesPath, &$viewsPath, &$componentsFound, &$SgsView) {
                     // Checking literal statements
                     $literal = strpos($gMT['allMatch'], ' literal ');
                     if ($literal == false) {
@@ -442,10 +442,10 @@ class SgsTemplate
                                 break;
 
                             case "l10n":
-                                return $this->processI10nCode($gMT);
+                                return $this->processI10nCode($gMT, $SgsView);
                                 break;
 
-                                // Comentários
+                            // Comentários
                             case "*":
                                 break;
 
