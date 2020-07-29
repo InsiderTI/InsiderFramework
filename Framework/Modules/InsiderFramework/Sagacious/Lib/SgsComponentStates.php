@@ -58,10 +58,11 @@ class SgsComponentStates
                 }
 
                 foreach ($componentConfig['states'] as $stateId => $stateData) {
-                    $this->changeState($stateId, $stateData);
+                    $this->changeStateData($stateId, $stateData);
                 }
 
                 $defaultStateId = $componentConfig['defaultstateid'];
+
                 $this->setDefaultIdState($defaultStateId);
                 $this->setCurrentState($defaultStateId);
             }
@@ -180,7 +181,7 @@ class SgsComponentStates
     }
 
     /**
-    * Add or update an state
+    * Add or update an state data
     *
     * @author Marcello Costa
     *
@@ -191,7 +192,7 @@ class SgsComponentStates
     *
     * @return void
     */
-    public function changeState(string $stateId, array $stateData): void
+    public function changeStateData(string $stateId, array $stateData): void
     {
         $this->validateState($stateData);
         $this->states[$stateId] = $stateData;

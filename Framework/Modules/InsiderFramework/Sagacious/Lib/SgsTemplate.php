@@ -909,11 +909,12 @@ class SgsTemplate
                 }
 
                 // Taking the translation language
-                $lang = LINGUAS;
+                $currentLinguas = \Modules\InsiderFramework\Core\I10n::getCurrentLinguas();
+
                 if (isset($i10nIDMatches[0]['lang'])) {
-                    $lang = $i10nIDMatches[0]['lang'];
+                    $currentLinguas = $i10nIDMatches[0]['lang'];
                 }
-                $lang = strtolower($lang);
+                $lang = strtolower($currentLinguas);
 
                 // Variable that defines whether the string will be echoed or returned
                 $componentCode = false;
@@ -949,13 +950,13 @@ class SgsTemplate
                 if ($stripphptags !== false) {
                     $gM['allMatch'] = preg_replace(
                         "{" . $gM['allMatch'] . "}",
-                        $cmd . " \\Sagacious\\SgsPage::translateString('$app', '$id', '$lang')",
+                        $cmd . " \\Modules\\InsiderFramework\\Sagacious\\Lib\\SgsPage::translateText('$app', '$id', '$lang')",
                         $gM['allMatch']
                     );
                 } else {
                     $gM['allMatch'] = preg_replace(
                         "{" . $gM['allMatch'] . "}",
-                        "<?php " . $cmd . " \\Sagacious\\SgsPage::translateString('$app', '$id', '$lang'); ?>",
+                        "<?php " . $cmd . " \\Modules\\InsiderFramework\\Sagacious\\Lib\\SgsPage::translateText('$app', '$id', '$lang'); ?>",
                         $gM['allMatch']
                     );
                 }

@@ -149,13 +149,13 @@ class SgsPage
      *
      * @package Modules\InsiderFramework\Sagacious\Lib\SgsPage
      *
-     * @param string $app  Name of the app where the translation is located
-     * @param string $id   String id to be translated
-     * @param string $lang Language into which the string will be translated
+     * @param string       $app  Name of the app where the translation is located
+     * @param string|array $id   String or Array of string to be translated
+     * @param string       $lang Language into which the string will be translated
      *
      * @return string Minified CSS
    */
-    public static function translateString(string $app, string $id, string $lang = LINGUAS): string
+    public static function translateText(string $app, $id, string $lang = LINGUAS): string
     {
         $pathLang = INSTALL_DIR . DIRECTORY_SEPARATOR . "Apps" . DIRECTORY_SEPARATOR .
         $app . DIRECTORY_SEPARATOR . "I10n" . DIRECTORY_SEPARATOR . $lang;
@@ -189,6 +189,10 @@ class SgsPage
             );
         }
 
-        return $content[$id];
+        $contentToReturn = $content[$id];
+        if (is_array($contentToReturn)) {
+            $contentToReturn = implode('', $contentToReturn);
+        }
+        return $contentToReturn;
     }
 }
