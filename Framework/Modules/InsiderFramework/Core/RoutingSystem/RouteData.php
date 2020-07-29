@@ -667,7 +667,7 @@ class RouteData
                     $path
                 );
             }
-            $path = "/" . $path . "/";
+            $path = "/^" . $path . "$/";
 
             $routingSettings = \Modules\InsiderFramework\Core\KernelSpace::getVariable(
                 'routingSettings',
