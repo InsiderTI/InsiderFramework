@@ -4,6 +4,10 @@
 
 The Insider Framework is a web framework, initially written in the PHP language, which is intended to be an implementation model that can be used in other programming languages. In addition, it also aims to provide a communication layer between these different languages.
 
+## Documentation
+
+You can access the official site to known more about the framework: www.insiderframework.com
+
 ## Roadmap
 
 This is the first public release of the code and is based on code that was first written in (probably) 2010. Since then my knowledge about several things was improved but a lot of refactoring will be done before merge this release to the main tree.
