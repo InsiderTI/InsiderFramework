@@ -1,5 +1,5 @@
 FROM php:7.4-apache
-MAINTAINER InsiderTI <contato@insiderti.com.br>
+MAINTAINER Marcello Costa <contact@insiderframework.com>
 
 # **********************************************************************************************************
 ###### Updating mirrors ######
