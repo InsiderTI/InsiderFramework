@@ -105,7 +105,7 @@ function deleteCookie(cookiename) {
  *
  *   @returns  {Void}
  */
-function updateDataCookieJS(name, value, days) {
+function setCookie(name, value, days) {
   var expires
   if (days) {
     var date = new Date()
@@ -126,7 +126,7 @@ function updateDataCookieJS(name, value, days) {
  *
  *   @returns  {Void}
  */
-function getDataCookieJS(cookieName) {
+function getCookie(cookieName) {
   if (document.cookie.length > 0) {
     cookieStartIndex = document.cookie.indexOf(cookieName + "=")
     if (cookieStartIndex != -1) {
