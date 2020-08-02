@@ -824,7 +824,7 @@ class SgsTemplate
                            "((settings)?( {0,})?=( {0,})?(['|\"](?P<settings>.+?(?=['|\"]))))['|\"]( {0,})?\})?" .
                            "/";
 
-        preg_match_all($viewsbagPattern, strtolower($gM['allMatch']), $viewsBagMatches, PREG_SET_ORDER);
+        preg_match_all($viewsbagPattern, $gM['allMatch'], $viewsBagMatches, PREG_SET_ORDER);
 
         if (!isset($viewsBagMatches[0]['key'])) {
             return $gM['allMatch'];
