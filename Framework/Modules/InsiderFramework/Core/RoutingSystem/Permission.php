@@ -54,7 +54,7 @@ class Permission
 
             if (!(empty($useridr))) {
                 if (!(isset($useridr['USERID']))) {
-                    \Modules\InsiderFramework\Core\Error\ErrorHandler::ErrorRegister(
+                    \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister(
                         'Error ! There are two users with the same access cookie!'
                     );
                 }

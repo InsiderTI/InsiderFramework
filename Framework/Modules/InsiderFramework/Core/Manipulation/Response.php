@@ -239,7 +239,7 @@ trait Response
             flush();
             fclose($file);
         } else {
-            \Modules\InsiderFramework\Core\Error\ErrorHandler::ErrorRegister(
+            \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister(
                 'Error: The file ' . $originalFilePath .
                     ' does not exist!'
             );

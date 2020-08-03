@@ -39,7 +39,7 @@ class UserAdminModel extends \Modules\InsiderFramework\Core\Model
         $result = $this->execute($query, $bindarray);
 
         if ($result !== null) {
-            \Modules\InsiderFramework\Core\Error\ErrorHandler::ErrorRegister(
+            \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister(
                 'Error performing update of user reset token'
             );
         }

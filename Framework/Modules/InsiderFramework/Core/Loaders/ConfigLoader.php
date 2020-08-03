@@ -510,7 +510,7 @@ class ConfigLoader
             "Apps.json"
         );
         if ($appLoaded == false) {
-            \Modules\InsiderFramework\Core\Error\ErrorHandler::ErrorRegister(
+            \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister(
                 'File ' . INSTALL_DIR . DIRECTORY_SEPARATOR .
                 "Framework" . DIRECTORY_SEPARATOR .
                 "Registry" . DIRECTORY_SEPARATOR .
@@ -555,7 +555,7 @@ class ConfigLoader
             $guildsJsonPath
         );
         if ($guildsLoaded == false) {
-            \Modules\InsiderFramework\Core\Error\ErrorHandler::ErrorRegister(
+            \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister(
                 'File ' . $guildsJsonPath . ' not found'
             );
         }

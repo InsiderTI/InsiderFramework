@@ -54,7 +54,7 @@ class PkgController extends \Modules\InsiderFramework\Core\Controller
             }
             if ($item === null || $authorization === null) {
                 if (!$requestCall) {
-                    \Modules\InsiderFramework\Core\Error\ErrorHandler::ErrorRegister(
+                    \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister(
                         'Invalid arguments for sys/getinstallediteminfo route'
                     );
                 } else {
@@ -75,7 +75,7 @@ class PkgController extends \Modules\InsiderFramework\Core\Controller
             }
         } else {
             if ($authorization . "" !== "") {
-                \Modules\InsiderFramework\Core\Error\ErrorHandler::ErrorRegister(
+                \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister(
                     'Invalid Authorization Token: ' . $authorization
                 );
             } else {
@@ -502,7 +502,7 @@ class PkgController extends \Modules\InsiderFramework\Core\Controller
             !\Modules\InsiderFramework\Core\Validation\Aggregation::existAndIsNotEmpty($POST, 'version') ||
             !\Modules\InsiderFramework\Core\Validation\Aggregation::existAndIsNotEmpty($POST, 'package')
         ) {
-            \Modules\InsiderFramework\Core\Error\ErrorHandler::ErrorRegister('Missing parameters on request');
+            \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister('Missing parameters on request');
         }
 
         $localAuthorization = \Modules\InsiderFramework\Core\Registry::getLocalAuthorization(REQUESTED_URL);
@@ -516,7 +516,7 @@ class PkgController extends \Modules\InsiderFramework\Core\Controller
             } else {
                 $msg = 'Server Error - Invalid Authorization Token: ' . $authorization;
             }
-            \Modules\InsiderFramework\Core\Error\ErrorHandler::ErrorRegister($msg);
+            \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister($msg);
         }
 
         if (!is_dir(PkgController::$mirrorDir)) {

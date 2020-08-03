@@ -9,7 +9,7 @@ namespace Modules\InsiderFramework\Core;
  *
  * @package Modules\InsiderFramework\Core\Model
  */
-class Model
+abstract class Model
 {
     use \Modules\InsiderFramework\PureSql\Core;
     
@@ -114,7 +114,7 @@ class Model
      *
      * @return bool Return of verification
      */
-    private function checkConnection(): bool
+    public function checkConnection(): bool
     {
         if (isset($this->connection) && $this->connection !== false) {
             return true;
@@ -295,7 +295,7 @@ class Model
 
             if (!$queryreturn) {
                 $error = $this->connection->errorInfo();
-                \Modules\InsiderFramework\Core\Error\ErrorHandler::ErrorRegister($error);
+                \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister($error);
             }
 
             if ($bindarray !== null) {
@@ -331,7 +331,7 @@ class Model
 
                 if (!$queryreturn) {
                     $error = $this->connection->errorInfo();
-                    \Modules\InsiderFramework\Core\Error\ErrorHandler::ErrorRegister($error);
+                    \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister($error);
                 }
             } catch (\Exception $e) {
                 $this->connection->rollback();

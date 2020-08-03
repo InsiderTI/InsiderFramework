@@ -20,9 +20,9 @@ class Connector
    *
    * @param object $model Model linked to connection
    *
-   * @return bool Return of operation
+   * @return void
    */
-    public static function connect($model): bool
+    public static function connect(&$model): void
     {
         if (property_exists($model, "dbms") && strtolower(trim($model->dbms)) !== "mysql") {
             \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError("Incorrect DBMS option for connector");
@@ -62,7 +62,5 @@ class Connector
         }
 
         $model->connection->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-
-        return true;
     }
 }

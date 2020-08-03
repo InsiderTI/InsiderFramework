@@ -187,7 +187,7 @@ trait Core
         $result = $this->execute($query, $bindArray);
 
         if (!is_numeric($result)) {
-            \Modules\InsiderFramework\Core\Error\ErrorHandler::ErrorRegister(
+            \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister(
                 'Error on execute update query %' . $query . '%: ' .
                 '%' . \Modules\InsiderFramework\Core\Json::jsonEncodePrivateObject($result) . '%',
                 __FILE__,
@@ -245,7 +245,7 @@ trait Core
         $result = $this->execute($query, $bindArray);
 
         if (!is_numeric($result)) {
-            \Modules\InsiderFramework\Core\Error\ErrorHandler::ErrorRegister(
+            \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister(
                 'Error on execute insert query %' . $query . '%: ' .
                 '%' . \Modules\InsiderFramework\Core\Json::jsonEncodePrivateObject($result) . '%',
                 __FILE__,

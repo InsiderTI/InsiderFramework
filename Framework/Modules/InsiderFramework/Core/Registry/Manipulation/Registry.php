@@ -444,20 +444,20 @@ trait Registry
                             "Apps.json";
                 break;
             default:
-                \Modules\InsiderFramework\Core\Error\ErrorHandler::ErrorRegister(
+                \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister(
                     'Invalid Section: ' . $packageControlData->getSection()
                 );
                 break;
         }
         
         if (!file_exists($filePath)) {
-            \Modules\InsiderFramework\Core\Error\ErrorHandler::ErrorRegister("File not found: " . $filePath);
+            \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister("File not found: " . $filePath);
         }
         
         // Tentando ler o arquivo JSON
         $jsonData = \Modules\InsiderFramework\Core\Json::getJSONDataFile($filePath);
         if ($jsonData === false) {
-            \Modules\InsiderFramework\Core\Error\ErrorHandler::ErrorRegister("Cannot read control file: " . $filePath);
+            \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister("Cannot read control file: " . $filePath);
         }
         
         // Verificando se o item já está registrado no arquivo
@@ -514,18 +514,18 @@ trait Registry
                             "Apps.json";
                 break;
             default:
-                \Modules\InsiderFramework\Core\Error\ErrorHandler::ErrorRegister('Invalid Section: ' . $section);
+                \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister('Invalid Section: ' . $section);
                 break;
         }
         
         if (!file_exists($filePath)) {
-            \Modules\InsiderFramework\Core\Error\ErrorHandler::ErrorRegister("File not found: " . $filePath);
+            \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister("File not found: " . $filePath);
         }
         
         // Tentando ler o arquivo JSON
         $jsonData = \Modules\InsiderFramework\Core\Json::getJSONDataFile($filePath);
         if ($jsonData === false) {
-            \Modules\InsiderFramework\Core\Error\ErrorHandler::ErrorRegister("Cannot read registry file: " . $filePath);
+            \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister("Cannot read registry file: " . $filePath);
         }
         
         // Verificando se o item está registrado no arquivo
@@ -546,21 +546,21 @@ trait Registry
                             "Apps.json";
                 break;
             default:
-                \Modules\InsiderFramework\Core\Error\ErrorHandler::ErrorRegister('Invalid Section: ' . $section);
+                \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister('Invalid Section: ' . $section);
                 break;
         }
 
         switch (strtolower($section)) {
             case 'app':
             case 'guild':
-                \Modules\InsiderFramework\Core\Error\ErrorHandler::ErrorRegister(
+                \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister(
                     'Remove not implemented for section: ' . $section
                 );
                 break;
             case 'modules':
                 break;
             default:
-                \Modules\InsiderFramework\Core\Error\ErrorHandler::ErrorRegister('Invalid Section: ' . $section);
+                \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister('Invalid Section: ' . $section);
                 break;
         }
         

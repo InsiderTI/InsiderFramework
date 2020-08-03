@@ -66,7 +66,7 @@ trait Currency
                 break;
 
             default:
-                \Modules\InsiderFramework\Core\Error\ErrorHandler::ErrorRegister('Not implemented', "CRITICAL");
+                \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister('Not implemented', "CRITICAL");
                 break;
         }
     }

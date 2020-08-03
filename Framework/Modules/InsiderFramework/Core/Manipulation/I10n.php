@@ -146,7 +146,7 @@ trait I10n
 
         // If file did not exists
         if (!file_exists($filePath)) {
-            \Modules\InsiderFramework\Core\Error\ErrorHandler::ErrorRegister(
+            \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister(
                 "Cannot load file %" . $filePath . "%",
                 "LOG"
             );
@@ -159,7 +159,7 @@ trait I10n
         $i10nData = \Modules\InsiderFramework\Core\Json::getJSONDataFile($filePath);
 
         if (!$i10nData) {
-            \Modules\InsiderFramework\Core\Error\ErrorHandler::ErrorRegister(
+            \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister(
                 "Cannot load file contents %" . $filePath . "%",
                 "LOG"
             );

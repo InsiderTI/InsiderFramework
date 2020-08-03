@@ -3,8 +3,11 @@
 <phpunit colors="true"
          bootstrap="../../Tests/bootstrap.default.php">
     <testsuites>
-        <testsuite name="Insider Framework (Core) test suite">
-            <directory>../Tests</directory>
+        <testsuite name="Insider Framework (Core) Database">
+            <directory>../Tests/DatabaseConnectors/Mysql/Connector.php</directory>
+            <directory>../Tests/Error/ErrorHandler.php</directory>
+            <directory>../Tests/Error/ErrorMessage.php</directory>
+            <directory>../Tests/Error/ErrorMonitor.php</directory>
         </testsuite>
     </testsuites>
 </phpunit>

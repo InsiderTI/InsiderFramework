@@ -33,7 +33,7 @@ class View extends SgsComponent
             !isset($props['params']) ||
             !Aggregation::existAndIsNotEmpty($props, 'doublecolonviewpath')
         ) {
-            \Modules\InsiderFramework\Core\Error\ErrorHandler::ErrorRegister('Invalid properties on View component');
+            \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister('Invalid properties on View component');
         }
 
         $params = $props['params'];
@@ -47,7 +47,7 @@ class View extends SgsComponent
              count($viewFilenameMatches) === 0
              )
         ) {
-            \Modules\InsiderFramework\Core\Error\ErrorHandler::ErrorRegister(
+            \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister(
                 'Invalid doublecolonviewpath property on View component'
             );
         }

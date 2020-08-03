@@ -74,13 +74,13 @@ class ErrorHandler
     public static function uncaughtTypeError(int $argumentNumber, string $requiredClass, string $givenClass): void
     {
         $errorMessage = "Uncaught TypeError: Argument " .
-            $argumentNumber .
-            " passed to " .
-            __METHOD__ . "() must be an instance of " .
-            $requiredClass . "," .
-            "instance of " .
-            $givenClass .
-            "given";
+        $argumentNumber .
+        " passed to " .
+        __METHOD__ . "() must be an instance of " .
+        $requiredClass . "," .
+        "instance of " .
+        $givenClass .
+        "given";
 
         \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister($errorMessage);
     }
@@ -105,7 +105,7 @@ class ErrorHandler
         string $domain,
         string $linguas = LINGUAS,
         string $type = "CRITICAL",
-        $responseCode = null
+        int $responseCode = null
     ): void {
         $msgI10n = \Modules\InsiderFramework\Core\Manipulation\I10n::getTranslate($message, $domain, $linguas);
 
@@ -113,7 +113,7 @@ class ErrorHandler
             $msgI10n = str_replace("%", "", $message);
         }
 
-        \Modules\InsiderFramework\Core\Error\ErrorHandler::ErrorRegister($msgI10n, $type, $responseCode);
+        \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister($msgI10n, $type, $responseCode);
     }
 
     /**
@@ -129,29 +129,50 @@ class ErrorHandler
      */
     protected static function registerErrorInLogFile(string $message)
     {
-        // Generates and unique ID for this error
-        $id = uniqid();
+        $rebuildLogFileName = function ($id) {
+            return INSTALL_DIR . DIRECTORY_SEPARATOR .
+            "Framework" . DIRECTORY_SEPARATOR .
+            "Cache" . DIRECTORY_SEPARATOR .
+            "logs" . DIRECTORY_SEPARATOR .
+            "logfile." . $id;
+        };
+        
+        // Counter of log files
+        $id = 0;
 
-        // Creates a new log in case of the file already exists
-        $logfilepath = INSTALL_DIR . DIRECTORY_SEPARATOR .
-                       "Framework" . DIRECTORY_SEPARATOR .
-                       "Cache" . DIRECTORY_SEPARATOR .
-                       "logs" . DIRECTORY_SEPARATOR .
-                       "logfile-" . $id;
+        // Avoid locked files
+        $getValidLogFileName = function ($id) use ($rebuildLogFileName) {
+            $logfilepath = $rebuildLogFileName($id);
 
-        while (file_exists($logfilepath . ".lock")) {
-            $id = uniqid();
-            $logfilepath = INSTALL_DIR . DIRECTORY_SEPARATOR .
-                           "Framework" . DIRECTORY_SEPARATOR .
-                           "Cache" . DIRECTORY_SEPARATOR .
-                           "logs" . DIRECTORY_SEPARATOR .
-                           "logfile-" . $id;
-        }
+            while (file_exists($logfilepath . ".lock")) {
+                $id++;
+                $logfilepath = $rebuildLogFileName($id);
+            }
+
+            $maxFileSizeMB = 5;
+            $sizeOfLogFileExceded = true;
+            while ($sizeOfLogFileExceded) {
+                if (!file_exists($logfilepath)) {
+                    $sizeOfLogFileExceded = false;
+                } else {
+                    $humanFileSize = filesize($logfilepath) / 1024 / 1024;
+                    if ($humanFileSize > $maxFileSizeMB) {
+                        $id++;
+                        $logfilepath = $getValidLogFileName($id);
+                    }
+                    $sizeOfLogFileExceded = false;
+                }
+            }
+
+            return $logfilepath;
+        };
+
+        $logfilepath = $getValidLogFileName($id);
 
         // Inserts and prefix in the message (for now, hard-coded)
         $date = new \DateTime('NOW');
         $dataFormat = $date->format('Y-m-d H:i:s');
-        $message = $dataFormat . "    " . $message;
+        $message = $dataFormat . "    " . $message . PHP_EOL;
 
         // Writing in the log file
         \Modules\InsiderFramework\Core\FileTree::fileWriteContent($logfilepath, $message);
@@ -186,11 +207,16 @@ class ErrorHandler
             }
         }
 
+        $requestSource = \Modules\InsiderFramework\Core\KernelSpace::getVariable(
+            'requestSource',
+            'insiderFrameworkSystem'
+        );
+
         switch (strtoupper(trim($type))) {
             // This is just a warning error and will be displayed in debug_bar and
             // registered in the log file
             case "WARNING":
-                if (DEBUG_BAR) {
+                if (DEBUG_BAR || $requestSource == "phpunit") {
                     $error = new \Modules\InsiderFramework\Core\Error\ErrorMessage(array(
                         'type' => $type,
                         'text' => $message,
@@ -529,6 +555,32 @@ class ErrorHandler
     }
 
     /**
+     * Function that manage an error if it's a test (phpunit) request
+     *
+     * @author Marcello Costa
+     *
+     * @package Modules\InsiderFramework\Core\Error\ErrorHandler
+     *
+     * @param \Modules\InsiderFramework\Core\Error\ErrorMessage $error Object with error information
+     *
+     * @return void
+     */
+    public static function manageErrorTestRequest(\Modules\InsiderFramework\Core\Error\ErrorMessage $error): void
+    {
+        // Initiazing console instance
+        $console = \Modules\InsiderFramework\Console\Application::createConsoleInstance();
+        \Modules\InsiderFramework\Core\KernelSpace::setVariable(
+            array(
+                'console' => $console
+            ),
+            'insiderFrameworkSystem'
+        );
+
+        // Manage error as console request
+        errorHandler::manageErrorConsoleRequest($error);
+    }
+
+    /**
      * Function that manage an error if it's a console request
      *
      * @author Marcello Costa
@@ -841,9 +893,15 @@ class ErrorHandler
             'insiderFrameworkSystem'
         );
 
-        if ($requestSource === 'console') {
-            ErrorHandler::manageErrorConsoleRequest($error);
-            return;
+        switch ($requestSource) {
+            case "console":
+                ErrorHandler::manageErrorConsoleRequest($error);
+                return;
+            break;
+            case "phpunit":
+                ErrorHandler::manageErrorTestRequest($error);
+                return;
+            break;
         }
 
         error_log(\Modules\InsiderFramework\Core\Json::jsonEncodePrivateObject($error), 0);
