@@ -29,22 +29,33 @@ trait Acl
     public static function getUserAccessLevel(
         \Modules\InsiderFramework\Core\RoutingSystem\RouteData $routeObj
     ) {
-        
-        $ajaxrequest = \Modules\InsiderFramework\Core\KernelSpace::getVariable('ajaxrequest', 'RoutingSystem');
-        $permissions = $routeObj->getPermissions();
+        $aclClass = ACL_CLASS;
+        $aclObj = new $aclClass();
+        return $aclObj::getUserAccessLevel($routeObj);
+    }
 
-        switch (strtolower($permissions['type'])) {
-            case 'native':
-                return \Modules\InsiderFramework\Core\RoutingSystem\Permission::getNativeAccessLevel();
-                break;
-            case 'custom':
-                $SecurityController = new \Apps\Sys\Controllers\SecurityController();
+    /**
+     * Function that validates the user access level for a route
+     *
+     * @author Marcello Costa
+     *
+     * @package Modules\InsiderFramework\Core\Acl
+     *
+     * @param RouteData $routeObj  Object of the current route
+     * @param mixed $permissionNow Current permissions for the current route
+     *
+     * @return bool Return true if user is allowed to access the route
+     */
+    public static function validateACLPermission(
+        \Modules\InsiderFramework\Core\RoutingSystem\RouteData $routeObj
+    ) {
+        $permissions = \Modules\InsiderFramework\Core\KernelSpace::getVariable(
+            'permissionNow',
+            'insiderFrameworkSystem'
+        );
 
-                return $SecurityController->getCustomAccessLevel();
-                break;
-            default:
-                \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError('ACL_METHOD not recognized');
-                break;
-        }
+        $aclClass = ACL_CLASS;
+        $aclObj = new $aclClass();
+        $test = $aclObj::validateACLPermission($routeObj, $permissions);
     }
 }

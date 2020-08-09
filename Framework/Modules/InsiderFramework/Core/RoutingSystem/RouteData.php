@@ -899,35 +899,9 @@ class RouteData
                 'insiderFrameworkSystem'
             );
 
-            // Verificando de acordo com o tipo de configuração
-            switch (strtolower($permissionsOfRoute['type'])) {
-                case "native":
-                    // Flag de acesso ao usuário atual
-                    $access = false;
-
-                    \Modules\InsiderFramework\Core\RoutingSystem\Permission::validateNativeACLPermission(
-                        $this,
-                        $permissionNow,
-                        $access
-                    );
-                    break;
-                case "custom":
-                    // Flag de acesso ao usuário atual
-                    $access = false;
-                    $Sec_security = new \Apps\Sys\Controllers\SecurityController();
-
-                    // Verificando a permissão de acesso à rota com método customizado
-                    $Sec_security->validateCustomAclPermission($this, $permissionNow, $access);
-                    break;
-                default:
-                    \Modules\InsiderFramework\Core\Error\ErrorHandler::i10nErrorRegister(
-                        'Permission type of route not recognized in %' . $this->getApp() .
-                        "\\" . $this->getController() . "\\" . $this->getActionNow() . ": " .
-                        $permissionsOfRoute['type'],
-                        "app/sys"
-                    );
-                    break;
-            }
+            $access = \Modules\InsiderFramework\Core\Manipulation\Acl::validateACLPermission(
+                $this
+            );
         }
 
         // Se o usuário não tem acesso

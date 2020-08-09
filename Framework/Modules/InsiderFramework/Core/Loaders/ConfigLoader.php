@@ -356,9 +356,9 @@ class ConfigLoader
          */
         define('DEFAULT_RESPONSE_FORMAT', $coreData['DEFAULT_RESPONSE_FORMAT']);
 
-        if (!isset($coreData['ACL_METHOD'])) {
+        if (!isset($coreData['ACL_CLASS'])) {
             \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError(
-                "The following information was not found in the configuration: 'ACL_METHOD'"
+                "The following information was not found in the configuration: 'ACL_CLASS'"
             );
         }
 
@@ -367,14 +367,7 @@ class ConfigLoader
          *
          * @package Modules\InsiderFramework\Loaders\ConfigLoader
          */
-        if ($coreData['ACL_METHOD'] === "native" || $coreData['ACL_METHOD'] === "custom") {
-            define('ACL_METHOD', $coreData['ACL_METHOD']);
-        } else {
-            \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError(
-                "The configuration 'ACL_METHOD' has an invalid value " .
-                $coreData['ACL_METHOD'] . ". Possible values are 'native' or 'custom'."
-            );
-        }
+        define('ACL_CLASS', $coreData['ACL_CLASS']);
 
         /**
          * Maximum number of loops before generating a warning for the default mail box or writing to the log

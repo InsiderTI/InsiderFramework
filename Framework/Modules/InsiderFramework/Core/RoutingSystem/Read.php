@@ -198,7 +198,7 @@ class Read
                         $aMD['permission'] = [];
                     }
                     if (!isset($aMD['permission']['type'])) {
-                        $aMD['permission']['type'] = ACL_METHOD;
+                        $aMD['permission']['type'] = ACL_CLASS;
                     }
                     if (!isset($aMD['permission']['users'])) {
                         $aMD['permission']['users'] = '';
