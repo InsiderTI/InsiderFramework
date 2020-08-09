@@ -92,11 +92,11 @@ class ErrorHandler
      *
      * @package Modules\InsiderFramework\Core\Error\ErrorHandler
      *
-     * @param string $message      Error message
-     * @param string $domain       Domain of error message
-     * @param string $linguas      Language of error message
-     * @param string $type         Type of error
-     * @param int    $responseCode Response code of error
+     * @param string $message             Error message
+     * @param string $domain              Domain of error message
+     * @param string $linguas             Language of error message
+     * @param string $frameworkErrorType  Framework error type
+     * @param int    $responseCode        Response code of error
      *
      * @return void
      */
@@ -104,7 +104,7 @@ class ErrorHandler
         string $message,
         string $domain,
         string $linguas = LINGUAS,
-        string $type = "CRITICAL",
+        string $frameworkErrorType = "CRITICAL",
         int $responseCode = null
     ): void {
         $msgI10n = \Modules\InsiderFramework\Core\Manipulation\I10n::getTranslate($message, $domain, $linguas);
@@ -113,7 +113,7 @@ class ErrorHandler
             $msgI10n = str_replace("%", "", $message);
         }
 
-        \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister($msgI10n, $type, $responseCode);
+        \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister($msgI10n, $frameworkErrorType, $responseCode);
     }
 
     /**
@@ -188,13 +188,13 @@ class ErrorHandler
      *
      * @package Modules\InsiderFramework\Core\Error\ErrorHandler
      *
-     * @param string $message      Error message
-     * @param string $type         Type of error
-     * @param int    $responseCode Response code of the error
+     * @param string $message             Error message
+     * @param string $frameworkErrorType  Framework error type
+     * @param int    $responseCode        Response code of the error
      *
      * @return void|string Returns the uniqid of the error if it's of type LOG
      */
-    public static function errorRegister(string $message, string $type = "CRITICAL", int $responseCode = null): ?string
+    public static function errorRegister(string $message, string $frameworkErrorType = "CRITICAL", int $responseCode = null): ?string
     {
         $debugbacktrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 3);
 
@@ -212,13 +212,13 @@ class ErrorHandler
             'insiderFrameworkSystem'
         );
 
-        switch (strtoupper(trim($type))) {
+        switch (strtoupper(trim($frameworkErrorType))) {
             // This is just a warning error and will be displayed in debug_bar and
             // registered in the log file
             case "WARNING":
                 if (DEBUG_BAR || $requestSource == "phpunit") {
                     $error = new \Modules\InsiderFramework\Core\Error\ErrorMessage(array(
-                        'type' => $type,
+                        'frameworkErrorType' => $frameworkErrorType,
                         'text' => $message,
                         'file' => $file,
                         'line' => $line,
@@ -251,7 +251,7 @@ class ErrorHandler
                 // Building the error array
                 $error = new \Modules\InsiderFramework\Core\Error\ErrorMessage(
                     array(
-                        'type' => $type,
+                        'frameworkErrorType' => $frameworkErrorType,
                         'text' => 'Attack detected',
                         'file' => $file,
                         'line' => $line,
@@ -326,7 +326,7 @@ class ErrorHandler
 
                 // Populate the error object
                 $ErrorMessage = new \Modules\InsiderFramework\Core\Error\ErrorMessage(array(
-                    'type' => $type,
+                    'frameworkErrorType' => $frameworkErrorType,
                     'text' => $message,
                     'file' => $file,
                     'line' => $line,
@@ -601,7 +601,9 @@ class ErrorHandler
         $console->setTextColor('red');
         $console->write($error->getSubject());
         $console->br();
-        $console->write("Type: " . $error->getType());
+        $console->write("Php Type: " . $error->getPhpErrorType());
+        $console->br();
+        $console->write("Framework Type: " . $error->getFrameworkErrorType());
         $console->br();
         $console->write("Message: " . $error->getMessageOrText());
         $console->br();
@@ -777,7 +779,7 @@ class ErrorHandler
 
         // Displaying the default error message
         $errorController = new \Apps\Sys\Controllers\ErrorController();
-        switch ($error->getType()) {
+        switch ($error->getFrameworkErrorType()) {
             case 'ATTACK_DETECTED':
                 $errorController->attackError();
                 break;

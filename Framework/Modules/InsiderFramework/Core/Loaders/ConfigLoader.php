@@ -20,26 +20,42 @@ class ConfigLoader
     *
     * @return array Data of json config files
     */
-    public static function loadFrameworkConfigVariables(): array
+    public static function getFrameworkConfigVariablesFromConfigFiles(): array
     {
-        $coreConfigFiles = array(
+        $configFiles = array(
             'core',
             'database',
             'mail',
             'repositories',
         );
 
-        $coreData = [];
+        $configData = [];
 
-        foreach ($coreConfigFiles as $configFile) {
-            $dataConfiguration = \Modules\InsiderFramework\Core\Loaders\ConfigLoader::getConfigData($configFile);
+        foreach ($configFiles as $configFile) {
+            $dataConfiguration = ConfigLoader::getConfigFileData($configFile);
             if (count($dataConfiguration) === 0) {
                 \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError(
                     "Could not read '$configFile' file of config directory"
                 );
             }
-            $coreData = array_merge($coreData, $dataConfiguration);
+            $configData = array_merge($configData, $dataConfiguration);
         }
+
+        return $configData;
+    }
+
+    /**
+    * Initialize configuration variables from config files
+    *
+    * @author Marcello Costa
+    *
+    * @package Modules\InsiderFramework\Loaders\ConfigLoader
+    *
+    * @return array Data of json config files
+    */
+    public static function initializeConfigVariablesFromConfigFiles(): void
+    {
+        $configVariables = ConfigLoader::getFrameworkConfigVariablesFromConfigFiles();
 
         global $i10n;
         if (is_array($i10n)) {
@@ -49,9 +65,7 @@ class ConfigLoader
 
         // Loading global variables from config to kernelspace
         \Modules\InsiderFramework\Core\Loaders\ConfigLoader::
-        registryJsonConfigurationToConstraintsAndVariablesInKernelSpace($coreData);
-
-        return $coreData;
+        registryJsonConfigurationAsConstraintsAndVariablesInKernelSpace($configVariables);
     }
 
     /**
@@ -160,7 +174,7 @@ class ConfigLoader
     *
     * @return array Data inside file
     */
-    public static function getConfigData(string $filename): array
+    public static function getConfigFileData(string $filename): array
     {
         $filepath = INSTALL_DIR . DIRECTORY_SEPARATOR .
                     "Framework" . DIRECTORY_SEPARATOR .
@@ -178,7 +192,7 @@ class ConfigLoader
     }
 
     /**
-    * Registry json configuration to constraints and variables in kernelspace
+    * Registry json configuration as constraints and variables in kernelspace
     *
     * @author Marcello Costa
     *
@@ -188,7 +202,7 @@ class ConfigLoader
     *
     * @return void
     */
-    public static function registryJsonConfigurationToConstraintsAndVariablesInKernelSpace(array &$coreData): void
+    protected static function registryJsonConfigurationAsConstraintsAndVariablesInKernelSpace(array &$coreData): void
     {
         /**
          * Domain used to request

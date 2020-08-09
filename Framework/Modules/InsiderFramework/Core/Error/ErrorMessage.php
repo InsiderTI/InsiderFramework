@@ -2,6 +2,8 @@
 
 namespace Modules\InsiderFramework\Core\Error;
 
+use Modules\InsiderFramework\Core\Error\FrameworkErrorType;
+
 /**
  * Class of error message object
  *
@@ -11,7 +13,8 @@ namespace Modules\InsiderFramework\Core\Error;
  */
 class ErrorMessage
 {
-    private $type;
+    private $frameworkErrorType;
+    private $phpErrorType;
     private $message;
     private $text;
     private $file;
@@ -31,41 +34,35 @@ class ErrorMessage
      *
      * @return void
      */
-    public function __construct(array $properties = null)
+    public function __construct(array $properties)
     {
-        if (is_array($properties)) {
-            if (isset($properties['type'])) {
-                $this->setType($properties['type']);
-            }
-            if (isset($properties['text'])) {
-                $this->setText($properties['text']);
-            }
-            if (isset($properties['file'])) {
-                $this->setFile($properties['file']);
-            }
-            if (isset($properties['line'])) {
-                $this->setLine($properties['line']);
-            }
-            if (isset($properties['fatal'])) {
-                $this->setFatal($properties['fatal']);
-            }
-            if (isset($properties['subject'])) {
-                $this->setSubject($properties['subject']);
-            }
+        if (isset($properties['frameworkErrorType'])) {
+            $this->setFrameworkErrorType($properties['frameworkErrorType']);
+        }
+        if (isset($properties['phpErrorType'])) {
+            $this->setPhpErrorType($properties['phpErrorType']);
+        }
+        if (isset($properties['text'])) {
+            $this->setText($properties['text']);
+        }
+        if (isset($properties['message'])) {
+            $this->setMessage($properties['message']);
+        }
+        if (isset($properties['file'])) {
+            $this->setFile($properties['file']);
+        }
+        if (isset($properties['line'])) {
+            $this->setLine($properties['line']);
+        }
+        if (isset($properties['fatal'])) {
+            $this->setFatal($properties['fatal']);
+        }
+        if (isset($properties['subject'])) {
+            $this->setSubject($properties['subject']);
         }
 
         $validationErrors = $this->validateAllProperties();
         if (count($validationErrors) !== 0) {
-            $debugbacktrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 3);
-
-            $file = $debugbacktrace[0]['file'];
-            $line = $debugbacktrace[0]['line'];
-            if (isset($debugbacktrace[2])) {
-                if (isset($debugbacktrace[2]['file']) && isset($debugbacktrace[2]['line'])) {
-                    $file = $debugbacktrace[2]['file'];
-                    $line = $debugbacktrace[2]['line'];
-                }
-            }
             \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError(
                 'Invalid ErrorMessage object. Errors: ' . json_encode($validationErrors)
             );
@@ -79,11 +76,25 @@ class ErrorMessage
      *
      * @package \Modules\InsiderFramework\Core\Error\ErrorMessage
      *
-     * @return string Type
+     * @return string Type of framework error
      */
-    public function getType(): string
+    public function getFrameworkErrorType(): string
     {
-        return $this->type ? $this->type : "NULL";
+        return $this->frameworkErrorType ? $this->frameworkErrorType : "NULL";
+    }
+
+    /**
+     * Get property of object
+     *
+     * @author Marcello Costa
+     *
+     * @package \Modules\InsiderFramework\Core\Error\ErrorMessage
+     *
+     * @return string Type of php error
+     */
+    public function getPhpErrorType(): string
+    {
+        return $this->phpErrorType ? $this->phpErrorType : "NULL";
     }
 
     /**
@@ -189,19 +200,43 @@ class ErrorMessage
     }
 
     /**
-     * Set type of error message
+     * Set framework type of error message
      *
      * @author Marcello Costa
      *
      * @package \Modules\InsiderFramework\Core\Error\ErrorMessage
      *
-     * @param string $type String that specifies the type of error
+     * @param string $frameworkErrorType String that specifies the type of error
      *
      * @return void
      */
-    public function setType(string $type): void
+    public function setFrameworkErrorType(string $frameworkErrorType): void
     {
-        $this->type = $type;
+        $validFrameworkErrorType = FrameworkErrorType::validateFrameworkErrorTypeName($frameworkErrorType);
+        if (!$validFrameworkErrorType) {
+            \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister('Invalid framework error type: ' . $frameworkErrorType);
+        }
+        $this->frameworkErrorType = $frameworkErrorType;
+    }
+
+    /**
+     * Set php type of error message
+     *
+     * @author Marcello Costa
+     *
+     * @package \Modules\InsiderFramework\Core\Error\ErrorMessage
+     *
+     * @param string $phpErrorType String that specifies the type of error
+     *
+     * @return void
+     */
+    public function setPhpErrorType(string $phpErrorType): void
+    {
+        $validPhpErrorType = PhpErrorType::validatePhpErrorTypeName($phpErrorType);
+        if (!$validPhpErrorType) {
+            \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister('Invalid php error type: ' . $phpErrorType);
+        }
+        $this->phpErrorType = $phpErrorType;
     }
 
     /**
@@ -311,31 +346,31 @@ class ErrorMessage
      *
      * @return array Array of errors
      */
-    public function validateAllProperties(): array
+    private function validateAllProperties(): array
     {
         $errors = [];
         if (!is_bool($this->getFatal())) {
             $errors[] = "Value " . "'Fatal'" . " not found";
         }
 
-        if (trim($this->getFile()) === "") {
+        if (trim($this->getFile()) . "" === "") {
             $errors[] = "Value " . "'File'" . " not found";
         }
 
-        if (trim($this->getLine()) === "") {
+        if (trim($this->getLine()) . "" === "") {
             $errors[] = "Value " . "'Line'" . " not found";
         }
 
-        if ((trim($this->getMessage()) === "" && trim($this->getText()) === "")) {
-            $this->setText('(Error message not specified)');
+        if ((trim($this->getMessage()) . "" === "" && trim($this->getText()) . "" === "")) {
+            $this->setText('Error message not specified for ErrorMessage object');
         }
 
-        if (trim($this->getSubject()) === "") {
+        if (trim($this->getSubject()) . "" === "") {
             $errors[] = "Value " . "'Subject'" . " not found";
         }
 
-        if (trim($this->getType()) === "") {
-            $errors[] = "Value " . "'Type'" . " not found";
+        if (trim($this->getFrameworkErrorType()) . "" === "" && trim($this->getPhpErrorType())) {
+            $errors[] = "frameworkErrorType or phpErroType not specified for ErrorMessage object";
         }
 
         return $errors;

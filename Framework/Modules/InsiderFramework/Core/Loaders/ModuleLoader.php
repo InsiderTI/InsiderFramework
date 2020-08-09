@@ -49,7 +49,7 @@ class ModuleLoader
     *
     * @return void
     */
-    public static function loadAdditionalModules(array $modules): void
+    protected static function loadAdditionalModules(array $modules): void
     {
         // Requesting modules (need not use class KC_FTree for this load)
         $moduleLoader = [];

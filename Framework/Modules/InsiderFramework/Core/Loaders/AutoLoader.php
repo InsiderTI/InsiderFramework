@@ -35,7 +35,7 @@ class AutoLoader
              *
              * @return void
              */
-            function ($soughtitem): void {
+            function (string $soughtitem): void {
                 if (!defined('INSTALL_DIR')) {
                     define('INSTALL_DIR', '.');
                 }
@@ -43,20 +43,9 @@ class AutoLoader
                 $firstNamespaceClass = explode("\\", $soughtitem)[0];
         
                 if ($firstNamespaceClass !== 'Apps') {
-                    $filepath = str_replace(
-                        "\\",
-                        DIRECTORY_SEPARATOR,
-                        INSTALL_DIR . DIRECTORY_SEPARATOR .
-                        "Framework" . DIRECTORY_SEPARATOR .
-                        $soughtitem . ".php"
-                    );
+                    $filepath = AutoLoader::getFrameworkClassFilePath($soughtitem);
                 } else {
-                    $filepath = str_replace(
-                        "\\",
-                        DIRECTORY_SEPARATOR,
-                        INSTALL_DIR . DIRECTORY_SEPARATOR .
-                        $soughtitem . ".php"
-                    );
+                    $filepath = AutoLoader::getAppClassFilePath($soughtitem);
                 }
 
                 if (
@@ -66,6 +55,49 @@ class AutoLoader
                     require_once $filepath;
                 }
             }
+        );
+    }
+
+    /**
+    * Get file path of a class inside the Apps directory
+    *
+    * @author Marcello Costa
+    *
+    * @package Modules\InsiderFramework\Core\Loaders\AutoLoader
+    *
+    * @param string $soughtitem Requested item name
+    *
+    * @return string File path of class
+    */
+    public static function getAppClassFilePath(string $soughtitem): string
+    {
+        return str_replace(
+            "\\",
+            DIRECTORY_SEPARATOR,
+            INSTALL_DIR . DIRECTORY_SEPARATOR .
+            $soughtitem . ".php"
+        );
+    }
+
+    /**
+    * Get file path of a class inside the Framework directory
+    *
+    * @author Marcello Costa
+    *
+    * @package Modules\InsiderFramework\Core\Loaders\AutoLoader
+    *
+    * @param string $soughtitem Requested item name
+    *
+    * @return string File path of class
+    */
+    public static function getFrameworkClassFilePath(string $soughtitem): string
+    {
+        return str_replace(
+            "\\",
+            DIRECTORY_SEPARATOR,
+            INSTALL_DIR . DIRECTORY_SEPARATOR .
+            "Framework" . DIRECTORY_SEPARATOR .
+            $soughtitem . ".php"
         );
     }
 }

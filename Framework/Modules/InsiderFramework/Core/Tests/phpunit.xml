@@ -4,10 +4,16 @@
          bootstrap="../../Tests/bootstrap.default.php">
     <testsuites>
         <testsuite name="Insider Framework (Core) Database">
-            <directory>../Tests/DatabaseConnectors/Mysql/Connector.php</directory>
-            <directory>../Tests/Error/ErrorHandler.php</directory>
-            <directory>../Tests/Error/ErrorMessage.php</directory>
-            <directory>../Tests/Error/ErrorMonitor.php</directory>
+            <directory>../Tests/DatabaseConnectors/Mysql/ConnectorTest.php</directory>
+            <directory>../Tests/Error/ErrorFatalTest.php</directory>
+            <directory>../Tests/Error/ErrorHandlerTest.php</directory>
+            <directory>../Tests/Error/ErrorMessageTest.php</directory>
+            <directory>../Tests/Error/ErrorMonitorTest.php</directory>
+            <directory>../Tests/Error/FrameworkErrorTypeTest.php</directory>
+            <directory>../Tests/Error/PhpErrorTypeTest.php</directory>
+            <directory>../Tests/Loaders/InitializeAutoLoaderTest.php</directory>
+            <directory>../Tests/Loaders/ConfigLoaderTest.php</directory>
+            <directory>../Tests/Loaders/ModuleLoaderTest.php</directory>
         </testsuite>
     </testsuites>
 </phpunit>

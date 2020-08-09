@@ -88,7 +88,7 @@ class ErrorController extends \Modules\InsiderFramework\Core\Controller
             if (is_array($msg) && isset($msg['jsonMessage'])) {
                 $errorArray = json_decode($msg['jsonMessage'], true);
                 $error = new ErrorMessage(array(
-                    'type' => $errorArray['type'],
+                    'frameworkErrorType' => $errorArray['type'],
                     'text' => $errorArray['message'] ? $errorArray['message'] : $errorArray['text'],
                     'file' => $errorArray['file'],
                     'line' => $errorArray['line'],

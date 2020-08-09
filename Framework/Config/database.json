@@ -5,10 +5,10 @@
       "dbms": "mysql",
       "connector": "mysql",
       "hostname": "127.0.0.1",
-      "port": "3356",
+      "port": "3306",
       "databasename": "insiderframework_site",
-      "username": "123",
-      "password": "123",
+      "username": "root",
+      "password": "root",
       "persistent": false,
       "charset": "utf8",
       "isolationLevel": "REPEATABLE READ"

@@ -44,7 +44,7 @@ class System
 
         \Modules\InsiderFramework\Core\Loaders\AutoLoader::initializeAutoLoader();
 
-        \Modules\InsiderFramework\Core\Loaders\ConfigLoader::loadFrameworkConfigVariables();
+        \Modules\InsiderFramework\Core\Loaders\ConfigLoader::initializeConfigVariablesFromConfigFiles();
         
         \Modules\InsiderFramework\Core\Loaders\ModuleLoader::loadModulesFromJsonConfigFile();
 

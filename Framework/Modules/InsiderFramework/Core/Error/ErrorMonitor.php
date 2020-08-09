@@ -74,81 +74,8 @@ class ErrorMonitor
                 $file = $error["file"];
                 $line = $error["line"];
 
-                $fatal = \Modules\InsiderFramework\Core\KernelSpace::getVariable(
-                    'fatalError',
-                    'insiderFrameworkSystem'
-                );
-
-                if ($fatal === null) {
-                    $fatal = false;
-                }
-
-                switch ($errno) {
-                    case 1:
-                        $errorType = 'E_ERROR';
-                        $fatal = true;
-                        break;
-
-                    case 2:
-                        $errorType = 'E_WARNING';
-                        break;
-
-                    case 4:
-                        $errorType = 'E_PARSE';
-                        $fatal = true;
-                        break;
-
-                    case 8:
-                        $errorType = 'E_NOTICE';
-                        break;
-
-                    case 16:
-                        $errorType = 'E_CORE_ERROR';
-                        $fatal = true;
-                        break;
-
-                    case 32:
-                        $errorType = 'E_CORE_WARNING';
-                        break;
-
-                    case 64:
-                        $errorType = 'E_COMPILE_ERROR';
-                        $fatal = true;
-                        break;
-
-                    case 128:
-                        $errorType = 'E_COMPILE_WARNING';
-                        break;
-
-                    case 256:
-                        $errorType = 'E_USER_ERROR';
-                        break;
-
-                    case 512:
-                        $errorType = 'E_USER_WARNING';
-                        break;
-
-                    case 1024:
-                        $errorType = 'E_USER_NOTICE';
-                        break;
-
-                    case 2048:
-                        $errorType = 'E_STRICT';
-                        break;
-
-                    case 4096:
-                        $errorType = 'E_RECOVERABLE_ERROR';
-                        $fatal = true;
-                        break;
-
-                    case 8192:
-                        $errorType = 'E_DEPRECATED';
-                        break;
-
-                    case 16384:
-                        $errorType = 'E_USER_DEPRECATED';
-                        break;
-                }
+                $phpErrorType = \Modules\InsiderFramework\Core\Error\PhpErrorType::getPhpErrorTypeByErrorNumber($errno);
+                $fatal = \Modules\InsiderFramework\Core\Error\ErrorFatal::getIfErrorIsFatalByErrorNumber($errno);
 
                 \Modules\InsiderFramework\Core\KernelSpace::setVariable(
                     array(
@@ -157,7 +84,7 @@ class ErrorMonitor
                     'insiderFrameworkSystem'
                 );
                 $error['fatal'] = $fatal;
-                $error['type'] = $errorType;
+                $error['frameworkErrorType'] = $phpErrorType;
 
                 if ($fatal == true) {
                     $subject = "Fatal Error - Insider Framework report agent";
@@ -170,7 +97,7 @@ class ErrorMonitor
                 $responseFormat = \Modules\InsiderFramework\Core\Response::getCurrentResponseFormat();
 
                 $ErrorMessage = new \Modules\InsiderFramework\Core\Error\ErrorMessage(array(
-                    'type' => $errorType,
+                    'phpErrorType' => $phpErrorType,
                     'text' => $message,
                     'file' => $file,
                     'line' => $line,

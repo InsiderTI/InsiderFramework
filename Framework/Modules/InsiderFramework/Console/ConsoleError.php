@@ -42,15 +42,16 @@ class ConsoleError
         $console->br();
         $console->setTextColor('red');
         $console->write($message->getSubject())->br();
-        $console->setTextColor('red');
-        $console->write("Type: " . $message->getType())->br();
-        $console->setTextColor('red');
+        $console->write("Php Type: " . $error->getPhpErrorType());
+        $console->br();
+        $console->write("Framework Type: " . $error->getFrameworkErrorType());
+        $console->br();
         $console->write("Message: " . $message->getMessageOrText())->br();
-        $console->setTextColor('red');
+        $console->br();
         $console->write("File: " . $message->getFile())->br();
-        $console->setTextColor('red');
+        $console->br();
         $console->write("Line: " . $message->getLine())->br();
-        $console->setTextColor('red');
+        $console->br();
         $console->write("Fatal: " . $fatalTextStatus)->br();
 
         if ($message->getFatal()) {
