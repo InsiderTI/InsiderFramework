@@ -2,6 +2,15 @@
 
 namespace Modules\InsiderFramework\Core\RoutingSystem;
 
+use Modules\InsiderFramework\Core\RoutingSystem\Annotation\ReadAnnotation;
+use Modules\InsiderFramework\Core\RoutingSystem\Annotation\Type\Permission as PermissionType;
+use Modules\InsiderFramework\Core\RoutingSystem\Annotation\Type\Route as RouteType;
+use Modules\InsiderFramework\Core\RoutingSystem\Annotation\Type\Verbs as VerbsType;
+use Modules\InsiderFramework\Core\RoutingSystem\Annotation\Type\Responseformat as ResponseformatType;
+use Modules\InsiderFramework\Core\RoutingSystem\Annotation\Type\Domains as DomainsType;
+use Modules\InsiderFramework\Core\RoutingSystem\Annotation\Type\Param as ParamType;
+use Modules\InsiderFramework\Core\ClassOperations;
+
 /**
  * Classe de leitura do módulo de roteamento
  *
@@ -12,7 +21,7 @@ namespace Modules\InsiderFramework\Core\RoutingSystem;
 class Read
 {
     // Patterns de declaração de rotas, actions e etc
-    public static $declarationPattern = '/@(?P<declaration>.*?(?=\(|$))/';
+    public static $declarationPattern = '/@(?P<declaration>([^(| ]+))/';
     public static $betweenCommasPattern = '/(,)?(?P<Argument>.*?)=(?P<PreDataDelimiter>[\'"])' .
                                           '(?P<Data>.*?)(?P<PosDataDelimiter>[\'"])/';
     public static $patternArgs = "/" . "@(?P<declaration>.*?(?=\(|$))\((?P<args>.*?.*)\)" . "/";
@@ -129,169 +138,172 @@ class Read
     }
 
     /**
-     * Função que registra todas as rotas mapeadas para um controller
+    * Get all annotations of a controller class file
+    *
+    * @author Marcello Costa
+    *
+    * @package Modules\InsiderFramework\Core\RoutingSystem\Read
+    *
+    * @param object $reflectionControllerObj Controller object created with reflection
+    *
+    * @return array Class and methods annotations
+    */
+    private function getAllAnnotationsOfController($reflectionControllerObj): array
+    {
+        $classComments = $reflectionControllerObj->getDocComment();
+
+        if ($classComments === false) {
+            return array(
+                'classAnnotations' => [],
+                'methodsAnnotations' => []
+            );
+        }
+
+        $classAnnotationsData = ReadAnnotation::getAnnotationsData(
+            $reflectionControllerObj->name,
+            $classComments
+        );
+
+        if (isset($classAnnotationsData[$reflectionControllerObj->name]['route'])) {
+            $controllerMethods = $reflectionControllerObj->getMethods(\ReflectionMethod::IS_PUBLIC);
+
+            foreach ($controllerMethods as $controllerMethod) {
+                $commentsMethod = $reflectionControllerObj->getMethod($controllerMethod->name)->getDocComment();
+
+                $idMethod = $controllerMethod->name;
+
+                $annotationMethodData = ReadAnnotation::getAnnotationsData(
+                    $idMethod,
+                    $commentsMethod
+                );
+
+                $methodsAnnotationsData[$idMethod] = $annotationMethodData[$idMethod];
+            }
+        }
+
+        return array(
+            'classAnnotations' => $classAnnotationsData[$reflectionControllerObj->name],
+            'methodsAnnotations' => $methodsAnnotationsData
+        );
+    }
+
+    /**
+    * Process all controller method annotations
+    *
+    * @author Marcello Costa
+    *
+    * @package Modules\InsiderFramework\Core\RoutingSystem\Read
+    *
+    * @param string $appName            App da rota
+    * @param string $completeClassName  Complete class name of controller
+    * @param array  $annotations        Array of controller annotations
+    *
+    * @return void
+    */
+    private function processControllerMethodsAnnotations(
+        string $appName,
+        string $completeClassName,
+        array $annotations
+    ): void {
+        $methodsAnnotations = $annotations['methodsAnnotations'];
+        if (empty($methodsAnnotations)) {
+            return;
+        }
+
+        $pathRouteForMethodsOfController = $annotations['classAnnotations']['route']['path'];
+        if (isset($annotations['classAnnotations']['route']['defaultaction'])) {
+            $defaultAction = $annotations['classAnnotations']['route']['defaultaction'];
+        }
+
+        foreach ($methodsAnnotations as $controllerMethodName => $controllerMethod) {
+            if (!isset($controllerMethod['route'])) {
+                continue;
+            }
+
+            if (!isset($controllerMethod['route']['path'])) {
+                continue;
+            }
+
+            $path = $controllerMethod['route']['path'];
+            $method = $controllerMethodName;
+
+            if (isset($controllerMethod['cache'])) {
+                $cacheRoute = $controllerMethod['cache'];
+            } else {
+                $cacheRoute = \Modules\InsiderFramework\Core\KernelSpace::getVariable(
+                    'SagaciousCacheStatus',
+                    'sagacious'
+                );
+            }
+
+            if (isset($controllerMethod['verbs'])) {
+                $verbsRoute = $controllerMethod['verbs'];
+            } else {
+                $verbsRoute = [];
+            }
+            if (isset($controllerMethod['responseFormat'])) {
+                $responseFormat = $controllerMethod['responseFormat'];
+            } else {
+                $responseFormat = \Modules\InsiderFramework\Core\Manipulation\Response::getCurrentResponseFormat();
+            }
+            if (isset($controllerMethod['domains'])) {
+                $domainsRoute = $controllerMethod['domainsRoute'];
+            } else {
+                $domainsRoute = [];
+            }
+                
+            $namespaceExploded = explode("\\", $completeClassName);
+            $controller = str_replace('Controller', '', $namespaceExploded[count($namespaceExploded) - 1]);
+
+            $this->mapAction(
+                $appName,
+                $controller,
+                $pathRouteForMethodsOfController,
+                $method,
+                $permissions,
+                $defaultAction,
+                $path,
+                $paramsRegexArray,
+                $verbsRoute,
+                $responseFormat,
+                $domainsRoute,
+                $cacheRoute
+            );
+        }
+    }
+
+
+    /**
+     * Function that records all routes mapped to a controller
      *
      * @author Marcello Costa
      *
      * @package Modules\InsiderFramework\Core\RoutingSystem\Read
      *
-     * @param string $controllerFilePath Caminho relativo onde está o controller
+     * @param string $controllerFilePath Relative path where the controller is
      *
      * @return void
      */
     private function mapRoutes(string $controllerFilePath): void
     {
-        $completeClassName = str_replace("/", "\\", substr($controllerFilePath, 0, -4));
-        $appName = explode("\\", $completeClassName)[1];
-
-        // Pegando o nome do controller
-        $reflectionControllerObj = new \ReflectionClass($completeClassName);
-
-        // Recuperando os comentários da classe do controller
-        $classComments = $reflectionControllerObj->getDocComment();
-
+        $reflectionControllerObj = ClassOperations::getReflectionControllerObjectByFilePath($controllerFilePath);
         $defaultAction = null;
-        $routeController = null;
 
-        // Se o controller náo tem comentários da classe, deve ser desconsiderado
-        if ($classComments === false) {
+        $annotations = $this->getAllAnnotationsOfController($reflectionControllerObj);
+
+        if (empty($annotations['classAnnotations']) && empty($annotations['methodsAnnotations'])) {
             return;
         }
 
-        // Buscando as definições da classe do controller
-        $classDefinitions = Annotation::getAnnotationsData($reflectionControllerObj->name, $classComments);
+        $completeClassName = ClassOperations::getClassNameByFilePath($controllerFilePath);
+        $appName = ClassOperations::getAppNameByClassName($completeClassName);
 
-        // Se existir a defaultaction
-        if (isset($classDefinitions[$reflectionControllerObj->name]['route']['defaultaction'])) {
-            $defaultAction = $classDefinitions[$reflectionControllerObj->name]['route']['defaultaction'];
-        }
-
-        // Se o controller tem uma rota definida, então ele também tem actions
-        // (métodos a serem mapeados automaticamente)
-        if (isset($classDefinitions[$reflectionControllerObj->name]['route'])) {
-            // Recuperando todos os métodos do controller
-            $controllerMethods = $reflectionControllerObj->getMethods(\ReflectionMethod::IS_PUBLIC);
-
-            // Para cada método encontrado dentro de um controller
-            foreach ($controllerMethods as $cM) {
-                // Se o método pertence ao controller que está sendo avaliado
-                // (esta otimização só não irá funcionar para controller que
-                // extendem de outros controllers. Se quiser habilitar
-                // este caso, basta comentar este "if").
-                if ($cM->class === $completeClassName) {
-                    // Recuperando comentários do método
-                    $commentsMethod = $reflectionControllerObj->getMethod($cM->name)->getDocComment();
-
-                    // Buscando os dados das annotations do método
-                    $idMethod = $completeClassName;
-                    $annotationMethodData = Annotation::getAnnotationsData($idMethod, $commentsMethod);
-
-                    $aMD = $annotationMethodData[$idMethod];
-
-                    // Se não existe variável de rota, não entra no mapeamento
-                    if (!isset($aMD['route'])) {
-                        continue;
-                    }
-
-                    // Inicializando permissões da rota
-                    if (!isset($aMD['permission'])) {
-                        $aMD['permission'] = [];
-                    }
-                    if (!isset($aMD['permission']['type'])) {
-                        $aMD['permission']['type'] = ACL_CLASS;
-                    }
-                    if (!isset($aMD['permission']['users'])) {
-                        $aMD['permission']['users'] = '';
-                    }
-                    if (!isset($aMD['permission']['groups'])) {
-                        $aMD['permission']['groups'] = '';
-                    }
-                    if (!isset($aMD['permission']['rules'])) {
-                        $aMD['permission']['rules'] = '';
-                    }
-
-                    $permissions = array(
-                        'permissionType' => $aMD['permission']['type'],
-                        'permissionCustomRules' => $aMD['permission']['rules'],
-                        'users' => $aMD['permission']['users'],
-                        'groups' => $aMD['permission']['groups']
-                    );
-
-                    if (!isset($aMD['verbs'])) {
-                        if (isset($classDefinitions[$reflectionControllerObj->name]['verbs'])) {
-                            $aMD['verbs'] = $classDefinitions[$reflectionControllerObj->name]['verbs'];
-                        } else {
-                            $aMD['verbs'] = [];
-                        }
-                    }
-                    $verbsRoute = $aMD['verbs'];
-
-                    if (!isset($aMD['responseformat'])) {
-                        if (isset($classDefinitions[$reflectionControllerObj->name]['responseformat'])) {
-                            $aMD['responseformat'] = $classDefinitions
-                                                    [$reflectionControllerObj->name]
-                                                    ['responseformat'];
-                        } else {
-                            $aMD['responseformat'] = DEFAULT_RESPONSE_FORMAT;
-                        }
-                    }
-                    $responseFormat = $aMD['responseformat'];
-
-                    if (!isset($aMD['domains'])) {
-                        if (isset($classDefinitions[$reflectionControllerObj->name]['domains'])) {
-                            $aMD['domains'] = $classDefinitions[$reflectionControllerObj->name]['domains'];
-                        } else {
-                            $aMD['domains'] = [];
-                        }
-                    }
-                    $domainsRoute = $aMD['domains'];
-
-                    if (!isset($aMD['param'])) {
-                        $aMD['param'] = null;
-                    }
-                    $paramsRegexArray = $aMD['param'];
-
-                    // Adicionando action ao array de rotas
-                    if (isset($classDefinitions[$reflectionControllerObj->name]['route']['path'])) {
-                        $routeController = $classDefinitions[$reflectionControllerObj->name]['route']['path'];
-                    }
-
-                    // Se não existe o routeController, ignora o método
-                    if (!isset($routeController)) {
-                        continue;
-                    }
-
-                    $method = $cM->name;
-
-                    if (isset($aMD['route']['cache'])) {
-                        $cacheRoute = $aMD['route']['cache'];
-                    } else {
-                        $cacheRoute = \Modules\InsiderFramework\Core\KernelSpace::getVariable(
-                            'SagaciousCacheStatus',
-                            'sagacious'
-                        );
-                    }
-                    $path = $aMD['route']['path'];
-                    
-                    $namespaceExploded = explode("\\", $completeClassName);
-                    $controller = str_replace('Controller', '', $namespaceExploded[count($namespaceExploded) - 1]);
-
-                    $this->mapAction(
-                        $appName,
-                        $controller,
-                        $routeController,
-                        $method,
-                        $permissions,
-                        $defaultAction,
-                        $path,
-                        $paramsRegexArray,
-                        $verbsRoute,
-                        $responseFormat,
-                        $domainsRoute,
-                        $cacheRoute
-                    );
-                }
-            }
+        if (isset($annotations['classAnnotations']['route'])) {
+            $this->processControllerMethodsAnnotations(
+                $appName,
+                $completeClassName,
+                $annotations
+            );
         }
     }
 
@@ -302,25 +314,25 @@ class Read
      *
      * @package Modules\InsiderFramework\Core\RoutingSystem\Read
      *
-     * @param string $appName         App da rota
-     * @param string $controller       Controller do método
-     * @param string $routeController  Rota ao qual a action pertence
-     * @param string $method           Nome do método da action
-     * @param array  $permissions      Array de permissões da action
-     * @param string $defaultAction    Default action do controller
-     * @param string $path             Path relativo à action
-     * @param array  $paramsRegexArray Array de parâmetros e seus regex para a rota
-     * @param array  $verbsRoute       Array de verbos permitidos para a rota
-     * @param string $responseFormat   Define o formato de resposta de uma action
-     * @param array  $domainsRoute     Array de domínios permitidos para a rota
-     * @param string $cacheRoute       Define se a rota possui alguma regra de cache
+     * @param string $appName                         App name
+     * @param string $controller                      Controller
+     * @param string $pathRouteForMethodsOfController Path for routes of controller
+     * @param string $method                          Name of the action method
+     * @param array  $permissions                     Permission array of the action
+     * @param string $defaultAction                   Default action do controller
+     * @param string $path                            Path of the action
+     * @param array  $paramsRegexArray                Parameters array data
+     * @param array  $verbsRoute                      Verbs array of route
+     * @param string $responseFormat                  Response format of the action
+     * @param array  $domainsRoute                    Domains array of the route
+     * @param string $cacheRoute                      Cache data
      *
      * @return void
      */
     public function mapAction(
         string $appName,
         string $controller,
-        string $routeController,
+        string $pathRouteForMethodsOfController,
         string $method,
         array $permissions = null,
         string $defaultAction = null,
@@ -358,7 +370,7 @@ class Read
 
             // Montando o array
             $routeObj = array(
-                $routeController => array(
+                $pathRouteForMethodsOfController => array(
                     'defaultAction' => $defaultAction,
                     'actions' => $this->createArrayPermissionAction(
                         $appName,
@@ -377,12 +389,12 @@ class Read
             // Se o domínio já existe
             if (isset($urlRoutes[$domain])) {
                 // Se a rota já existe para o domínio
-                if (isset($urlRoutes[$domain][$routeController])) {
+                if (isset($urlRoutes[$domain][$pathRouteForMethodsOfController])) {
                     // Verifica se a action que está sendo inserida também já existe (baseado no nome do método)
                     $actionExist = false;
-                    if (array_key_exists($method, $urlRoutes[$domain][$routeController]['actions'])) {
+                    if (array_key_exists($method, $urlRoutes[$domain][$pathRouteForMethodsOfController]['actions'])) {
                         // Se existe a chave "controller" é porque existe apenas um método $alias em um único controller
-                        if (array_key_exists("controller", $urlRoutes[$domain][$routeController]['actions'][$method])) {
+                        if (array_key_exists("controller", $urlRoutes[$domain][$pathRouteForMethodsOfController]['actions'][$method])) {
                             $actionExist = true;
                             $multipleControllers = false;
                         } else {
@@ -392,10 +404,10 @@ class Read
                     }
                     if ($actionExist) {
                         // Verifica se a rota que existe aceita os mesmos verbos da action que está sendo inserida
-                        if (is_array($urlRoutes[$domain][$routeController]['actions'][$method]['verbs'])) {
+                        if (is_array($urlRoutes[$domain][$pathRouteForMethodsOfController]['actions'][$method]['verbs'])) {
                             $intersect = empty(array_intersect(
-                                $routeObj[$routeController]['actions'][$method]['verbs'],
-                                $urlRoutes[$domain][$routeController]['actions'][$method]['verbs']
+                                $routeObj[$pathRouteForMethodsOfController]['actions'][$method]['verbs'],
+                                $urlRoutes[$domain][$pathRouteForMethodsOfController]['actions'][$method]['verbs']
                             ));
                         } else {
                             $intersect = true;
@@ -407,32 +419,32 @@ class Read
                             if ($multipleControllers) {
                                 // Pegando o índice que existe neste momento
                                 $lastActionIndex = intval(key(
-                                    $urlRoutes[$domain][$routeController]['actions'][$method]
+                                    $urlRoutes[$domain][$pathRouteForMethodsOfController]['actions'][$method]
                                 ));
 
                                 // Adicionando esta action ao array de actions deste método
-                                $urlRoutes[$domain][$routeController]['actions']
+                                $urlRoutes[$domain][$pathRouteForMethodsOfController]['actions']
                                 [$method][$lastActionIndex + 1] = $routeObj['actions'][$method];
                             } else {
                                 // Pega a estrutura atual da action
-                                $tmp = $urlRoutes[$domain][$routeController]['actions'][$method];
+                                $tmp = $urlRoutes[$domain][$pathRouteForMethodsOfController]['actions'][$method];
 
                                 // Zerando o valor do array na action
-                                $urlRoutes[$domain][$routeController]['actions'][$method] = [];
+                                $urlRoutes[$domain][$pathRouteForMethodsOfController]['actions'][$method] = [];
 
                                 // Inserindo a antiga action novamente no array
-                                $urlRoutes[$domain][$routeController]['actions'][$method][0] = $tmp;
+                                $urlRoutes[$domain][$pathRouteForMethodsOfController]['actions'][$method][0] = $tmp;
 
                                 // Adicionando esta action ao array de actions deste método
                                 $routeObj = array_reverse($routeObj);
                                 $firstElement = array_pop($routeObj);
-                                $urlRoutes[$domain][$routeController]['actions']
+                                $urlRoutes[$domain][$pathRouteForMethodsOfController]['actions']
                                 [$method][1] = $firstElement['actions'][$method];
                             }
                         } else {
                             // Gera um erro
                             \Modules\InsiderFramework\Core\Error\ErrorHandler::i10nErrorRegister(
-                                "The route %" . $routeController . "/" . $method . "% " .
+                                "The route %" . $pathRouteForMethodsOfController . "/" . $method . "% " .
                                 "already exists in the system for the domain %" . $domain . "% " .
                                 "(error in app %" . $this->app . "%)",
                                 "app/sys"
@@ -452,25 +464,25 @@ class Read
             }
 
             // Corrigindo duplicidade do nome do app dentro da rota
-            foreach ($urlRoutes[$domain][$routeController]['actions'] as $k => $action) {
+            foreach ($urlRoutes[$domain][$pathRouteForMethodsOfController]['actions'] as $k => $action) {
                 if (isset($action['app']) && is_array($action['app'])) {
                     $tmpApp = array_unique($action['app']);
                     if (count($tmpApp) > 1) {
                         // Gera um erro
                         \Modules\InsiderFramework\Core\Error\ErrorHandler::i10nErrorRegister(
-                            "The route %" . $routeController . "/" . $method . "% " .
+                            "The route %" . $pathRouteForMethodsOfController . "/" . $method . "% " .
                             "has actions that are listed in more than one app " .
                             "%" . json_encode(array_values($tmpPack)) . "%",
                             "app/sys"
                         );
                     }
-                    $urlRoutes[$domain][$routeController]['actions'][$k]['app'] = $tmpPack[0];
+                    $urlRoutes[$domain][$pathRouteForMethodsOfController]['actions'][$k]['app'] = $tmpPack[0];
                 }
             }
 
             // Corrigindo duplicidade da defaultAction dentro da rota
-            if (is_array($urlRoutes[$domain][$routeController]['defaultAction'])) {
-                $tmpDA = array_unique($urlRoutes[$domain][$routeController]['defaultAction']);
+            if (is_array($urlRoutes[$domain][$pathRouteForMethodsOfController]['defaultAction'])) {
+                $tmpDA = array_unique($urlRoutes[$domain][$pathRouteForMethodsOfController]['defaultAction']);
 
                 // Removendo valores nulos
                 foreach ($tmpDA as $tK => $tV) {
@@ -483,14 +495,14 @@ class Read
                 if (count($tmpDA) > 1) {
                     // Gera um erro
                     \Modules\InsiderFramework\Core\Error\ErrorHandler::i10nErrorRegister(
-                        "The route %" . $routeController . "% " .
+                        "The route %" . $pathRouteForMethodsOfController . "% " .
                         "has more than one defaultAction " .
                         "%" . json_encode(array_values($tmpDA)) . "%",
                         "app/sys"
                     );
                 }
                 if (count($tmpDA) > 0) {
-                    $urlRoutes[$domain][$routeController]['defaultAction'] = $tmpDA[array_keys($tmpDA)[0]];
+                    $urlRoutes[$domain][$pathRouteForMethodsOfController]['defaultAction'] = $tmpDA[array_keys($tmpDA)[0]];
                 }
             }
         }
@@ -533,94 +545,26 @@ class Read
             $paramsRegexArray = [];
         }
 
-        // Inicializando permissões padrão
-        $typeGroupPermission = "exclude";
-        $groupsID = [];
-        $typeUsersPermission = "exclude";
-        $usersID = [];
-
         // Se permissões foram definidas para a action
-        $permissionType = "native";
-        $permissionCustomRules = "";
+        $permissionEngine = ACL_DEFAULT_ENGINE;
+        $permissionRules = "";
+        $permissionName = "";
         if ($permissions !== null) {
             if (
                 \Modules\InsiderFramework\Core\Validation\Aggregation::existAndIsNotEmpty(
                     $permissions,
-                    'permissionType'
+                    'permissionEngine'
                 )
             ) {
-                $permissionType = $permissions['permissionType'];
+                $permissionEngine = $permissions['permissionEngine'];
             }
-
-            // Se permissões para grupos foram definidas
-            if (\Modules\InsiderFramework\Core\Validation\Aggregation::existAndIsNotEmpty($permissions, 'groups')) {
-                $tmpP = trim(strtolower($permissions['groups']));
-                if ($tmpP !== '') {
-                    $tmpP = explode('|', $tmpP);
-                    if (count($tmpP) !== 2) {
-                        \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError(
-                            'Wrong permissions on ' . $app . '\\' . $controller . ': ' .
-                            json_encode($permissions)
-                        );
-                    }
-
-                    $groupsID = explode(',', $tmpP[0]);
-                }
-
-                // Definindo o tipo de permissão de grupos
-                $typeGroupPermission = $tmpP[1];
-                switch ($typeGroupPermission) {
-                    case "include":
-                    case "exclude":
-                        break;
-                    default:
-                        \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError(
-                            'Wrong type permissions on ' . $app . '\\' . $controller .
-                            ': ' . json_encode($permissions)
-                        );
-                        break;
-                }
-            }
-
-            // Se permissões para usu[arios foram definidas
-            if (\Modules\InsiderFramework\Core\Validation\Aggregation::existAndIsNotEmpty($permissions, 'users')) {
-                $tmpP = trim(strtolower($permissions['users']));
-                if ($tmpP !== '') {
-                    $tmpP = explode('|', $tmpP);
-                    if (count($tmpP) !== 2) {
-                        \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError(
-                            'Wrong permissions on ' . $app . '\\' . $controller . ': ' .
-                            json_encode($permissions)
-                        );
-                    }
-
-                    $usersID = explode(',', $tmpP[0]);
-                }
-
-                // Definindo o tipo de permissão de grupos
-                $typeUsersPermission = $tmpP[1];
-                switch ($typeUsersPermission) {
-                    case "include":
-                    case "exclude":
-                        break;
-                    default:
-                        \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError(
-                            'Wrong type permissions on ' . $app . '\\' .
-                            $controller . ': ' .
-                            json_encode($permissions)
-                        );
-                        break;
-                }
-            }
-
-            // Se regras adicionais para permissões foram definidas
             if (
                     \Modules\InsiderFramework\Core\Validation\Aggregation::existAndIsNotEmpty(
                         $permissions,
-                        'permissionCustomRules'
+                        'rules'
                     )
             ) {
-                $permissionCustomRules = $permissions['permissionCustomRules'];
+                $permissionRules = $permissions['rules'];
             }
         }
 
@@ -636,16 +580,8 @@ class Read
                 'responseFormat' => strtoupper($responseFormat),
                 'paramsRegexArray' => $paramsRegexArray,
                 'permissions' => array(
-                    "type" => $permissionType,
-                    "permissionCustomRules" => $permissionCustomRules,
-                    "groups" => array(
-                        "type" => $typeGroupPermission,
-                        "groupsID" => implode(",", $groupsID)
-                    ),
-                    "users" => array(
-                        "type" => $typeUsersPermission,
-                        "usersID" => implode(",", $usersID)
-                    )
+                    "engine" => $permissionEngine,
+                    "rules" => $permissionRules
                 )
             )
         );

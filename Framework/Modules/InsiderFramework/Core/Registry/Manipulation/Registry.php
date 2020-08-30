@@ -2,6 +2,8 @@
 
 namespace Modules\InsiderFramework\Core\Registry\Manipulation;
 
+use Modules\InsiderFramework\Core\Validation\Aggregation;
+
 /**
  * Methods responsible for defines a registry object
  *
@@ -11,6 +13,53 @@ namespace Modules\InsiderFramework\Core\Registry\Manipulation;
  */
 trait Registry
 {
+    /**
+    * Method description
+    *
+    * @author Marcello Costa
+    *
+    * @package Modules\InsiderFramework\Core\Registry\Manipulation\Registry
+    *
+    * @param string $aclEngineName Acl engine name
+    *
+    * @return array ACL main engine data
+    */
+    public static function getAclDataRegistry($aclEngineName): array
+    {
+        $regAclFile = \Modules\InsiderFramework\Core\Json::getJSONDataFile(
+            INSTALL_DIR . DIRECTORY_SEPARATOR .
+            "Framework" . DIRECTORY_SEPARATOR .
+            "Registry" . DIRECTORY_SEPARATOR .
+            "Sections" . DIRECTORY_SEPARATOR .
+            "Acl.json"
+        );
+
+        if (!is_array($regAclFile) || !Aggregation::existAndIsNotEmpty($regAclFile, 'ENGINES')) {
+            \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister('Cannot read Acl Engines registry file: Engine array not found');
+        }
+
+        $engineData = [];
+        foreach ($regAclFile['ENGINES'] as $engine) {
+            if (!is_array($engine) || !Aggregation::existAndIsNotEmpty($engine, 'NAME')) {
+                \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister(
+                    'Incorrect format of Acl Engine registry file: Name of engine not found'
+                );
+            }
+            if (!is_array($engine) || !Aggregation::existAndIsNotEmpty($engine, 'ACL_DEFAULT_ENGINE_CLASS')) {
+                \Modules\InsiderFramework\Core\Error\ErrorHandler::errorRegister(
+                    'Incorrect format of Acl Engine registry file: Default ACL engine class not found'
+                );
+            }
+
+            if ($engine['NAME'] === $aclEngineName) {
+                $engineData = $engine;
+                break;
+            }
+        }
+
+        return $engineData;
+    }
+
     /**
      * Function that looks for a component in the framework component register
      *

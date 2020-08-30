@@ -12,6 +12,8 @@ use Modules\InsiderFramework\Core\KernelSpace;
  * @package Apps\Start\Controllers\MainController
  *
  * @Route(path="/", defaultaction="home")
+ *
+ * @Permission(rules='test,teste2,teste3', engine='TEST_ENGINE')
  * @Verbs(POST,GET)
  */
 class MainController extends \Modules\InsiderFramework\Core\Controller

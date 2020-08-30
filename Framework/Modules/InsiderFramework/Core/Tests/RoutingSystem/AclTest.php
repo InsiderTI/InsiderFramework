@@ -15,7 +15,7 @@ use Modules\InsiderFramework\Core\RoutingSystem\RouteData;
 class AclTest extends \PHPUnit\Framework\TestCase
 {
     /**
-    * getUserAccessLevel method test
+    * getUserAccessLevelByRoute method test
     *
     * @author Marcello Costa
     *
@@ -23,7 +23,7 @@ class AclTest extends \PHPUnit\Framework\TestCase
     *
     * @return void
     */
-    public function testGetUserAccessLevel(): void
+    public function testGetUserAccessLevelByRoute(): void
     {
         $routeData = \Modules\InsiderFramework\Core\RoutingSystem\Request::searchAndFillRouteData(
             "/",
@@ -31,7 +31,7 @@ class AclTest extends \PHPUnit\Framework\TestCase
             ""
         );
 
-        $userAccessLevel = \Modules\InsiderFramework\InsiderAcl\AclMain::getUserAccessLevel($routeData);
+        $userAccessLevel = \Modules\InsiderFramework\InsiderAcl\InsiderAclMain::getUserAccessLevelByRoute($routeData);
 
         $this->expectNotToPerformAssertions();
     }
@@ -53,7 +53,7 @@ class AclTest extends \PHPUnit\Framework\TestCase
             ""
         );
 
-        $permissions = \Modules\InsiderFramework\InsiderAcl\AclMain::validateACLPermission($routeData);
+        $permissions = \Modules\InsiderFramework\InsiderAcl\InsiderAclMain::validateACLPermission($routeData);
 
         $this->assertIsBool($permissions);
     }

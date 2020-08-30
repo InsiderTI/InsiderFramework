@@ -12,7 +12,7 @@ namespace Modules\InsiderFramework\Core\RoutingSystem;
 class Permission
 {
     /**
-     * Standard (native) function of the framework for security checking. More details
+     * Standard function of the framework for security checking. More details
      * on how to use this function in the documentation.
      *
      * @author Marcello Costa
@@ -91,7 +91,7 @@ class Permission
      * @package Modules\InsiderFramework\Core\RoutingSystem\Permission
      *
      * @param \Modules\InsiderFramework\Core\RoutingSystem\RouteData $routeObj      Objeto de rota
-     * @param array                                   $permissionNow Permissões atuais
+     * @param array                                   $currentUserAclPermission Permissões atuais
      * @param bool                                    $access        Booleano que indica se o
      *                                                               usuário tem acesso ou não
      *                                                               à rota atual
@@ -100,7 +100,7 @@ class Permission
      */
     public static function validateNativeACLPermission(
         \Modules\InsiderFramework\Core\RoutingSystem\RouteData $routeObj,
-        array $permissionNow,
+        array $currentUserAclPermission,
         bool &$access
     ): void {
         $permissionsOfRoute = $routeObj->getPermissions();
@@ -124,10 +124,10 @@ class Permission
         }
 
         // O usuário está logado ?
-        if ($permissionNow !== "UNPRIVILEGEDUSER") {
-            $pnowu = $permissionNow['USERID'];
+        if ($currentUserAclPermission !== "UNPRIVILEGEDUSER") {
+            $pnowu = $currentUserAclPermission['USERID'];
         } else {
-            $pnowu = $permissionNow;
+            $pnowu = $currentUserAclPermission;
         }
 
         // Rota - Permissão de grupos
@@ -144,17 +144,17 @@ class Permission
         }
 
         // Armazenando permissão atual do grupo
-        if ($permissionNow === null) {
-            $permissionNow = "UNPRIVILEGEDUSER";
+        if ($currentUserAclPermission === null) {
+            $currentUserAclPermission = "UNPRIVILEGEDUSER";
             \Modules\InsiderFramework\Core\KernelSpace::setVariable(
                 array(
-                    'permissionNow' => $permissionNow
+                    'currentUserAclPermission' => $currentUserAclPermission
                 ),
-                'insiderFrameworkSystem'
+                'routingSystem'
             );
         }
-        if ($permissionNow !== "UNPRIVILEGEDUSER") {
-            if (!is_array($permissionNow)) {
+        if ($currentUserAclPermission !== "UNPRIVILEGEDUSER") {
+            if (!is_array($currentUserAclPermission)) {
                 \Modules\InsiderFramework\Core\Error\ErrorHandler::i10nErrorRegister(
                     "Expected array on return from permissions check function",
                     "app/sys"
@@ -162,10 +162,10 @@ class Permission
             }
 
             if (
-                !isset($permissionNow['USERGROUPS']) ||
-                !isset($permissionNow['USERID']) ||
-                !is_array($permissionNow['USERGROUPS']) ||
-                !is_array($permissionNow['USERID'])
+                !isset($currentUserAclPermission['USERGROUPS']) ||
+                !isset($currentUserAclPermission['USERID']) ||
+                !is_array($currentUserAclPermission['USERGROUPS']) ||
+                !is_array($currentUserAclPermission['USERID'])
             ) {
                 \Modules\InsiderFramework\Core\Error\ErrorHandler::i10nErrorRegister(
                     "Array on return of invalid permissions check function",
@@ -176,7 +176,7 @@ class Permission
             // Para cada item de grupo encontrado
             // constrói o array de grupos
             $pnowg = array();
-            foreach ($permissionNow['USERGROUPS'] as $pkg => $pkv) {
+            foreach ($currentUserAclPermission['USERGROUPS'] as $pkg => $pkv) {
                 if (isset($pkv['GROUPID'])) {
                     $pnowg[] = intval($pkv['GROUPID']);
                 } else {
@@ -184,7 +184,7 @@ class Permission
                 }
             }
         } else {
-            $pnowg = $permissionNow;
+            $pnowg = $currentUserAclPermission;
         }
 
         // Flag de acesso ao usuário atual

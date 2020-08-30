@@ -4,7 +4,7 @@
          bootstrap="../../Tests/bootstrap.default.php">
     <testsuites>
         <testsuite name="Insider Acl">
-            <directory>../Tests/AclMainTest.php</directory>
+            <directory>../Tests/InsiderAclMainTest.php</directory>
         </testsuite>
     </testsuites>
 </phpunit>

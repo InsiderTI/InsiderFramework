@@ -2,6 +2,8 @@
 
 namespace Modules\InsiderFramework\Core\RoutingSystem;
 
+use Modules\InsiderFramework\Core\RoutingSystem\Acl;
+
 /**
  * Class of object used in RoutingSystem\Route
  *
@@ -729,6 +731,7 @@ class RouteData
         // a rota detectada
         $domain = $this->getDomain();
         $route = "/" . $this->getRoute();
+
         if (isset($urlRoutes[$domain][$route])) {
             $actionNow = $this->getActionNow();
 
@@ -877,32 +880,20 @@ class RouteData
         $permissionsOfRoute = $this->getPermissions();
 
         // Verificando as permissões
-        // Se a rota está com o tipo native de permissão e não
-        // tem nada configurado
-        if (
-            $permissionsOfRoute['type'] === 'native' &&
-            $permissionsOfRoute['groups']['groupsID'] === '' &&
-            $permissionsOfRoute['users']['usersID'] === ''
-        ) {
-            // Acesso garantido
-            $access = true;
-        } else {
-            // Verificando as permissões atuais do usuário
-            $permissionNow = \Modules\InsiderFramework\Core\Manipulation\Acl::getUserAccessLevel($this);
+        $currentUserAclPermission = Acl::getUserAccessLevelByRoute($this);
 
-            // Buscando no array global de rotas:
-            // Rota, Action e permissão
-            \Modules\InsiderFramework\Core\KernelSpace::setVariable(
-                array(
-                    'permissionNow' => $permissionNow
-                ),
-                'insiderFrameworkSystem'
-            );
+        // Buscando no array global de rotas:
+        // Rota, Action e permissão
+        \Modules\InsiderFramework\Core\KernelSpace::setVariable(
+            array(
+                'currentUserAclPermission' => $currentUserAclPermission
+            ),
+            'routingSystem'
+        );
 
-            $access = \Modules\InsiderFramework\Core\Manipulation\Acl::validateACLPermission(
-                $this
-            );
-        }
+        $access = Acl::validateACLPermission(
+            $this
+        );
 
         // Se o usuário não tem acesso
         if ($access === false) {

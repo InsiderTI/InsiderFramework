@@ -14,7 +14,7 @@
             <directory>../Tests/Loaders/InitializeAutoLoaderTest.php</directory>
             <directory>../Tests/Loaders/ConfigLoaderTest.php</directory>
             <directory>../Tests/Loaders/ModuleLoaderTest.php</directory>
-            <directory>../Tests/Manipulation/AclTest.php</directory>
+            <directory>../Tests/RoutingSystem/AclTest.php</directory>
         </testsuite>
     </testsuites>
 </phpunit>

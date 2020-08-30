@@ -2,27 +2,29 @@
 
 namespace Modules\InsiderFramework\InsiderAcl;
 
+use Modules\InsiderFramework\Core\RoutingSystem\RouteData;
+
 /**
 * Main class of Insider Framework default acl
 *
 * @author Marcello Costa
 *
-* @package Modules\InsiderFramework\InsiderAcl\AclMain
+* @package Modules\InsiderFramework\InsiderAcl\InsiderAclMain
 */
-class AclMain
+class InsiderAclMain
 {
     /**
     * Get user access level function
     *
     * @author Marcello Costa
     *
-    * @package Modules\InsiderFramework\InsiderAcl\AclMain
+    * @package Modules\InsiderFramework\InsiderAcl\InsiderAclMain
     *
-    * @param type param desc
+    * @param RouteData $routeObj Route object
     *
     * @return string Get the user access level
     */
-    public static function getUserAccessLevel(\Modules\InsiderFramework\Core\RoutingSystem\RouteData $routeObj): string
+    public static function getUserAccessLevelByRoute(RouteData $routeObj): string
     {
         $permissions = $routeObj->getPermissions();
         
@@ -79,7 +81,7 @@ class AclMain
                 );
 
                 if ($renewAcces) {
-                    AclMain::renewAccess();
+                    InsiderAclMain::renewAccess();
                 }
 
                 return ($arrayr);
@@ -88,41 +90,21 @@ class AclMain
             }
         }
     }
-    
+
     /**
-    * Function that validates the user access level for a route
+    * Get user access level by rules property in permission annotation
     *
     * @author Marcello Costa
     *
-    * @package Modules\InsiderFramework\InsiderAcl\AclMain
+    * @package Modules\InsiderFramework\InsiderAcl\InsiderAclMain
     *
-    * @param RouteData $routeObj  Object of the current route
-    * @param mixed $permissionNow Current permissions for the current route
+    * @param string $rules Rules string for the route
     *
     * @return bool Return true if user is allowed to access the route
     */
-    public static function validateACLPermission(
-        \Modules\InsiderFramework\Core\RoutingSystem\RouteData $routeObj
-    ): bool {
-        return true;
-
-        // Revision needed
-        /*
-        $permissionsOfRoute = $routeObj->getPermissions();
-
-        $permissionNow = \Modules\InsiderFramework\Core\KernelSpace::getVariable(
-            'permissionNow',
-            'insiderFrameworkSystem'
-        );
-
-        if ($permissionNow === null) {
-            $permissionNow = "UNPRIVILEGEDUSER";
-        }
-
+    protected static function getUserAccessLevelByRules(string $rules): bool
+    {
         // Checking route permissions
-        // The route permissions rule works as follows
-        // 1st - Treat all listed groups
-        // 2nd - Modify the treated groups according to the listed users
         $ut = $permissionsOfRoute['users']['type'];
 
         if ($permissionsOfRoute['users']['usersID'] !== "") {
@@ -262,8 +244,45 @@ class AclMain
                 $access = false;
             }
         }
+    }
+    
+    /**
+    * Function that validates the user access level for a route
+    *
+    * @author Marcello Costa
+    *
+    * @package Modules\InsiderFramework\InsiderAcl\InsiderAclMain
+    *
+    * @param RouteData $routeObj  Object of the current route
+    * @param mixed $currentUserAclPermission Current permissions for the current route
+    *
+    * @return bool Return true if user is allowed to access the route
+    */
+    public static function validateACLPermission(RouteData $routeObj): bool
+    {
+        $access = false;
+        $permissionsOfRoute = $routeObj->getPermissions();
+        $currentUserAclPermission = \Modules\InsiderFramework\Core\KernelSpace::getVariable(
+            'currentUserAclPermission',
+            'routingSystem'
+        );
+        if ($currentUserAclPermission === null) {
+            $currentUserAclPermission = "UNPRIVILEGEDUSER";
+            \Modules\InsiderFramework\Core\KernelSpace::setVariable(
+                array(
+                    'currentUserAclPermission' => $currentUserAclPermission
+                ),
+                'routingSystem'
+            );
+        }
+
+        if (trim($permissionsOfRoute['rules']) == "") {
+            $access = true;
+            return $access;
+        }
+
+        $access = InsiderAclMain::getUserAccessLevelByRules($permissionsOfRoute['rules']);
 
         return $access;
-        */
     }
 }

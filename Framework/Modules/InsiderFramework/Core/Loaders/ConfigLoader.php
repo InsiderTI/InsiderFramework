@@ -356,18 +356,18 @@ class ConfigLoader
          */
         define('DEFAULT_RESPONSE_FORMAT', $coreData['DEFAULT_RESPONSE_FORMAT']);
 
-        if (!isset($coreData['ACL_CLASS'])) {
+        if (!isset($coreData['ACL_DEFAULT_ENGINE'])) {
             \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError(
-                "The following information was not found in the configuration: 'ACL_CLASS'"
+                "The following information was not found in the configuration: 'ACL_DEFAULT_ENGINE'"
             );
         }
 
         /**
-         * String value. "native" = ACL standard framework or "custom" = ACL custom method
+         * String value. ACL engine class
          *
          * @package Modules\InsiderFramework\Loaders\ConfigLoader
          */
-        define('ACL_CLASS', $coreData['ACL_CLASS']);
+        define('ACL_DEFAULT_ENGINE', $coreData['ACL_DEFAULT_ENGINE']);
 
         /**
          * Maximum number of loops before generating a warning for the default mail box or writing to the log

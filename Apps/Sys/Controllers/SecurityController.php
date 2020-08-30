@@ -61,19 +61,19 @@ class SecurityController extends \Modules\InsiderFramework\Core\Controller
      * @package Apps\Sys\Controllers\SecurityController
      *
      * @param RouteData  $routeObj      Route object
-     * @param mixed      $permissionNow Current user permissions
+     * @param mixed      $currentUserAclPermission Current user permissions
      * @param bool       $access        Access control variable
      *
      * @return mixed Any feedback that you develop
     */
-    public function validateCustomAclPermission($routeObj, $permissionNow, &$access)
+    public function validateCustomAclPermission($routeObj, $currentUserAclPermission, &$access)
     {
         // Here is a sample code for custom validation.
         // As stated in the method description, if the $access variable is set
         // as null ($access = null;), the framework will take no action after
         // the end of processing this method, being in charge of developing
         // create additional custom routing logic
-        $access = $permissionNow;
+        $access = $currentUserAclPermission;
         
         // Enable this line to enable automatic renewal of the
         // user session / cookie on each request

@@ -7,9 +7,9 @@ require_once(
     'Modules' . DIRECTORY_SEPARATOR .
     'InsiderFramework' . DIRECTORY_SEPARATOR .
     'Core' . DIRECTORY_SEPARATOR .
-    'System.php'
+    'Bootstrap.php'
 );
 
-\Modules\InsiderFramework\Core\System::initializeFramework();
-\Modules\InsiderFramework\Core\System::checkCpuUsage();
+\Modules\InsiderFramework\Core\Bootstrap::initializeFramework();
+\Modules\InsiderFramework\Core\CpuAvg::checkCpuUsage();
 \Modules\InsiderFramework\Core\RoutingSystem\Request::requestRoute();

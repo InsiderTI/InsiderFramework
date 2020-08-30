@@ -3,7 +3,7 @@
   "ENCODE": "utf-8",
   "ENCRYPT_KEY": "Pm3EJ3/Z$7wer=Bbqprx$k33={,M,V",
   "DEFAULT_RESPONSE_FORMAT": "HTML",
-  "ACL_CLASS": "\\Modules\\InsiderFramework\\InsiderAcl\\AclMain",
+  "ACL_DEFAULT_ENGINE": "InsiderAcl",
   "DEBUG": true,
   "DEBUG_BAR": false,
   "MAX_TOLERANCE_LOOPS": 1000,

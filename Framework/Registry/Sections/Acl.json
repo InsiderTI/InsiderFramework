@@ -1,0 +1,8 @@
+{
+  "ENGINES": [
+    {
+      "NAME": "InsiderAcl",
+      "ACL_DEFAULT_ENGINE_CLASS": "\\Modules\\InsiderFramework\\InsiderAcl\\InsiderAclMain"
+    }
+  ]
+}

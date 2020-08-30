@@ -36,29 +36,4 @@ class DebugController extends \Modules\InsiderFramework\Core\Controller
         $debugBarHtml = $this->renderViewToString('Sys::debugBar/index.sgv');
         return $debugBarHtml;
     }
-
-    /**
-    * Send a warning to the frontend
-    *
-    * @author Marcello Costa
-    *
-    * @package Apps\Sys\Controllers\DebugController
-    *
-    * @return void
-    */
-    public function flushWarning()
-    {
-        /*
-        $warnings = \Modules\InsiderFramework\Core\KernelSpace::getVariable(
-            'warnings',
-            'insiderFrameworkSystem'
-        );
-
-        $virtualDom = SgsVirtualDom::getVirtualDom();
-        foreach ($warnings as $warning) {
-            $warningJson = \Modules\InsiderFramework\Core\Json::jsonEncodePrivateObject($warning);
-            $virtualDom->send("registerWarning('" . base64_encode($warningJson) . "');");
-        }
-        */
-    }
 }

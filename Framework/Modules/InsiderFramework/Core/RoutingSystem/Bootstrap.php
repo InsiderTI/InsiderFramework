@@ -47,6 +47,7 @@ class Bootstrap
             ),
             'RoutingSystem'
         );
+
         \Modules\InsiderFramework\Core\KernelSpace::setVariable(
             array(
                 'routingActions' => $routingConfig['actions']
