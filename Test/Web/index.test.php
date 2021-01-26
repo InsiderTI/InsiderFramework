@@ -1,10 +1,10 @@
 <?php
 
-function it(String $testName, callable $callback){
-  echo "Testing: ".$testName;
-  $callback();
-}
+require('../Framework/Modules/InsiderFrameworkTesting/main.php');
 
-it("Should run test", function () {
+\Framework\Modules\InsiderFrameworkTestingMain::it("Should run test", function () {
+  echo "\r\n";
   echo "teste";
+  echo "\r\n";
+  echo "\r\n";
 });
