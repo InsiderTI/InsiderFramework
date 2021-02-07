@@ -1,14 +1,15 @@
 version: "3"
 
 services:
-  insider_framework:
-    image: insiderti/insiderframework:0.3.0
+  insider_framework_php8_fpm_nginx:
+    image: insiderti/insiderframework_php8_fpm_nginx:0.3.0-rc1
     expose:
       - "80"
     ports:
       - "8082:80"
+      - "8083:443"
     build:
-      dockerfile: ./insider_framework.dockerfile
+      dockerfile: ./php8-fpm+nginx/dockerfile
       context: .
     stdin_open: true
     tty: true
@@ -16,6 +17,10 @@ services:
       - docker_insider_network
     volumes:
       - "../:/var/www/insiderframework"
+      - "./php8-fpm+nginx/ssl-certificate-example:/etc/nginx/ssl"
+      - "./php8-fpm+nginx/nginx.conf:/etc/nginx/nginx.conf"
+      - "./php8-fpm+nginx/sites-available/insiderframework.nginx.conf:/etc/nginx/sites-available/insiderframework.conf"
+      - "./php8-fpm+nginx/sites-available/insiderframework.nginx.conf:/etc/nginx/sites-enabled/insiderframework.conf"
     restart: always
 
     labels:

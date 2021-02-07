@@ -1,0 +1,137 @@
+
+
+# **********************************************************************************************************
+####### Installing php extensions ############
+RUN docker-php-ext-install pdo pdo_mysql mysqli 
+
+# **********************************************************************************************************
+####### Vim and git ############
+RUN apt-get install vim git -y
+# **********************************************************************************************************
+
+
+# **********************************************************************************************************
+####### Locales for Brazil ##########
+# RUN apt-get install -y locales && rm -rf /var/lib/apt/lists/* && localedef -i pt_BR -c -f UTF-8 -A /usr/share/locale/locale.alias pt_BR.UTF-8
+# ENV LANG pt_BR.UTF-8
+# **********************************************************************************************************
+
+
+# **********************************************************************************************************
+####### Composer #######
+RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && \
+    php composer-setup.php --install-dir=/usr/local/bin --filename=composer && \
+    php -r "unlink('composer-setup.php');" && \
+    chmod +x /usr/local/bin/composer
+# **********************************************************************************************************
+
+# System utils
+RUN apt install zip -y
+
+# **********************************************************************************************************
+# Nginx Configuration
+
+## Apt-get way
+# RUN apt install nginx-full -y
+# RUN service nginx start
+
+# Compile Way
+ENV NGINX_VERSION="1.18.0"
+RUN apt update && apt install build-essential wget tree git -y 
+RUN mkdir -p /tmp/nginx
+RUN cd /tmp/nginx && wget https://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz && tar -zxvf nginx-${NGINX_VERSION}.tar.gz 
+
+RUN cd /tmp/nginx && wget https://ftp.pcre.org/pub/pcre/pcre-8.44.tar.gz && tar -zxvf pcre-8.44.tar.gz && \
+    wget https://www.zlib.net/zlib-1.2.11.tar.gz && tar -zxvf zlib-1.2.11.tar.gz && \
+    wget https://www.openssl.org/source/openssl-1.1.1i.tar.gz && tar -zxvf openssl-1.1.1i.tar.gz
+
+RUN apt install perl libperl-dev libgd3 libgd-dev libgeoip1 libgeoip-dev \
+                geoip-bin libxml2 libxml2-dev libxslt1.1 libxslt1-dev -y
+
+#RUN cp /tmp/nginx/nginx-${NGINX_VERSION}/man/nginx.8 /usr/share/man/man8 && \
+#     gzip /usr/share/man/man8/nginx.8
+
+RUN cd /tmp/nginx/nginx-${NGINX_VERSION} && \
+    ./configure --prefix=/etc/nginx \
+                --sbin-path=/usr/sbin/nginx \
+                --modules-path=/usr/lib/nginx/modules \
+                --conf-path=/etc/nginx/nginx.conf \
+                --error-log-path=/var/log/nginx/error.log \
+                --pid-path=/var/run/nginx.pid \
+                --lock-path=/var/run/nginx.lock \
+                --user=nginx \
+                --group=nginx \
+                --build=Debian \
+                --http-client-body-temp-path=/var/lib/nginx/body \
+                --http-fastcgi-temp-path=/var/lib/nginx/fastcgi \
+                --http-proxy-temp-path=/var/lib/nginx/proxy \
+                --http-scgi-temp-path=/var/lib/nginx/scgi \
+                --http-uwsgi-temp-path=/var/lib/nginx/uwsgi \
+                --with-openssl=../openssl-1.1.1i \
+                --with-openssl-opt=enable-ec_nistp_64_gcc_128 \
+                --with-openssl-opt=no-nextprotoneg \
+                --with-openssl-opt=no-weak-ssl-ciphers \
+                --with-openssl-opt=no-ssl3 \
+                --with-pcre-jit \
+                --with-pcre=../pcre-8.44 \
+                --with-zlib=../zlib-1.2.11 \
+                --with-compat \
+                --with-file-aio \
+                --with-threads \
+                --with-http_addition_module \
+                --with-http_auth_request_module \
+                --with-http_dav_module \
+                --with-http_flv_module \
+                --with-http_gunzip_module \
+                --with-http_gzip_static_module \
+                --with-http_mp4_module \
+                --with-http_random_index_module \
+                --with-http_realip_module \
+                --with-http_slice_module \
+                --with-http_ssl_module \
+                --with-http_sub_module \
+                --with-http_stub_status_module \
+                --with-http_v2_module \
+                --with-http_secure_link_module \
+                --with-mail \
+                --with-mail_ssl_module \
+                --with-stream \
+                --with-stream_realip_module \
+                --with-stream_ssl_module \
+                --with-stream_ssl_preread_module \
+                --with-debug \
+                --with-mail=dynamic \
+                --without-http_empty_gif_module \
+                --with-cc-opt='-g -O2 -fPIE -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2' \
+                --with-ld-opt='-Wl,-Bsymbolic-functions -fPIE -pie -Wl,-z,relro -Wl,-z,now' \
+                --http-log-path=/var/log/nginx
+
+#apt install libpcre3 libpcre3-dev libpcrecpp0v5 libssl-dev zlib1g zlib1g-dev -y
+
+RUN cd /tmp/nginx/nginx-${NGINX_VERSION} && make && make install
+ADD nginx-service.sh /etc/init.d/nginx
+RUN chmod +x /etc/init.d/nginx
+RUN adduser --system --no-create-home --disabled-login --disabled-password --group nginx
+RUN update-rc.d -f nginx defaults
+RUN mkdir -p /etc/nginx/sites-enabled && mkdir -p /etc/nginx/sites-available
+ADD nginx.conf /etc/nginx/nginx.conf
+# RUN service nginx restart
+# **********************************************************************************************************
+
+# **********************************************************************************************************
+# Apache Configuration
+
+###### Vhost ######
+#ADD insiderframework.conf /etc/apache2/sites-available/
+#RUN a2ensite insiderframework; exit 0
+#RUN a2dissite 000-default; exit 0;
+
+#RUN a2enmod rewrite
+#RUN a2enmod headers
+# **********************************************************************************************************
+
+# Init script
+ADD init.sh /usr/local/bin/init.sh
+ADD welcomeInstall.php /tmp/welcomeInstall.php
+RUN chmod +x /usr/local/bin/init.sh
+ENTRYPOINT /usr/local/bin/init.sh && /bin/bash
