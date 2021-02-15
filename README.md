@@ -7,9 +7,9 @@ The Insider Framework is a web framework, initially written in the PHP language,
 ## Roadmap
 
 You can follow the roadmap development in
-https://quire.io/w/insider-framework/35/Implement_progres...?board=PhpVersion
+https://quire.io/w/insider-framework?sublist=0.3.0
 
-I am currently focused on the "0.2.1-rc3" branch. You can take a look at the code if you're curious about the details of this project (and hopefully will you see some working code).
+I am currently focused on the "0.3.0-rc1" branch, rewriting part of the code from the beginning, creating tests, recreating the framework's directory tree and creating new features. The "0.2.1-rc3" branch has the latest functional code. You can take a look at the branch code "0.2.1-rc3" where there is a configuration to run the framework via the docker container to see the framework working with all the resources already created so far.
 
 ## Documentation
 
