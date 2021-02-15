@@ -1,17 +1,17 @@
 <?php
-
-declare(strict_types=1);
-
 use PHPUnit\Framework\TestCase;
-require('Modules/Insiderframework/Core/Loaders/Autoloader.php');
-use \Modules\InsiderFramework\Core\Loaders\AutoLoader;
+use \Modules\Insiderframework\Core\Loaders\AutoLoader;
 
 final class AutoloaderTest extends TestCase
 {
-    public function testShouldLoadAutoLoaderFunction(): void
+    public function testShouldBeLoadAutoloader(): void
     {
-        Autoloader::initializeAutoLoader();
         $loadedFunctions = isset(spl_autoload_functions()[1]);
         $this->assertEquals(true, $loadedFunctions);
+    }
+
+    public function testShouldLoadFakeClass(): void {
+        $returnOfMethod = \Modules\Insiderframework\Tests\Foo::bar();
+        $this->assertEquals(null, $returnOfMethod);
     }
 }
