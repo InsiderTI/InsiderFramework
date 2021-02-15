@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\InsiderFramework\Core\Loaders;
+namespace Modules\Insiderframework\Core\Loaders;
 
 /**
  * This file loads the classes, interfaces and etc. of the environment
@@ -8,7 +8,7 @@ namespace Modules\InsiderFramework\Core\Loaders;
  *
  * @author Marcello Costa
  *
- * @package Modules\InsiderFramework\Core\Loaders\AutoLoader
+ * @package Modules\Insiderframework\Core\Loaders\AutoLoader
  */
 class AutoLoader
 {
@@ -17,11 +17,11 @@ class AutoLoader
     *
     * @author Marcello Costa
     *
-    * @package Modules\InsiderFramework\Core\Loaders\AutoLoader
+    * @package Modules\Insiderframework\Core\Loaders\AutoLoader
     *
     * @return void
     */
-    public static function initializeAutoLoader(): void
+    public static function initializeAutoLoader()
     {
         spl_autoload_register(
             /**
@@ -29,7 +29,7 @@ class AutoLoader
              *
              * @author Marcello Costa
              *
-             * @package Modules\InsiderFramework\Core\Loaders\AutoLoader
+             * @package Modules\Insiderframework\Core\Loaders\AutoLoader
              *
              * @param string $soughtitem Requested item name
              *
@@ -44,8 +44,6 @@ class AutoLoader
         
                 if ($firstNamespaceClass !== 'Apps') {
                     $filepath = AutoLoader::getFrameworkClassFilePath($soughtitem);
-                } else {
-                    $filepath = AutoLoader::getAppClassFilePath($soughtitem);
                 }
 
                 if (
@@ -55,6 +53,27 @@ class AutoLoader
                     require_once $filepath;
                 }
             }
+        );
+    }
+
+    /**
+    * Get file path of a class inside the Framework directory
+    *
+    * @author Marcello Costa
+    *
+    * @package Modules\Insiderframework\Core\Loaders\AutoLoader
+    *
+    * @param string $soughtitem Requested item name
+    *
+    * @return string File path of class
+    */
+    public static function getFrameworkClassFilePath(string $soughtitem): string
+    {
+        return str_replace(
+            "\\",
+            DIRECTORY_SEPARATOR,
+            INSTALL_DIR . DIRECTORY_SEPARATOR .
+            $soughtitem . ".php"
         );
     }
 }
