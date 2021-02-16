@@ -6,8 +6,16 @@ final class FileTreeTest extends TestCase
 {
   public function testShouldReadFileContent(): void
   {
-    $test = FileTree::fileReadContent();
-    var_dump($test);
-    die();
+    $filepath = '';
+    $returnstring = true;
+    $delaytry = 0.15;
+    $maxToleranceLoops = null;
+
+    $fileContent = FileTree::fileReadContent(
+      'Tests' . DIRECTORY_SEPARATOR .
+      'phpunit.xml'
+    ) ? true : false;
+
+    $this->assertEquals(true, $fileContent);
   }
 }

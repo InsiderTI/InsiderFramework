@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\InsiderFramework\Core\Manipulation;
+namespace Modules\Insiderframework\Core\FileTree;
 
 /**
  * Methods responsible for handle files and directories
