@@ -39,6 +39,7 @@ class Bootstrap
     {
         Bootstrap::requireAndLoadAutoLoader();
         KernelSpace::setVariable(array('FRAMEWORK_LOAD_STATUS' => 'LOADING'), 'insiderFrameworkSystem');
+        // Do something in the middle...
         KernelSpace::setVariable(array('FRAMEWORK_LOAD_STATUS' => 'LOADED'), 'insiderFrameworkSystem');
     }
 }
