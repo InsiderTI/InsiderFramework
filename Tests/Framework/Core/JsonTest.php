@@ -5,7 +5,7 @@ use \Modules\Insiderframework\Core\Json;
 final class JsonTest extends TestCase
 {
   public function testShouldReadJsonAndReturnArray(): void
-  {
+  { 
     $jsonContent = Json::getJSONDataFile(
         "Config" . DIRECTORY_SEPARATOR .
         "core.json"
