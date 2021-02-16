@@ -24,7 +24,13 @@ class Bootstrap
     */
     protected static function requireAndLoadAutoLoader(): void
     {
-      require('Modules/Insiderframework/Core/Loaders/Autoloader.php');
+      require(
+        'Modules'.DIRECTORY_SEPARATOR.
+        'Insiderframework'.DIRECTORY_SEPARATOR.
+        'Core'.DIRECTORY_SEPARATOR.
+        'Loaders'.DIRECTORY_SEPARATOR.
+        'Autoloader.php'
+      );
       \Modules\Insiderframework\Core\Loaders\AutoLoader::initializeAutoLoader();
     }
 
