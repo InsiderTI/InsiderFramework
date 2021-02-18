@@ -1,13 +1,13 @@
 <?php
 
-namespace Modules\InsiderFramework\Core;
+namespace Modules\Insiderframework\Core;
 
 /**
  * Methods responsible for handle files and directories
  *
  * @author Marcello Costa
  *
- * @package Modules\InsiderFramework\Core\FileTree
+ * @package Modules\Insiderframework\Core\FileTree
  *
  */
 class FileTree

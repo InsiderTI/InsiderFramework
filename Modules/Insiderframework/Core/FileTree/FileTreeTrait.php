@@ -7,7 +7,7 @@ namespace Modules\Insiderframework\Core\FileTree;
  *
  * @author Marcello Costa
  *
- * @package Modules\InsiderFramework\Core\FileTree\FileTreeTrait
+ * @package Modules\Insiderframework\Core\FileTree\FileTreeTrait
  *
  */
 trait FileTreeTrait
@@ -17,7 +17,7 @@ trait FileTreeTrait
      *
      * @author Marcello Costa
      *
-     * @package Modules\InsiderFramework\Core\FileTree\FileTreeTrait
+     * @package Modules\Insiderframework\Core\FileTree\FileTreeTrait
      *
      * @param string    $filepath          Path of the file
      * @param bool      $returnstring      If true, the function will return a string, otherwise will return an array
@@ -33,7 +33,7 @@ trait FileTreeTrait
         int $maxToleranceLoops = null
     ) {
         if (!is_numeric($delaytry)) {
-            \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError('Variable delaytry is not numeric');
+            \Modules\Insiderframework\Core\Error\ErrorHandler::primaryError('Variable delaytry is not numeric');
         }
 
         if ($maxToleranceLoops === null) {
@@ -45,8 +45,8 @@ trait FileTreeTrait
         }
 
         if ($filepath === null) {
-            \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError(
-                "The file path not specified in \Modules\InsiderFramework\Core\FileTree\FileTreeTrait::fileReadContent()"
+            \Modules\Insiderframework\Core\Error\ErrorHandler::primaryError(
+                "The file path not specified in \Modules\Insiderframework\Core\FileTree\FileTreeTrait::fileReadContent()"
             );
         }
 
@@ -58,7 +58,7 @@ trait FileTreeTrait
             if ($countToleranceLoops > $maxToleranceLoops && $idError === null) {
                 $countToleranceLoops = 0;
 
-                \Modules\InsiderFramework\Core\Error\ErrorHandler::primaryError(
+                \Modules\Insiderframework\Core\Error\ErrorHandler::primaryError(
                   "Too long waiting time detected to read file: " . $filepath
                 );
             }

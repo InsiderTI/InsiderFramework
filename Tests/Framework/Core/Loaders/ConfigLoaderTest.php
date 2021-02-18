@@ -11,4 +11,25 @@ final class ConfigLoaderTest extends TestCase
 
         $this->assertEquals(true, $configContent);
     }
+
+    public function testShouldGetFrameworkConfigVariablesFromConfigFiles(): void
+    {
+        $configVariables = ConfigLoader::getFrameworkConfigVariablesFromConfigFiles();
+        $valid = false;
+
+        if (is_array($configVariables) && !empty($configVariables)) {
+            $valid = true;
+        }
+
+        $this->assertEquals(true, $valid);
+    }
+
+    public function testShouldLoadFrameworkConstants(): void
+    {
+        ConfigLoader::initializeConfigVariablesFromConfigFiles();
+
+        $this->assertEquals(true, defined('REQUESTED_URL'));
+        $this->assertEquals(true, defined('LOCAL_REPOSITORIES'));
+        $this->assertEquals(true, defined('REMOTE_REPOSITORIES'));
+    }
 }

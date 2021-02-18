@@ -1,0 +1,14 @@
+{
+  "REPOSITORIES": [
+    {
+      "TYPE": "LOCAL",
+      "DOMAIN": "http://localhost",
+      "AUTHORIZATION": "y8644387e5<DJ30$?%q8806625Iu{Wx8N284Jm>c5Q8vVC46r P806[717>0 [5Ps*n5T8zm0 H<Uc4td8+1qV'>4=-!Z63x02n284'F2~49zK60E62l4IX11}Dk5>+m"
+    },
+    {
+      "TYPE": "REMOTE",
+      "DOMAIN": "http://master.insiderframework.com",
+      "AUTHORIZATION": "y8644387e5<DJ30$?%q8806625Iu{Wx8N284Jm>c5Q8vVC46r P806[717>0 [5Ps*n5T8zm0 H<Uc4td8+1qV'>4=-!Z63x02n284'F2~49zK60E62l4IX11}Dk5>+m"
+    }
+  ]
+}

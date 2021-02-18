@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace Modules\Insiderframework\Core;
 
-use \Modules\InsiderFramework\Core\Loaders\ConfigFiles;
+use \Modules\Insiderframework\Core\Loaders\ConfigFiles;
 
 /**
  * Class for the framework bootstrap functions
