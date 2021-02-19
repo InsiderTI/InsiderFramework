@@ -85,21 +85,9 @@ class ConfigLoader
         $coreData = ConfigLoader::getFrameworkConfigVariablesFromConfigFiles();
         \Modules\Insiderframework\Core\Loaders\ConfigLoader\RequestedUrl::load();
         \Modules\Insiderframework\Core\Loaders\ConfigLoader\RepositoriesList::load($coreData);
-        
+        \Modules\Insiderframework\Core\Loaders\ConfigLoader\Linguas::load($coreData);
         // TO BE CONVERTED
-        // if (!isset($coreData['LINGUAS'])) {
-        //     \Modules\Insiderframework\Core\Error\ErrorHandler::primaryError(
-        //         "The following information was not found in the configuration: 'LINGUAS'"
-        //     );
-        // }
-
-        // /**
-        //  * Default application language
-        //  *
-        //  * @package Modules\Insiderframework\Core\Loaders\ConfigLoader
-        //  */
-        // define('LINGUAS', $coreData['LINGUAS']);
-        // \Modules\Insiderframework\Core\I10n::setCurrentLinguas(LINGUAS);
+        
 
         // if (!isset($coreData['ENCODE'])) {
         //     \Modules\Insiderframework\Core\Error\ErrorHandler::primaryError(

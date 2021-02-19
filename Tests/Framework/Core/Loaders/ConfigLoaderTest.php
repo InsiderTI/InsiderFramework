@@ -26,8 +26,7 @@ final class ConfigLoaderTest extends TestCase
 
     public function testShouldLoadFrameworkConstants(): void
     {
-        ConfigLoader::initializeConfigVariablesFromConfigFiles();
-
+        // ConfigLoader::initializeConfigVariablesFromConfigFiles();
         $this->assertEquals(true, defined('REQUESTED_URL'));
         $this->assertEquals(true, defined('LOCAL_REPOSITORIES'));
         $this->assertEquals(true, defined('REMOTE_REPOSITORIES'));
