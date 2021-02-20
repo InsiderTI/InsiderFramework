@@ -61,7 +61,7 @@ class ConfigLoader
         foreach ($configFiles as $configFile) {
             $dataConfiguration = ConfigLoader::getConfigFileData($configFile);
             if (count($dataConfiguration) === 0) {
-                \Modules\Insiderframework\Core\Error\ErrorHandler::primaryError(
+                \Modules\Insiderframework\Core\Error::primaryError(
                     "Could not read '$configFile' file of config directory"
                 );
             }
@@ -87,10 +87,9 @@ class ConfigLoader
         \Modules\Insiderframework\Core\Loaders\ConfigLoader\RepositoriesList::load($coreData);
         \Modules\Insiderframework\Core\Loaders\ConfigLoader\Linguas::load($coreData);
         // TO BE CONVERTED
-        
 
         // if (!isset($coreData['ENCODE'])) {
-        //     \Modules\Insiderframework\Core\Error\ErrorHandler::primaryError(
+        //     \Modules\Insiderframework\Core\Error::primaryError(
         //         "The following information was not found in the configuration: 'ENCODE'"
         //     );
         // }
@@ -103,7 +102,7 @@ class ConfigLoader
         // define('ENCODE', $coreData['ENCODE']);
 
         // if (!isset($coreData['ENCRYPT_KEY'])) {
-        //     \Modules\Insiderframework\Core\Error\ErrorHandler::primaryError(
+        //     \Modules\Insiderframework\Core\Error::primaryError(
         //         "The following information was not found in the configuration: 'ENCRYPT_KEY'"
         //     );
         // }
@@ -116,7 +115,7 @@ class ConfigLoader
         // define('ENCRYPT_KEY', $coreData['ENCRYPT_KEY']);
 
         // if (!isset($coreData['MAILBOX'])) {
-        //     \Modules\Insiderframework\Core\Error\ErrorHandler::primaryError(
+        //     \Modules\Insiderframework\Core\Error::primaryError(
         //         "The following information was not found in the configuration: 'MAILBOX'"
         //     );
         // }
@@ -129,7 +128,7 @@ class ConfigLoader
         // define('MAILBOX', $coreData['MAILBOX']);
 
         // if (!isset($coreData['MAILBOX_PASS'])) {
-        //     \Modules\Insiderframework\Core\Error\ErrorHandler::primaryError(
+        //     \Modules\Insiderframework\Core\Error::primaryError(
         //         "The following information was not found in the configuration: 'MAILBOX_PASS'"
         //     );
         // }
@@ -142,7 +141,7 @@ class ConfigLoader
         // define('MAILBOX_PASS', $coreData['MAILBOX_PASS']);
 
         // if (!isset($coreData['MAILBOX_SMTP'])) {
-        //     \Modules\Insiderframework\Core\Error\ErrorHandler::primaryError(
+        //     \Modules\Insiderframework\Core\Error::primaryError(
         //         "The following information was not found in the configuration: 'MAILBOX_SMTP'"
         //     );
         // }
@@ -155,7 +154,7 @@ class ConfigLoader
         // define('MAILBOX_SMTP', $coreData['MAILBOX_SMTP']);
 
         // if (!isset($coreData['MAILBOX_SMTP_AUTH'])) {
-        //     \Modules\Insiderframework\Core\Error\ErrorHandler::primaryError(
+        //     \Modules\Insiderframework\Core\Error::primaryError(
         //         "The following information was not found in the configuration: 'MAILBOX_SMTP_AUTH'"
         //     );
         // }
@@ -168,7 +167,7 @@ class ConfigLoader
         // define('MAILBOX_SMTP_AUTH', $coreData['MAILBOX_SMTP_AUTH']);
 
         // if (!isset($coreData['MAILBOX_SMTP_SECURE'])) {
-        //     \Modules\Insiderframework\Core\Error\ErrorHandler::primaryError(
+        //     \Modules\Insiderframework\Core\Error::primaryError(
         //         "The following information was not found in the configuration: 'MAILBOX_SMTP_SECURE'"
         //     );
         // }
@@ -181,7 +180,7 @@ class ConfigLoader
         // define('MAILBOX_SMTP_SECURE', $coreData['MAILBOX_SMTP_SECURE']);
 
         // if (!isset($coreData['MAILBOX_SMTP_PORT'])) {
-        //     \Modules\Insiderframework\Core\Error\ErrorHandler::primaryError(
+        //     \Modules\Insiderframework\Core\Error::primaryError(
         //         "The following information was not found in the configuration: 'MAILBOX_SMTP_PORT'"
         //     );
         // }
@@ -194,7 +193,7 @@ class ConfigLoader
         // define('MAILBOX_SMTP_PORT', $coreData['MAILBOX_SMTP_PORT']);
 
         // if (!isset($coreData['DEFAULT_RESPONSE_FORMAT'])) {
-        //     \Modules\Insiderframework\Core\Error\ErrorHandler::primaryError(
+        //     \Modules\Insiderframework\Core\Error::primaryError(
         //         "The following information was not found in the configuration: 'DEFAULT_RESPONSE_FORMAT'"
         //     );
         // }
@@ -207,7 +206,7 @@ class ConfigLoader
         // define('DEFAULT_RESPONSE_FORMAT', $coreData['DEFAULT_RESPONSE_FORMAT']);
 
         // if (!isset($coreData['ACL_DEFAULT_ENGINE'])) {
-        //     \Modules\Insiderframework\Core\Error\ErrorHandler::primaryError(
+        //     \Modules\Insiderframework\Core\Error::primaryError(
         //         "The following information was not found in the configuration: 'ACL_DEFAULT_ENGINE'"
         //     );
         // }
@@ -228,7 +227,7 @@ class ConfigLoader
         // // -------------------------- DEBUG -------------------------- //
 
         // if (!isset($coreData['DEBUG'])) {
-        //     \Modules\Insiderframework\Core\Error\ErrorHandler::primaryError(
+        //     \Modules\Insiderframework\Core\Error::primaryError(
         //         "The following information was not found in the configuration: 'DEBUG'"
         //     );
         // }
@@ -242,7 +241,7 @@ class ConfigLoader
         // $debug = $coreData['DEBUG'];
 
         // if (!isset($coreData['DEBUG_BAR'])) {
-        //     \Modules\Insiderframework\Core\Error\ErrorHandler::primaryError(
+        //     \Modules\Insiderframework\Core\Error::primaryError(
         //         "The following information was not found in the configuration: 'DEBUG_BAR'"
         //     );
         // }
@@ -258,7 +257,7 @@ class ConfigLoader
         // // If the debug bar is enabled, add the debug styles in the default css
         // if (DEBUG_BAR === true) {
         //     if ($debug === false) {
-        //         \Modules\Insiderframework\Core\Error\ErrorHandler::errorRegister(
+        //         \Modules\Insiderframework\Core\Error::errorRegister(
         //             'You cannot <b>enable DEBUG_BAR</b> core config without enable DEBUG. ' .
         //             'Automatically activating DEBUG.',
         //             'WARNING'
@@ -284,22 +283,22 @@ class ConfigLoader
         // }
 
         // if (!isset($coreData['LOAD_AVG_ACTION'])) {
-        //     \Modules\Insiderframework\Core\Error\ErrorHandler::primaryError(
+        //     \Modules\Insiderframework\Core\Error::primaryError(
         //         "The following information was not found in the configuration: 'LOAD_AVG_ACTION'"
         //     );
         // }
         // if (!isset($coreData['LOAD_AVG_MAX_USE_CPU'])) {
-        //     \Modules\Insiderframework\Core\Error\ErrorHandler::primaryError(
+        //     \Modules\Insiderframework\Core\Error::primaryError(
         //         "The following information was not found in the configuration: 'LOAD_AVG_MAX_USE_CPU'"
         //     );
         // }
         // if (!isset($coreData['LOAD_AVG_TIME'])) {
-        //     \Modules\Insiderframework\Core\Error\ErrorHandler::primaryError(
+        //     \Modules\Insiderframework\Core\Error::primaryError(
         //         "The following information was not found in the configuration: 'LOAD_AVG_TIME'"
         //     );
         // }
         // if (!isset($coreData['LOAD_AVG_SEND_MAIL'])) {
-        //     \Modules\Insiderframework\Core\Error\ErrorHandler::primaryError(
+        //     \Modules\Insiderframework\Core\Error::primaryError(
         //         "The following information was not found in the configuration: 'LOAD_AVG_SEND_MAIL'"
         //     );
         // }
@@ -336,7 +335,7 @@ class ConfigLoader
 
         // // ---------- DATABASE SETTINGS --------------- //
         // if (!isset($coreData['DATABASES'])) {
-        //     \Modules\Insiderframework\Core\Error\ErrorHandler::primaryError(
+        //     \Modules\Insiderframework\Core\Error::primaryError(
         //         "The following information was not found in the configuration: 'DATABASES'"
         //     );
         // }
@@ -367,7 +366,7 @@ class ConfigLoader
         //     "Apps.json"
         // );
         // if ($appLoaded == false) {
-        //     \Modules\Insiderframework\Core\Error\ErrorHandler::errorRegister(
+        //     \Modules\Insiderframework\Core\Error::errorRegister(
         //         'File ' . INSTALL_DIR . DIRECTORY_SEPARATOR .
         //         "Framework" . DIRECTORY_SEPARATOR .
         //         "Registry" . DIRECTORY_SEPARATOR .
@@ -375,31 +374,6 @@ class ConfigLoader
         //         "Apps.json" .
         //         ' not found'
         //     );
-        // }
-
-        // // Carregando as possíveis traduções dos app
-        // foreach (array_keys($appLoaded) as $app) {
-        //     $pathI10n = INSTALL_DIR . DIRECTORY_SEPARATOR . "Apps" . DIRECTORY_SEPARATOR .
-        //     $app . DIRECTORY_SEPARATOR . "I10n";
-
-        //     $dirTree = \Modules\Insiderframework\Core\FileTree::dirTree($pathI10n);
-        //     foreach ($dirTree as $dT) {
-        //         if (!is_dir($dT)) {
-        //             \Modules\Insiderframework\Core\Manipulation\I10n::loadi10nFile("app/$app", $dT);
-        //         }
-        //     }
-        // }
-        // if (isset($app)) {
-        //     unset($app);
-        // }
-        // if (isset($pathI10n)) {
-        //     unset($pathI10n);
-        // }
-        // if (isset($dirTree)) {
-        //     unset($dirTree);
-        // }
-        // if (isset($dT)) {
-        //     unset($dT);
         // }
 
         // $guildsJsonPath = INSTALL_DIR . DIRECTORY_SEPARATOR .
@@ -412,7 +386,7 @@ class ConfigLoader
         //     $guildsJsonPath
         // );
         // if ($guildsLoaded == false) {
-        //     \Modules\Insiderframework\Core\Error\ErrorHandler::errorRegister(
+        //     \Modules\Insiderframework\Core\Error::errorRegister(
         //         'File ' . $guildsJsonPath . ' not found'
         //     );
         // }

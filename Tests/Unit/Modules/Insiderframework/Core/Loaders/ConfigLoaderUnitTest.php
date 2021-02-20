@@ -2,7 +2,7 @@
 use PHPUnit\Framework\TestCase;
 use \Modules\Insiderframework\Core\Loaders\ConfigLoader;
 
-final class ConfigLoaderTest extends TestCase
+final class ConfigLoaderUnitTest extends TestCase
 {
     public function testShouldGetConfigFileContent(): void
     {
@@ -22,14 +22,5 @@ final class ConfigLoaderTest extends TestCase
         }
 
         $this->assertEquals(true, $valid);
-    }
-
-    public function testShouldLoadFrameworkConstants(): void
-    {
-        // ConfigLoader::initializeConfigVariablesFromConfigFiles();
-        $this->assertEquals(true, defined('REQUESTED_URL'));
-        $this->assertEquals(true, defined('LOCAL_REPOSITORIES'));
-        $this->assertEquals(true, defined('REMOTE_REPOSITORIES'));
-        $this->assertEquals(true, defined('LINGUAS'));
     }
 }

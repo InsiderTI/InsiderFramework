@@ -2,8 +2,6 @@
 declare(strict_types=1);
 namespace Modules\Insiderframework\Core;
 
-use \Modules\Insiderframework\Core\Loaders\ConfigLoader;
-
 /**
  * Class for the framework bootstrap functions
  *
@@ -18,7 +16,7 @@ class Bootstrap
     *
     * @author Marcello Costa
     *
-    * @package Modules\Insiderframework\Core\Bootstrap
+    * @package Modules\Insiderframework\Core\Bootstrap\BootstrapTrait
     *
     * @return void
     */
@@ -39,16 +37,17 @@ class Bootstrap
     *
     * @author Marcello Costa
     *
-    * @package Modules\Insiderframework\Core\Bootstrap
+    * @package Modules\Insiderframework\Core\Bootstrap\BootstrapTrait
     *
     * @return void
     */
     public static function initializeFramework(): void
     {
         Bootstrap::requireAndLoadAutoLoader();
-        KernelSpace::setVariable(array('FRAMEWORK_LOAD_STATUS' => 'LOADING'), 'insiderFrameworkSystem');
         
-        ConfigLoader::initializeConfigVariablesFromConfigFiles();
+        KernelSpace::setVariable(array('FRAMEWORK_LOAD_STATUS' => 'LOADING'), 'insiderFrameworkSystem');
+
+        Loaders\ConfigLoader::initializeConfigVariablesFromConfigFiles();
 
         KernelSpace::setVariable(array('FRAMEWORK_LOAD_STATUS' => 'LOADED'), 'insiderFrameworkSystem');
     }

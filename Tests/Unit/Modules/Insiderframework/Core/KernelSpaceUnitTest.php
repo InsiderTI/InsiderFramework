@@ -2,7 +2,7 @@
 use PHPUnit\Framework\TestCase;
 use \Modules\Insiderframework\Core\KernelSpace;
 
-final class KernelSpaceTest extends TestCase
+final class KernelSpaceUnitTest extends TestCase
 {
   public function testShouldSetAndGetVariableFromKernelSpace(): void
   {

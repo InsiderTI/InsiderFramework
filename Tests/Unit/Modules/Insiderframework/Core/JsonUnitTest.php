@@ -2,7 +2,7 @@
 use PHPUnit\Framework\TestCase;
 use \Modules\Insiderframework\Core\Json;
 
-final class JsonTest extends TestCase
+final class JsonUnitTest extends TestCase
 {
   public function testShouldReadJsonAndReturnArray(): void
   { 

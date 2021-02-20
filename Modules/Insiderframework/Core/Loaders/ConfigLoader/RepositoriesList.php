@@ -12,13 +12,13 @@ class RepositoriesList {
     *
     * @return void
     */
-  public static function load(&$coreData): void {
+  public static function load(array &$coreData): void {
         if (
             !isset($coreData['REPOSITORIES']) ||
             !is_array($coreData['REPOSITORIES']) ||
             empty($coreData['REPOSITORIES'])
         ) {
-            \Modules\Insiderframework\Core\Error\ErrorHandler::primaryError(
+            \Modules\Insiderframework\Core\Error::primaryError(
                 "The following information was not found in the configuration: 'REPOSITORIES'"
             );
         }
@@ -36,7 +36,7 @@ class RepositoriesList {
         $finalUnique = array_unique($final);
 
         if (count($final) !== count($finalUnique)) {
-            \Modules\Insiderframework\Core\Error\ErrorHandler::primaryError(
+            \Modules\Insiderframework\Core\Error::primaryError(
                 "Duplicated domains has been founded on configuration " .
                 "REPOSITORIES and DOMAIN. Please, review the configuration files"
             );
@@ -74,24 +74,24 @@ class RepositoriesList {
     * @return void
     */
     protected static function addLocalOrRemoteRepository(
-      $currentRepository,
-      &$localRepositories,
-      &$remoteRepositories
+      array $currentRepository,
+      array &$localRepositories,
+      array &$remoteRepositories
     ): void {
       if (!isset($currentRepository['DOMAIN'])) {
-          \Modules\Insiderframework\Core\Error\ErrorHandler::primaryError(
+          \Modules\Insiderframework\Core\Error::primaryError(
               "The following information was not found in the repositories configuration: 'DOMAIN'"
           );
       }
       if (!isset($currentRepository['TYPE'])) {
-          \Modules\Insiderframework\Core\Error\ErrorHandler::primaryError(
+          \Modules\Insiderframework\Core\Error::primaryError(
               "The following information was not found in the repositories configuration: 'TYPE'"
           );
       }
       switch (strtoupper(trim($currentRepository['TYPE']))) {
           case 'REMOTE':
               if (isset($remoteRepositories[$currentRepository['DOMAIN']])) {
-                  \Modules\Insiderframework\Core\Error\ErrorHandler::primaryError(
+                  \Modules\Insiderframework\Core\Error::primaryError(
                       "Duplicated entry for repository: " . $currentRepository['DOMAIN']
                   );
               }
@@ -100,14 +100,14 @@ class RepositoriesList {
 
           case 'LOCAL':
               if (isset($localRepositories[$currentRepository['DOMAIN']])) {
-                  \Modules\Insiderframework\Core\Error\ErrorHandler::primaryError(
+                  \Modules\Insiderframework\Core\Error::primaryError(
                       "Duplicated entry for repository: " . $currentRepository['DOMAIN']
                   );
               }
               $localRepositories[$currentRepository['DOMAIN']] = $currentRepository;
               break;
           default:
-              \Modules\Insiderframework\Core\Error\ErrorHandler::primaryError(
+              \Modules\Insiderframework\Core\Error::primaryError(
                   "Unknown type for repository: " . $currentRepository['TYPE']
               );
               break;

@@ -5,11 +5,11 @@ namespace Modules\Insiderframework\Core\Error;
 /**
  * Class that contains functions for handling errors
  *
- * @package Modules\Insiderframework\Core\Error\ErrorHandler
+ * @package Modules\Insiderframework\Core\Error\ErrorTrait
  *
  * @author Marcello Costa
  */
-class ErrorHandler
+trait ErrorTrait
 {
     /**
      * Function that allows you to trigger an error directly to the user
@@ -17,7 +17,7 @@ class ErrorHandler
      *
      * @author Marcello Costa
      *
-     * @package Modules\Insiderframework\Core\Error\ErrorHandler
+     * @package Modules\Insiderframework\Core\Error\ErrorTrait
      *
      * @param string $msg          Error message
      * @param int    $errorCode    Error code

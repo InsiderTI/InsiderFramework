@@ -1,8 +1,8 @@
 <?php
 use PHPUnit\Framework\TestCase;
-use \Modules\Insiderframework\Core\Error\ErrorHandler;
+use \Modules\Insiderframework\Core\Error;
 
-final class ErrorHandlerTest extends TestCase
+final class ErrorUnitTest extends TestCase
 {
   public function testShouldCallPrimaryErrorAndReturnJsonWithHttpResponseCode500(): void
   {
@@ -10,10 +10,10 @@ final class ErrorHandlerTest extends TestCase
     $expectedHttpResponseCode = 500;
 
     try{
-      ErrorHandler::primaryError(
+      Error::primaryError(
         $errorMsg
       );
-    } catch(\Exception $err){
+    } catch(\Exception $err) {
       $result = $err->getMessage();
     }
 
@@ -28,7 +28,7 @@ final class ErrorHandlerTest extends TestCase
     $expectedHttpResponseCode = 400;
 
     try{
-      ErrorHandler::primaryError(
+      Error::primaryError(
         $exceptedReturn,
         $expectedHttpResponseCode,
         "STRING"

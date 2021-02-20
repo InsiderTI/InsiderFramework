@@ -33,7 +33,7 @@ trait FileTreeTrait
         int $maxToleranceLoops = null
     ) {
         if (!is_numeric($delaytry)) {
-            \Modules\Insiderframework\Core\Error\ErrorHandler::primaryError('Variable delaytry is not numeric');
+            \Modules\Insiderframework\Core\Error::primaryError('Variable delaytry is not numeric');
         }
 
         if ($maxToleranceLoops === null) {
@@ -45,7 +45,7 @@ trait FileTreeTrait
         }
 
         if ($filepath === null) {
-            \Modules\Insiderframework\Core\Error\ErrorHandler::primaryError(
+            \Modules\Insiderframework\Core\Error::primaryError(
                 "The file path not specified in \Modules\Insiderframework\Core\FileTree\FileTreeTrait::fileReadContent()"
             );
         }
@@ -58,7 +58,7 @@ trait FileTreeTrait
             if ($countToleranceLoops > $maxToleranceLoops && $idError === null) {
                 $countToleranceLoops = 0;
 
-                \Modules\Insiderframework\Core\Error\ErrorHandler::primaryError(
+                \Modules\Insiderframework\Core\Error::primaryError(
                   "Too long waiting time detected to read file: " . $filepath
                 );
             }
