@@ -39,5 +39,7 @@ final class ConfigLoaderIntegrationTest extends TestCase
             'insiderFrameworkSystem'
         );
         $this->assertEquals(true, $loadAVG !== null);
+        
+        $this->assertEquals(true, defined('DB_APP'));
     }
 }

@@ -97,32 +97,9 @@ class ConfigLoader
         \Modules\Insiderframework\Core\Loaders\ConfigLoader\Debug::load($coreData);
         \Modules\Insiderframework\Core\Loaders\ConfigLoader\InjectedSgsVariables::load($coreData);
         \Modules\Insiderframework\Core\Loaders\ConfigLoader\LoadAvg::load($coreData);
+        \Modules\Insiderframework\Core\Loaders\ConfigLoader\Database::load($coreData);
         // TODO: TO BE CONVERTED
 
-
-
-        // // ---------- DATABASE SETTINGS --------------- //
-        // if (!isset($coreData['DATABASES'])) {
-        //     \Modules\Insiderframework\Core\Error::primaryError(
-        //         "The following information was not found in the configuration: 'DATABASES'"
-        //     );
-        // }
-        // $databases = $coreData['DATABASES'];
-        // \Modules\Insiderframework\Core\KernelSpace::setVariable(
-        //     array(
-        //         'databases' => $databases
-        //     ),
-        //     'insiderFrameworkSystem'
-        // );
-
-        // if (isset($coreData['DB_APP'])) {
-        //     /**
-        //      * Name of the application's default database
-        //      *
-        //      * @package Modules\Insiderframework\Core\Loaders\ConfigLoader
-        //      */
-        //     define('BD_APP', $coreData['DB_APP']);
-        // }
         // unset($coreData);
 
         // // Loading framework registry
