@@ -16,6 +16,7 @@ final class AutoloaderUnitTest extends TestCase
       "\\",
       DIRECTORY_SEPARATOR,
       INSTALL_DIR . DIRECTORY_SEPARATOR .
+      "Framework" . DIRECTORY_SEPARATOR .
       $soughtitem . ".php"
     );
 

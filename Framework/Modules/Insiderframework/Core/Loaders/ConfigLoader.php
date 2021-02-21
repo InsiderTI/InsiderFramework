@@ -26,7 +26,8 @@ class ConfigLoader
     */
     public static function getConfigFileData(string $filename): array
     {
-        $filepath = "Config" . DIRECTORY_SEPARATOR .
+        $filepath = INSTALL_DIR . DIRECTORY_SEPARATOR .
+                    "Config" . DIRECTORY_SEPARATOR .
                     $filename . ".json";
 
         if (file_exists($filepath) && is_readable($filepath)) {

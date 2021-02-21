@@ -1,3 +1,4 @@
 .vscode
 TODO
-vendor/
+Framework/Modules/vendor/
+\.phpunit\.result\.cache

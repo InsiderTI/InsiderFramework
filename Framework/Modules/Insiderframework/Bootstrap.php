@@ -23,10 +23,11 @@ class Bootstrap
     protected static function requireAndLoadAutoLoader(): void
     {
       require(
-        'Modules'.DIRECTORY_SEPARATOR.
-        'Insiderframework'.DIRECTORY_SEPARATOR.
-        'Core'.DIRECTORY_SEPARATOR.
-        'Loaders'.DIRECTORY_SEPARATOR.
+        'Framework' . DIRECTORY_SEPARATOR .
+        'Modules' . DIRECTORY_SEPARATOR .
+        'Insiderframework' . DIRECTORY_SEPARATOR .
+        'Core' . DIRECTORY_SEPARATOR .
+        'Loaders' . DIRECTORY_SEPARATOR .
         'Autoloader.php'
       );
       \Modules\Insiderframework\Core\Loaders\AutoLoader::initializeAutoLoader();
@@ -70,6 +71,7 @@ class Bootstrap
     */
     protected static function setEnviromentExecutionDirectoryAndConstraints(): void
     {
+        chdir('..' . DIRECTORY_SEPARATOR . '..');
         define('INSTALL_DIR', getcwd());
         define('APP_ROOT', INSTALL_DIR);
     }

@@ -36,10 +36,6 @@ class AutoLoader
              * @return void
              */
             function (string $soughtitem): void {
-                if (!defined('INSTALL_DIR')) {
-                    define('INSTALL_DIR', '.');
-                }
-
                 $firstNamespaceClass = explode("\\", $soughtitem)[0];
         
                 if ($firstNamespaceClass !== 'Apps') {
@@ -72,7 +68,7 @@ class AutoLoader
         return str_replace(
             "\\",
             DIRECTORY_SEPARATOR,
-            INSTALL_DIR . DIRECTORY_SEPARATOR .
+            INSTALL_DIR . DIRECTORY_SEPARATOR . "Framework" . DIRECTORY_SEPARATOR .
             $soughtitem . ".php"
         );
     }
