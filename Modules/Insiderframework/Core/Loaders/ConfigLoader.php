@@ -86,7 +86,17 @@ class ConfigLoader
         \Modules\Insiderframework\Core\Loaders\ConfigLoader\RequestedUrl::load();
         \Modules\Insiderframework\Core\Loaders\ConfigLoader\RepositoriesList::load($coreData);
         \Modules\Insiderframework\Core\Loaders\ConfigLoader\Linguas::load($coreData);
-        // TO BE CONVERTED
+        \Modules\Insiderframework\Core\Loaders\ConfigLoader\Encoding::load($coreData);
+
+
+// /**
+        //  * Default application encoding
+        //  *
+        //  * @package Modules\Insiderframework\Core\Loaders\ConfigLoader
+        //  */
+        // define('ENCODE', $coreData['ENCODE']);
+
+        // TODO: TO BE CONVERTED
 
         // if (!isset($coreData['ENCODE'])) {
         //     \Modules\Insiderframework\Core\Error::primaryError(
@@ -94,12 +104,7 @@ class ConfigLoader
         //     );
         // }
 
-        // /**
-        //  * Default application encoding
-        //  *
-        //  * @package Modules\Insiderframework\Core\Loaders\ConfigLoader
-        //  */
-        // define('ENCODE', $coreData['ENCODE']);
+        
 
         // if (!isset($coreData['ENCRYPT_KEY'])) {
         //     \Modules\Insiderframework\Core\Error::primaryError(
