@@ -87,37 +87,11 @@ class ConfigLoader
         \Modules\Insiderframework\Core\Loaders\ConfigLoader\RepositoriesList::load($coreData);
         \Modules\Insiderframework\Core\Loaders\ConfigLoader\Linguas::load($coreData);
         \Modules\Insiderframework\Core\Loaders\ConfigLoader\Encoding::load($coreData);
+        \Modules\Insiderframework\Core\Loaders\ConfigLoader\Encription::load($coreData);
 
 
-// /**
-        //  * Default application encoding
-        //  *
-        //  * @package Modules\Insiderframework\Core\Loaders\ConfigLoader
-        //  */
-        // define('ENCODE', $coreData['ENCODE']);
+        // TODO: TO BE CONVERTED        
 
-        // TODO: TO BE CONVERTED
-
-        // if (!isset($coreData['ENCODE'])) {
-        //     \Modules\Insiderframework\Core\Error::primaryError(
-        //         "The following information was not found in the configuration: 'ENCODE'"
-        //     );
-        // }
-
-        
-
-        // if (!isset($coreData['ENCRYPT_KEY'])) {
-        //     \Modules\Insiderframework\Core\Error::primaryError(
-        //         "The following information was not found in the configuration: 'ENCRYPT_KEY'"
-        //     );
-        // }
-
-        // /**
-        //  * Encryption / global decryption key
-        //  *
-        //  * @package Modules\Insiderframework\Core\Loaders\ConfigLoader
-        //  */
-        // define('ENCRYPT_KEY', $coreData['ENCRYPT_KEY']);
 
         // if (!isset($coreData['MAILBOX'])) {
         //     \Modules\Insiderframework\Core\Error::primaryError(

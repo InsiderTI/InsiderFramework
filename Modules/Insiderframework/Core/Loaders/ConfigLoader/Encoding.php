@@ -15,5 +15,17 @@ class Encoding {
     * @return void
     */
   public static function load(array $coreData): void {
+    if (!isset($coreData['ENCODE'])) {
+      \Modules\Insiderframework\Core\Error::primaryError(
+        "The following information was not found in the configuration: 'ENCODE'"
+      );
+    }
+
+    /**
+     * Default application encoding
+     *
+     * @package Modules\Insiderframework\Core\Loaders\ConfigLoader
+     */
+    define('ENCODE', $coreData['ENCODE']);
   }
 }

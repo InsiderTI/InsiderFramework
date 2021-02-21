@@ -11,5 +11,7 @@ final class ConfigLoaderIntegrationTest extends TestCase
         $this->assertEquals(true, defined('LOCAL_REPOSITORIES'));
         $this->assertEquals(true, defined('REMOTE_REPOSITORIES'));
         $this->assertEquals(true, defined('LINGUAS'));
+        $this->assertEquals(true, defined('ENCODE'));
+        $this->assertEquals(true, defined('ENCRYPT_KEY'));
     }
 }
