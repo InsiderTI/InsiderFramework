@@ -33,5 +33,11 @@ final class ConfigLoaderIntegrationTest extends TestCase
         $injectedCss = KernelSpace::getVariable('injectedCss', 'sagacious');
 
         $this->assertEquals(true, $injectedCss !== null);
+
+        $loadAVG = \Modules\Insiderframework\Core\KernelSpace::getVariable(
+            'loadAVG',
+            'insiderFrameworkSystem'
+        );
+        $this->assertEquals(true, $loadAVG !== null);
     }
 }

@@ -6,5 +6,10 @@
     "ACL_DEFAULT_ENGINE": "InsiderAcl",
     "MAX_TOLERANCE_LOOPS": 1000,
     "DEBUG": true,
-    "DEBUG_BAR": false
+    "DEBUG_BAR": false,
+    "ERROR_MAIL_SENDING_POLICY": "debug-off-only",
+    "LOAD_AVG_MAX_USE_CPU": 0,
+    "LOAD_AVG_TIME": 1,
+    "LOAD_AVG_SEND_MAIL": false,
+    "LOAD_AVG_ACTION": "throttle-2000"
 }
