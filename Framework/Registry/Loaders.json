@@ -1,0 +1,10 @@
+{
+  "Module": {
+    "Insiderframework": {
+      "RequestedUrl": {
+        "Path": "/Modules/Insiderframework/Core/Loaders/ConfigLoader/RequestedUrl",
+        "Function": "load"
+      }
+    }
+  }
+}

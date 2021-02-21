@@ -86,19 +86,7 @@ class ConfigLoader
     public static function initializeConfigVariablesFromConfigFiles(): void
     {
         $coreData = ConfigLoader::getFrameworkConfigVariablesFromConfigFiles();
-        \Modules\Insiderframework\Core\Loaders\ConfigLoader\RequestedUrl::load();
-        \Modules\Insiderframework\Core\Loaders\ConfigLoader\RepositoriesList::load($coreData);
-        \Modules\Insiderframework\Core\Loaders\ConfigLoader\Linguas::load($coreData);
-        \Modules\Insiderframework\Core\Loaders\ConfigLoader\Encoding::load($coreData);
-        \Modules\Insiderframework\Core\Loaders\ConfigLoader\Encription::load($coreData);
-        \Modules\Insiderframework\Core\Loaders\ConfigLoader\Mail::load($coreData);
-        \Modules\Insiderframework\Core\Loaders\ConfigLoader\ResponseFormat::load($coreData);
-        \Modules\Insiderframework\Core\Loaders\ConfigLoader\Acl::load($coreData);
-        \Modules\Insiderframework\Core\Loaders\ConfigLoader\ToleranceLoops::load($coreData);
-        \Modules\Insiderframework\Core\Loaders\ConfigLoader\Debug::load($coreData);
-        \Modules\Insiderframework\Core\Loaders\ConfigLoader\InjectedSgsVariables::load($coreData);
-        \Modules\Insiderframework\Core\Loaders\ConfigLoader\LoadAvg::load($coreData);
-        \Modules\Insiderframework\Core\Loaders\ConfigLoader\Database::load($coreData);
+        // TODO: Load coreData to KernelSpace and load all loaders from registry
         unset($coreData);
     }
 }
