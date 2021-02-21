@@ -92,5 +92,18 @@ class Mail {
          * @package Modules\Insiderframework\Core\Loaders\ConfigLoader\Mail
          */
         define('MAILBOX_SMTP_PORT', $coreData['MAILBOX_SMTP_PORT']);
+
+        if (!isset($coreData['ERROR_MAIL_SENDING_POLICY'])) {
+            \Modules\Insiderframework\Core\Error::primaryError(
+                "The following information was not found in the configuration: 'ERROR_MAIL_SENDING_POLICY'"
+            );
+        }
+
+        /**
+         * Email sending policy for errors
+         *
+         * @package Modules\Insiderframework\Core\Loaders\ConfigLoader
+         */
+        define('ERROR_MAIL_SENDING_POLICY', $coreData['ERROR_MAIL_SENDING_POLICY']);
     }
 }

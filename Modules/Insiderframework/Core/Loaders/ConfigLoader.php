@@ -98,8 +98,6 @@ class ConfigLoader
         \Modules\Insiderframework\Core\Loaders\ConfigLoader\InjectedSgsVariables::load($coreData);
         // TODO: TO BE CONVERTED
 
-        
-
         // if (!isset($coreData['LOAD_AVG_ACTION'])) {
         //     \Modules\Insiderframework\Core\Error::primaryError(
         //         "The following information was not found in the configuration: 'LOAD_AVG_ACTION'"
@@ -143,13 +141,6 @@ class ConfigLoader
         //     'insiderFrameworkSystem'
         // );
         // unset($loadAVG);
-
-        // /**
-        //  * Email sending policy for errors
-        //  *
-        //  * @package Modules\Insiderframework\Core\Loaders\ConfigLoader
-        //  */
-        // define('ERROR_MAIL_SENDING_POLICY', $coreData['ERROR_MAIL_SENDING_POLICY']);
 
         // // ---------- DATABASE SETTINGS --------------- //
         // if (!isset($coreData['DATABASES'])) {

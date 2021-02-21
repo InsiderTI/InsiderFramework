@@ -4,5 +4,6 @@
   "MAILBOX_SMTP": "smtp.example.com",
   "MAILBOX_SMTP_AUTH": true,
   "MAILBOX_SMTP_SECURE": "ssl",
-  "MAILBOX_SMTP_PORT": 465
+  "MAILBOX_SMTP_PORT": 465,
+  "ERROR_MAIL_SENDING_POLICY": "debug-off-only"
 }

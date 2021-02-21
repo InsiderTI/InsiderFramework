@@ -20,6 +20,7 @@ final class ConfigLoaderIntegrationTest extends TestCase
         $this->assertEquals(true, defined('MAILBOX_SMTP_AUTH'));
         $this->assertEquals(true, defined('MAILBOX_PASS'));
         $this->assertEquals(true, defined('MAILBOX'));
+        $this->assertEquals(true, defined('ERROR_MAIL_SENDING_POLICY'));
 
         $this->assertEquals(true, defined('DEFAULT_RESPONSE_FORMAT'));
         $this->assertEquals(true, defined('ACL_DEFAULT_ENGINE'));
