@@ -90,21 +90,9 @@ class ConfigLoader
         \Modules\Insiderframework\Core\Loaders\ConfigLoader\Encription::load($coreData);
         \Modules\Insiderframework\Core\Loaders\ConfigLoader\Mail::load($coreData);
         \Modules\Insiderframework\Core\Loaders\ConfigLoader\ResponseFormat::load($coreData);
+        \Modules\Insiderframework\Core\Loaders\ConfigLoader\Acl::load($coreData);
 
-        // TODO: TO BE CONVERTED        
-
-        // if (!isset($coreData['ACL_DEFAULT_ENGINE'])) {
-        //     \Modules\Insiderframework\Core\Error::primaryError(
-        //         "The following information was not found in the configuration: 'ACL_DEFAULT_ENGINE'"
-        //     );
-        // }
-
-        // /**
-        //  * String value. ACL engine class
-        //  *
-        //  * @package Modules\Insiderframework\Core\Loaders\ConfigLoader
-        //  */
-        // define('ACL_DEFAULT_ENGINE', $coreData['ACL_DEFAULT_ENGINE']);
+        // TODO: TO BE CONVERTED
 
         // /**
         //  * Maximum number of loops before generating a warning for the default mail box or writing to the log
