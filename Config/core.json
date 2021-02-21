@@ -1,5 +1,6 @@
 {
     "ENCODE": "utf-8",
     "LINGUAS": "en",
-    "ENCRYPT_KEY": "Pm3EJ3/Z$7wer=Bbqprx$k33={,M,V"
+    "ENCRYPT_KEY": "Pm3EJ3/Z$7wer=Bbqprx$k33={,M,V",
+    "DEFAULT_RESPONSE_FORMAT": "HTML"
 }
