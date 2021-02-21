@@ -89,24 +89,9 @@ class ConfigLoader
         \Modules\Insiderframework\Core\Loaders\ConfigLoader\Encoding::load($coreData);
         \Modules\Insiderframework\Core\Loaders\ConfigLoader\Encription::load($coreData);
         \Modules\Insiderframework\Core\Loaders\ConfigLoader\Mail::load($coreData);
-
+        \Modules\Insiderframework\Core\Loaders\ConfigLoader\ResponseFormat::load($coreData);
 
         // TODO: TO BE CONVERTED        
-
-
-        
-        // if (!isset($coreData['DEFAULT_RESPONSE_FORMAT'])) {
-        //     \Modules\Insiderframework\Core\Error::primaryError(
-        //         "The following information was not found in the configuration: 'DEFAULT_RESPONSE_FORMAT'"
-        //     );
-        // }
-
-        // /**
-        //  * Application default response format
-        //  *
-        //  * @package Modules\Insiderframework\Core\Loaders\ConfigLoader
-        //  */
-        // define('DEFAULT_RESPONSE_FORMAT', $coreData['DEFAULT_RESPONSE_FORMAT']);
 
         // if (!isset($coreData['ACL_DEFAULT_ENGINE'])) {
         //     \Modules\Insiderframework\Core\Error::primaryError(

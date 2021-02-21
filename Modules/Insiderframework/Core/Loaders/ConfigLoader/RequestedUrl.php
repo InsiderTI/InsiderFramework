@@ -6,7 +6,7 @@ class RequestedUrl {
    *
    * @package Modules\Insiderframework\Core\Loaders\ConfigLoader\RequestedUrl
    */
-  public static function load(): void {   
+  public static function load(): void {
       $proto = 'http';
       if (isset($_SERVER["HTTP_X_FORWARDED_PROTO"])) {
           $proto = $_SERVER["HTTP_X_FORWARDED_PROTO"];
