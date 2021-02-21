@@ -13,5 +13,11 @@ final class ConfigLoaderIntegrationTest extends TestCase
         $this->assertEquals(true, defined('LINGUAS'));
         $this->assertEquals(true, defined('ENCODE'));
         $this->assertEquals(true, defined('ENCRYPT_KEY'));
+
+        $this->assertEquals(true, defined('MAILBOX_SMTP_PORT'));
+        $this->assertEquals(true, defined('MAILBOX_SMTP_SECURE'));
+        $this->assertEquals(true, defined('MAILBOX_SMTP_AUTH'));
+        $this->assertEquals(true, defined('MAILBOX_PASS'));
+        $this->assertEquals(true, defined('MAILBOX'));
     }
 }
