@@ -22,5 +22,7 @@ final class ConfigLoaderIntegrationTest extends TestCase
 
         $this->assertEquals(true, defined('DEFAULT_RESPONSE_FORMAT'));
         $this->assertEquals(true, defined('ACL_DEFAULT_ENGINE'));
+
+        $this->assertEquals(true, defined('MAX_TOLERANCE_LOOPS'));
     }
 }

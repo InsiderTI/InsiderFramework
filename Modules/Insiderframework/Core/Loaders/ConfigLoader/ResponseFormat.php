@@ -3,7 +3,7 @@ namespace Modules\Insiderframework\Core\Loaders\ConfigLoader;
 
 class ResponseFormat {
   /**
-   * Domain used to request
+   * ResponseFormat config loader
    *
    * @package Modules\Insiderframework\Core\Loaders\ConfigLoader\ResponseFormat
    */

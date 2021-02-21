@@ -2,7 +2,7 @@
 namespace Modules\Insiderframework\Core\Loaders\ConfigLoader;
 class RequestedUrl {
   /**
-   * Domain used to request
+   * RequestedUrl config loader
    *
    * @package Modules\Insiderframework\Core\Loaders\ConfigLoader\RequestedUrl
    */

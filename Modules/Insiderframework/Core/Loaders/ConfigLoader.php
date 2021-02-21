@@ -91,16 +91,12 @@ class ConfigLoader
         \Modules\Insiderframework\Core\Loaders\ConfigLoader\Mail::load($coreData);
         \Modules\Insiderframework\Core\Loaders\ConfigLoader\ResponseFormat::load($coreData);
         \Modules\Insiderframework\Core\Loaders\ConfigLoader\Acl::load($coreData);
+        \Modules\Insiderframework\Core\Loaders\ConfigLoader\ToleranceLoops::load($coreData);
 
         // TODO: TO BE CONVERTED
 
-        // /**
-        //  * Maximum number of loops before generating a warning for the default mail box or writing to the log
-        //  *
-        //  * @package Modules\Insiderframework\Core\Loaders\ConfigLoader
-        //  */
-        // define('MAX_TOLERANCE_LOOPS', $coreData['MAX_TOLERANCE_LOOPS']);
-        // // -------------------------- DEBUG -------------------------- //
+
+        // -------------------------- DEBUG -------------------------- //
 
         // if (!isset($coreData['DEBUG'])) {
         //     \Modules\Insiderframework\Core\Error::primaryError(
