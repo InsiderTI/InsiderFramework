@@ -98,48 +98,6 @@ class ConfigLoader
         \Modules\Insiderframework\Core\Loaders\ConfigLoader\InjectedSgsVariables::load($coreData);
         \Modules\Insiderframework\Core\Loaders\ConfigLoader\LoadAvg::load($coreData);
         \Modules\Insiderframework\Core\Loaders\ConfigLoader\Database::load($coreData);
-        // TODO: TO BE CONVERTED
-
-        // unset($coreData);
-
-        // // Loading framework registry
-        // $appLoaded = \Modules\Insiderframework\Core\Json::getJSONDataFile(
-        //     INSTALL_DIR . DIRECTORY_SEPARATOR .
-        //     "Framework" . DIRECTORY_SEPARATOR .
-        //     "Registry" . DIRECTORY_SEPARATOR .
-        //     "Sections" . DIRECTORY_SEPARATOR .
-        //     "Apps.json"
-        // );
-        // if ($appLoaded == false) {
-        //     \Modules\Insiderframework\Core\Error::errorRegister(
-        //         'File ' . INSTALL_DIR . DIRECTORY_SEPARATOR .
-        //         "Framework" . DIRECTORY_SEPARATOR .
-        //         "Registry" . DIRECTORY_SEPARATOR .
-        //         "Sections" . DIRECTORY_SEPARATOR .
-        //         "Apps.json" .
-        //         ' not found'
-        //     );
-        // }
-
-        // $guildsJsonPath = INSTALL_DIR . DIRECTORY_SEPARATOR .
-        //                   "Framework" . DIRECTORY_SEPARATOR .
-        //                   "Registry" . DIRECTORY_SEPARATOR .
-        //                   "Sections" . DIRECTORY_SEPARATOR .
-        //                   "Guilds.json";
-                        
-        // $guildsLoaded = \Modules\Insiderframework\Core\Json::getJSONDataFile(
-        //     $guildsJsonPath
-        // );
-        // if ($guildsLoaded == false) {
-        //     \Modules\Insiderframework\Core\Error::errorRegister(
-        //         'File ' . $guildsJsonPath . ' not found'
-        //     );
-        // }
-        // \Modules\Insiderframework\Core\KernelSpace::setVariable(
-        //     array(
-        //         'guildsLoaded' => $guildsLoaded
-        //     ),
-        //     'insiderFrameworkSystem'
-        // );
+        unset($coreData);
     }
 }
