@@ -43,6 +43,13 @@ class Bootstrap
     */
     public static function initializeFramework(): void
     {
+        // Activates the output buffer. This is necessary in case of internal errors.
+        // So the framework will not let you return something that breaks the return JSON
+        // of the error.
+        ob_start();
+
+        Bootstrap::setEnviromentExecutionDirectoryAndConstraints();
+
         Bootstrap::requireAndLoadAutoLoader();
         
         \Modules\Insiderframework\Core\KernelSpace::setVariable(array('FRAMEWORK_LOAD_STATUS' => 'LOADING'), 'insiderFrameworkSystem');
@@ -50,5 +57,20 @@ class Bootstrap
         Loaders\ConfigLoader::initializeConfigVariablesFromConfigFiles();
 
         \Modules\Insiderframework\Core\KernelSpace::setVariable(array('FRAMEWORK_LOAD_STATUS' => 'LOADED'), 'insiderFrameworkSystem');
+    }
+
+    /**
+    * Set the right execution directory for framework
+    *
+    * @author Marcello Costa
+    *
+    * @package Modules\InsiderFramework\Core\Bootstrap
+    *
+    * @return void
+    */
+    protected static function setEnviromentExecutionDirectoryAndConstraints(): void
+    {
+        define('INSTALL_DIR', getcwd());
+        define('APP_ROOT', INSTALL_DIR);
     }
 }
