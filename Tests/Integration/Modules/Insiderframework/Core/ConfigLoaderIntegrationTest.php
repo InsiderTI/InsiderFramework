@@ -24,5 +24,8 @@ final class ConfigLoaderIntegrationTest extends TestCase
         $this->assertEquals(true, defined('ACL_DEFAULT_ENGINE'));
 
         $this->assertEquals(true, defined('MAX_TOLERANCE_LOOPS'));
+
+        $this->assertEquals(true, defined('DEBUG'));
+        $this->assertEquals(true, defined('DEBUG_BAR'));
     }
 }
