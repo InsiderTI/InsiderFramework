@@ -16,3 +16,4 @@ class Encoding {
     */
   public static function load(array $coreData): void {
   }
+}
