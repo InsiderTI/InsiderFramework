@@ -2,6 +2,8 @@
 
 namespace Modules\Insiderframework\Core\Loaders;
 
+use \Modules\Insiderframework\Core\KernelSpace;
+
 /**
  * Loader for configurations in framework
  *
@@ -93,24 +95,10 @@ class ConfigLoader
         \Modules\Insiderframework\Core\Loaders\ConfigLoader\Acl::load($coreData);
         \Modules\Insiderframework\Core\Loaders\ConfigLoader\ToleranceLoops::load($coreData);
         \Modules\Insiderframework\Core\Loaders\ConfigLoader\Debug::load($coreData);
-
+        \Modules\Insiderframework\Core\Loaders\ConfigLoader\InjectedSgsVariables::load($coreData);
         // TODO: TO BE CONVERTED
 
-        //     global $injectedCss;
-        //     $filename = "Web" . DIRECTORY_SEPARATOR .
-        //                 "Apps" . DIRECTORY_SEPARATOR .
-        //                 "Sys" . DIRECTORY_SEPARATOR .
-        //                 "assets" . DIRECTORY_SEPARATOR .
-        //                 "css" . DIRECTORY_SEPARATOR .
-        //                 "debug.css";
-
-        //     $cssDebugBar = file_get_contents($filename);
-        //     $injectedCss = $injectedCss . "<style>" . $cssDebugBar . "</style>";
-        //     unset($filename);
-        //     unset($cssDebugBar);
-        // } else {
-        //     define('DEBUG', $debug);
-        // }
+        
 
         // if (!isset($coreData['LOAD_AVG_ACTION'])) {
         //     \Modules\Insiderframework\Core\Error::primaryError(

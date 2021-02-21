@@ -1,0 +1,69 @@
+#debugbarinsiderframe {
+  font-family: "Arial" !important;
+  font-weight: bold !important;
+  color: #a7a7a7 !important;
+  position: fixed !important;
+  bottom: 0 !important;
+  border-top: #ddd 1px inset !important;
+  padding: 10px !important;
+  font-size: 0.8em !important;
+  line-height: 30px !important;
+  background: #070707 !important;
+  z-index: 99999 !important;
+  width: 100% !important;
+}
+
+#debugBarLogo {
+  position: relative !important;
+  top: 0em !important;
+  width: 32px !important;
+  height: auto !important;
+  float: left !important;
+  margin-right: 15px !important;
+}
+
+.warningItems {
+  align-items: flex-start !important;
+  float: right !important;
+  margin-right: 32px !important;
+}
+
+.warningItem {
+  border-bottom: 1px solid #222 !important;
+}
+.warningItem:last-child {
+  border-bottom: none !important;
+}
+
+#warningImg {
+  width: 24px !important;
+  height: 24px !important;
+  background-repeat: no-repeat !important;
+  background-size: contain !important;
+  position: relative !important;
+  top: 5px !important;
+  cursor: pointer !important;
+}
+.warningImgOff {
+  background-image: url("/Apps/Sys/assets/img/warning_icon_debugbar_off.png") !important;
+}
+.warningImgOn {
+  background-image: url("/Apps/Sys/assets/img/warning_icon_debugbar_on.png") !important;
+}
+#warningItemContainer {
+  color: #acae02 !important;
+  width: 600px !important;
+  max-height: 200px !important;
+  border: 1px solid #fff !important;
+  border-radius: 3px !important;
+  display: none;
+  position: absolute !important;
+  bottom: 60px !important;
+  background: #111 !important;
+  right: 25px !important;
+  font-size: 11px !important;
+  font-family: "Verdana" !important;
+  padding: 10px 0 0 10px !important;
+  overflow: auto !important;
+  font-weight: 100 !important;
+}

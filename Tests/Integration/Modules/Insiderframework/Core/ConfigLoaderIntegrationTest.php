@@ -1,6 +1,7 @@
 <?php
 use PHPUnit\Framework\TestCase;
 use \Modules\Insiderframework\Core\Loaders\ConfigLoader;
+use \Modules\Insiderframework\Core\KernelSpace;
 
 final class ConfigLoaderIntegrationTest extends TestCase
 {
@@ -27,5 +28,9 @@ final class ConfigLoaderIntegrationTest extends TestCase
 
         $this->assertEquals(true, defined('DEBUG'));
         $this->assertEquals(true, defined('DEBUG_BAR'));
+
+        $injectedCss = KernelSpace::getVariable('injectedCss', 'sagacious');
+
+        $this->assertEquals(true, $injectedCss !== null);
     }
 }

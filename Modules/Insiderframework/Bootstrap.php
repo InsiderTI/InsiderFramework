@@ -45,10 +45,10 @@ class Bootstrap
     {
         Bootstrap::requireAndLoadAutoLoader();
         
-        KernelSpace::setVariable(array('FRAMEWORK_LOAD_STATUS' => 'LOADING'), 'insiderFrameworkSystem');
+        \Modules\Insiderframework\Core\KernelSpace::setVariable(array('FRAMEWORK_LOAD_STATUS' => 'LOADING'), 'insiderFrameworkSystem');
 
         Loaders\ConfigLoader::initializeConfigVariablesFromConfigFiles();
 
-        KernelSpace::setVariable(array('FRAMEWORK_LOAD_STATUS' => 'LOADED'), 'insiderFrameworkSystem');
+        \Modules\Insiderframework\Core\KernelSpace::setVariable(array('FRAMEWORK_LOAD_STATUS' => 'LOADED'), 'insiderFrameworkSystem');
     }
 }
