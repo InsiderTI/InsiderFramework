@@ -1,6 +1,7 @@
 <?php
+
 require_once(
-    '..' . DIRECTORY_SEPARATOR .
+    'Framework' . DIRECTORY_SEPARATOR .
     'Modules' . DIRECTORY_SEPARATOR .
     'Insiderframework' . DIRECTORY_SEPARATOR .
     'Bootstrap.php'

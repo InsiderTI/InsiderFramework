@@ -82,4 +82,61 @@ trait FileTreeTrait
 
         return false;
     }
+
+    /**
+     * Creates a map in format of an array of a path
+     *
+     * @author Marcello Costa
+     *
+     * @package Modules\Insiderframework\Core\FileTree
+     *
+     * @param string $dir       Path to be mapped
+     * @param bool   $sortitems Splits the result inside the array ordering by directories
+     *
+     * @return array Array of the mapped path
+     */
+    public static function dirTree(string $dir, bool $sortitems = false): array
+    {
+        // Removing the last bar from the string $dir (if did exists)
+        if ($dir[strlen($dir) - 1] === DIRECTORY_SEPARATOR) {
+            $dir = \Modules\InsiderFramework\Core\Text::extractString($dir, 0, strlen($dir) - 1);
+        }
+
+        // Mapping the directory
+        $path = [];
+        $stack[] = $dir;
+        while ($stack) {
+            $thisdir = array_pop($stack);
+            if ($dircont = scandir($thisdir)) {
+                $i = 0;
+                while (isset($dircont[$i])) {
+                    if ($dircont[$i] !== '.' && $dircont[$i] !== '..') {
+                        $current_file = "{$thisdir}" . DIRECTORY_SEPARATOR . "{$dircont[$i]}";
+                        if (is_file($current_file)) {
+                            $path[] = "{$thisdir}" . DIRECTORY_SEPARATOR . "{$dircont[$i]}";
+                        } elseif (is_dir($current_file)) {
+                            $path[] = "{$thisdir}" . DIRECTORY_SEPARATOR . "{$dircont[$i]}";
+                            $stack[] = $current_file;
+                        }
+                    }
+                    $i++;
+                }
+            }
+        }
+
+        // If the result needs to be organized
+        if ($sortitems === true) {
+            // Calls the function which is responsable for organize the files inside the path
+            $dirarray = ($fileData = \Modules\InsiderFramework\Core\FileTree::fillArrayWithFileNodes(
+                new \DirectoryIterator($dir)
+            )
+            );
+
+            // Returning the organized result
+            return $dirarray;
+        }
+
+        // Returning the result without arranging the array
+        return $path;
+    }
 }

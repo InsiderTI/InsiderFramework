@@ -11,6 +11,15 @@ namespace Modules\Insiderframework\Core\Error;
  */
 trait ErrorTrait
 {
+    public static $frameworkErrorTypes = [
+      'CRITICAL',
+      'XML_PRE_CONDITION_FAILED',
+      'JSON_PRE_CONDITION_FAILED',
+      'ATTACK_DETECTED',
+      'LOG',
+      'WARNING'
+    ];
+
     /**
      * Function that allows you to trigger an error directly to the user
      * and stop the execution of php script
@@ -37,5 +46,24 @@ trait ErrorTrait
       }
 
       throw new \RuntimeException($output);
+    }
+
+    /**
+     * Register/Show errors
+     *
+     * @author Marcello Costa
+     *
+     * @package Modules\Insiderframework\Core\Error\ErrorTrait
+     *
+     * @param string $message             Error message
+     * @param string $frameworkErrorType  Framework error type
+     * @param int    $responseCode        Response code of the error
+     *
+     * @return void|string Returns the uniqid of the error if it's of type LOG
+     */
+    public static function errorRegister(string $message, string $frameworkErrorType = "CRITICAL", int $responseCode = null): ?string
+    {
+      // TODO
+      ErrorTrait::primaryError('Error Register must be implemented');
     }
   }

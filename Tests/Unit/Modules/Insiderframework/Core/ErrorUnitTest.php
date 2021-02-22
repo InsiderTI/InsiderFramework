@@ -40,4 +40,17 @@ final class ErrorUnitTest extends TestCase
     $this->assertEquals($exceptedReturn, $result);    
     $this->assertEquals($expectedHttpResponseCode, http_response_code());
   }
+
+  public function testShouldCallErrorRegisterFunction(): void {
+    $this->markTestIncomplete(
+      'This test has not been implemented yet.'
+    );
+  }
+
+  public function testShouldReturnArrayofErrorTypes(): void {
+    $errorArray = Error::$frameworkErrorTypes;
+
+    $this->assertEquals('array', gettype($errorArray));
+    $this->assertGreaterThan(0, count($errorArray));
+  }
 }

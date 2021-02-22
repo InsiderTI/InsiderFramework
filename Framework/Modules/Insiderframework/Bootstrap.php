@@ -71,7 +71,6 @@ class Bootstrap
     */
     protected static function setEnviromentExecutionDirectoryAndConstraints(): void
     {
-        chdir('..' . DIRECTORY_SEPARATOR . '..');
         define('INSTALL_DIR', getcwd());
         define('APP_ROOT', INSTALL_DIR);
     }

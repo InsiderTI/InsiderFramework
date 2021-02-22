@@ -1,0 +1,18 @@
+{
+  "package": "insider-framework",
+  "version": "0.3.0-RC1",
+  "authors": "Marcello Costa <marcello@insiderframework.com>",
+  "section": "guild",
+  "provides": {
+    "sagacious": "0.2.1",
+    "phpmailer": "5.2.13",
+    "php-openssl-cryptor": "1.0.1"
+  },
+  "depends": {
+    "sagacious": "=0.2.1",
+    "phpmailer": "=5.2.13",
+    "php-openssl-cryptor": "=1.0.1"
+  },
+  "recommends": {},
+  "description": "The Insider Framework is a web framework that links two languages (PHP and Node.Js), delivering a versatile solution for building applications and web APIs"
+}
