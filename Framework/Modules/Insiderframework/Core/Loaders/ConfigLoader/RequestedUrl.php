@@ -13,8 +13,9 @@ class RequestedUrl {
       }
       if (!isset($_SERVER['SHELL']) && isset($_SERVER['HTTP_HOST'])) {
           define('REQUESTED_URL', $proto . "://" . $_SERVER['HTTP_HOST']);
-      } else {
-          define('REQUESTED_URL', $proto . "://localhost");
+          return;
       }
+
+      define('REQUESTED_URL', $proto . "://localhost");
   }
 }

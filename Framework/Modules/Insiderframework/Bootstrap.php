@@ -30,6 +30,7 @@ class Bootstrap
         'Loaders' . DIRECTORY_SEPARATOR .
         'Autoloader.php'
       );
+
       \Modules\Insiderframework\Core\Loaders\AutoLoader::initializeAutoLoader();
     }
 

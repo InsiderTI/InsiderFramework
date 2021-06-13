@@ -158,16 +158,16 @@ trait I10nTrait
                 "Cannot load file contents %" . $filePath . "%",
                 "LOG"
             );
-        } else {
-            if (!isset($i10n[$domain])) {
-                $i10n[$domain] = [];
-            }
-            if (!isset($i10n[$domain][$language])) {
-                $i10n[$domain][$language] = [];
-            }
-
-            $i10n[$domain][$language] = array_merge($i10n[$domain][$language], $i10nData);
         }
+
+        if (!isset($i10n[$domain])) {
+            $i10n[$domain] = [];
+        }
+        if (!isset($i10n[$domain][$language])) {
+            $i10n[$domain][$language] = [];
+        }
+
+        $i10n[$domain][$language] = array_merge($i10n[$domain][$language], $i10nData);
 
         \Modules\Insiderframework\Core\KernelSpace::setVariable(array('i10n' => $i10n), 'insiderFrameworkSystem');
     }

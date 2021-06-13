@@ -37,12 +37,12 @@ trait ErrorTrait
     public static function primaryError(string $msg, int $errorCode = 500, string $outputFormat = 'JSON'): array
     {
       http_response_code($errorCode);
+
+      $output = $msg;
       if (strtoupper($outputFormat) === 'JSON') {
           $msgToUser = [];
           $msgToUser['error'] = $msg;
           $output = json_encode($msgToUser);
-      } else {
-          $output = $msg;
       }
 
       throw new \RuntimeException($output);

@@ -37,9 +37,9 @@ trait FileTreeTrait
         }
 
         if ($maxToleranceLoops === null) {
-            if (!defined("MAX_TOLERANCE_LOOPS")) {
-                $maxToleranceLoops = 1000;
-            } else {
+            $maxToleranceLoops = 1000;
+
+            if (defined("MAX_TOLERANCE_LOOPS")) {
                 $maxToleranceLoops = MAX_TOLERANCE_LOOPS;
             }
         }

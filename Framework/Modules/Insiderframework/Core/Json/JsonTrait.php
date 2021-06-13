@@ -37,8 +37,8 @@ trait JsonTrait
             }
 
             return (json_decode($filecontent, $assoc));
-        } else {
-            return false;
         }
+        
+        return false;
     }
 }
