@@ -2,6 +2,7 @@ version: "3"
 
 services:
   insider_framework_php8_fpm_nginx:
+    container_name: insider_framework
     image: insiderti/insiderframework_php8_fpm_nginx:0.3.0-rc1
     expose:
       - "80"
