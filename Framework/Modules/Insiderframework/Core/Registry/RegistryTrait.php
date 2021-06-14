@@ -31,6 +31,27 @@ trait RegistryTrait {
         return $modulesList;
     }
 
+
+    /**
+     * Get all modules info from JSON
+     *
+     * @author Marcello Costa
+     *
+     * @package Modules\Insiderframework\Core\Registry\RegistryTrait
+     *
+     * @return array Info of all modules
+     */
+    public static function getAllModulesInfo(): array {
+        $listOfModules = RegistryTrait::getListOfInstalledModules();
+
+        $modulesInfo = [];
+        foreach($listOfModules as $moduleName){
+            $modulesInfo[]=RegistryTrait::getModuleInfo($moduleName);
+        }
+
+        return $modulesInfo;
+    }
+
     /**
      * Get module info from JSON
      *
@@ -38,30 +59,21 @@ trait RegistryTrait {
      *
      * @package Modules\Insiderframework\Core\Registry\RegistryTrait
      *
-     * @param string $moduleName Module name (optional)
+     * @param string $moduleName Module name
      *
      * @return array Info of one or all module
      */
-    public static function getModuleInfo(string $moduleName = null): array {
+    public static function getModuleInfo(string $moduleName): array {
         $listOfModules = RegistryTrait::getListOfInstalledModules();
 
-        if ($moduleName !== null && !in_array($moduleName, $listOfModules)){
+        if ($moduleName !== null && !in_array($moduleName, $listOfModules)) {
             \Modules\Insiderframework\Core\Error::errorRegister(
                 'Cannot find module ' . $moduleName
             );
         }
 
-        $modules = [];
-        if ($moduleName !== NULL){
-            $modules[] = $moduleName;
-        } else {
-            // TODO
-            // Get all control files
-            // Must be implemented: Text::extractString
-            // Must be implemented: FileTree::fillArrayWithFileNodes
-        }
-
-        $controlPath = INSTALL_DIR . "Framework" . DIRECTORY_SEPARATOR .
+        $controlPath = INSTALL_DIR . DIRECTORY_SEPARATOR .
+                       "Framework" . DIRECTORY_SEPARATOR .
                        "Registry" . DIRECTORY_SEPARATOR .
                        "Controls" . DIRECTORY_SEPARATOR .
                        $moduleName . DIRECTORY_SEPARATOR .
@@ -70,8 +82,6 @@ trait RegistryTrait {
         $controlData = \Modules\Insiderframework\Core\Json::getJSONDataFile($controlPath);
 
         if (!$controlData) {
-            var_dump($controlPath);
-            die();
             \Modules\Insiderframework\Core\Error::errorRegister(
                 "Cannot load file contents %" . $controlPath . "%"
             );

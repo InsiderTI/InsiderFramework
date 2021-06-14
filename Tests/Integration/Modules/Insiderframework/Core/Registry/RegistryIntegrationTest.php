@@ -6,7 +6,7 @@ use \Modules\Insiderframework\Core\Registry;
 final class RegistryIntegrationTest extends TestCase
 {
     public function testShouldGetInfoFromAllModules(): void {
-      $moduleInfos = Registry::getModuleInfo();
+      $moduleInfos = Registry::getAllModulesInfo();
       $this->assertEquals('array', gettype($moduleInfos));
       $this->assertGreaterThan(0, count($moduleInfos));
     }
