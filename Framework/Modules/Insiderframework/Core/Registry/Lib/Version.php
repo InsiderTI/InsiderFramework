@@ -21,7 +21,6 @@ class Version {
                         "(?P<separator2>.)(?P<part3>([0-9]*))" .
                         "((?P<separator3>-)(?P<part4>.*))?/";
 
-        $versionData = [];
         preg_match_all($regexVersion, $version, $versionMatches, PREG_SET_ORDER);
 
         if (count($versionMatches) == 0) {
